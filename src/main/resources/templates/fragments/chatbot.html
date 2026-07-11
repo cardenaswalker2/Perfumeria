@@ -669,20 +669,100 @@
             .nova-toast.show { transform: translateY(0); opacity: 1; }
             .nova-toast.show { transform: translateX(0); }
 
-            /* Ajustes Responsivos */
-            @media (max-width: 500px) {
-                #nova-chat-container { width: 100%; height: 100%; bottom: 0; right: 0; }
-                #nova-chat-window { border-radius: 0; }
-                .nova-side-panel { width: 100%; height: 100%; border-radius: 0 !important; z-index: 100; }
+            /* Ajustes Responsivos Premium */
+            @media (max-width: 768px) {
+                #nova-chat-container {
+                    position: fixed !important;
+                    top: 75px !important; /* Starts below header */
+                    left: 0 !important;
+                    right: 0 !important;
+                    bottom: 0 !important;
+                    width: 100% !important;
+                    height: calc(100vh - 75px) !important;
+                    z-index: 20000 !important; /* Always on top of normal content */
+                }
+                
+                #nova-chat-window {
+                    height: 100% !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    border-radius: 0 !important;
+                    border: none !important;
+                }
+                
+                .nova-body {
+                    flex: 1 !important;
+                    overflow-y: auto !important;
+                    padding: 15px 15px 30px 15px !important; /* Extra bottom padding for last message */
+                }
+                
+                .quick-chips-wrapper {
+                    padding: 10px 12px !important;
+                    background: rgba(15, 15, 15, 0.95) !important;
+                    border-top: 1px solid var(--glass-border) !important;
+                    width: 100% !important;
+                    box-sizing: border-box !important;
+                    flex-shrink: 0 !important;
+                }
+                
+                .quick-chips-container {
+                    display: flex !important;
+                    gap: 8px !important;
+                    overflow-x: auto !important;
+                    -webkit-overflow-scrolling: touch !important;
+                    scrollbar-width: none !important;
+                }
+                
+                .quick-chip {
+                    padding: 6px 12px !important;
+                    font-size: 0.72rem !important;
+                    border-radius: 20px !important;
+                }
+                
+                .nova-input-area {
+                    padding: 12px 14px !important;
+                    background: #0d0d0d !important;
+                    border-top: 1px solid var(--glass-border) !important;
+                    box-sizing: border-box !important;
+                    width: 100% !important;
+                    flex-shrink: 0 !important;
+                    gap: 8px !important;
+                }
+                
+                #nova-chat-input {
+                    padding: 10px 16px !important;
+                    font-size: 0.82rem !important;
+                    border-radius: 20px !important;
+                }
+                
+                .nova-input-area button {
+                    width: 38px !important;
+                    height: 38px !important;
+                    font-size: 0.85rem !important;
+                }
+
+                .nova-side-panel {
+                    width: 100% !important;
+                    height: 100% !important;
+                    border-radius: 0 !important;
+                    z-index: 21000 !important;
+                }
+                
                 #nova-history-panel { left: 0; opacity: 1; pointer-events: auto; }
                 #nova-history-panel.closed { left: -100%; opacity: 0; pointer-events: none; }
                 #nova-profile-panel { left: 0; opacity: 1; pointer-events: auto; }
                 #nova-profile-panel.closed { left: -100%; opacity: 0; pointer-events: none; }
-                .nova-modal-grid { grid-template-columns: 1fr; }
-                .nova-modal-left { padding: 20px; height: 220px; }
-                .nova-modal-left img { max-height: 100%; }
-                .nova-modal-right { padding: 25px; }
-                .nova-p-card, .nova-compare-box, .nova-gallery-grid, .nova-p-carousel { width: 100%; }
+                
+                .nova-modal-grid { grid-template-columns: 1fr !important; }
+                .nova-modal-left { padding: 15px !important; height: 180px !important; }
+                .nova-modal-left img { max-height: 100% !important; }
+                .nova-modal-right { padding: 15px !important; }
+                
+                .nova-p-card, .nova-compare-box, .nova-gallery-grid, .nova-p-carousel { 
+                    width: 100% !important; 
+                    max-width: 100% !important;
+                    box-sizing: border-box !important;
+                }
             }
 
             @media (max-width: 768px) {
