@@ -633,6 +633,80 @@
                 width: 100% !important;
             }
         }
+    
+        /* MOBILE STICKY CHECKOUT BAR */
+        .mobile-cart-sticky-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            padding: 14px 20px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            z-index: 10400;
+            box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .sticky-cart-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .sticky-cart-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: #999;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .sticky-cart-total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .sticky-checkout-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .sticky-checkout-btn:active {
+            transform: scale(0.97);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-cart-sticky-bar {
+                display: flex;
+            }
+            body {
+                padding-bottom: 85px !important;
+            }
+        }
+        
     </style>
 
     <!-- SCRIPTS -->
@@ -762,6 +836,7 @@
             // Animar cambio de total
             const subtotalEl = document.getElementById('summary-subtotal');
             const totalEl = document.getElementById('summary-total');
+            const stickyTotalEl = document.getElementById('sticky-summary-total');
 
             subtotalEl.style.transform = 'scale(1.05)';
             totalEl.style.transform = 'scale(1.05)';
@@ -769,6 +844,9 @@
 
             subtotalEl.textContent = formattedTotal;
             totalEl.textContent = formattedTotal;
+            if (stickyTotalEl) {
+                stickyTotalEl.textContent = formattedTotal;
+            }
 
             setTimeout(() => {
                 subtotalEl.style.transform = 'scale(1)';
@@ -796,6 +874,20 @@
             });
         });
     </script>
+
+    <!-- Mobile Sticky Checkout Bar -->
+    <div class="mobile-cart-sticky-bar">
+        <div class="sticky-cart-info">
+            <span class="sticky-cart-label">Total</span>
+            <span class="sticky-cart-total" id="sticky-summary-total" th:text="'$' + ${#numbers.formatDecimal(total, 0, 'POINT', 0, 'POINT')}">$0</span>
+        </div>
+        <form th:action="@{/carrito/checkout}" method="post" style="flex: 1; display: flex; margin: 0;">
+            <button type="submit" class="sticky-checkout-btn">
+                <i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i> Comprar
+            </button>
+        </form>
+    </div>
+
 </body>
 
 </html>
