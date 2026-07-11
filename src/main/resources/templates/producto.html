@@ -835,7 +835,80 @@
                 grid-template-columns: 1fr !important;
             }
         }
-    </style>
+
+        /* MOBILE STICKY ADD TO BAG BAR */
+        .mobile-sticky-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            padding: 12px 20px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            z-index: 10400;
+            box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .sticky-price-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .sticky-price-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: #999;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .sticky-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .sticky-add-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, #e8890c 100%);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(244, 154, 31, 0.2);
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .sticky-add-btn:active {
+            transform: scale(0.97);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-sticky-bar {
+                display: flex;
+            }
+            body {
+                padding-bottom: 80px !important;
+            }
+        }
+            </style>
 
     <!-- SCRIPTS -->
     <script>
@@ -1033,6 +1106,21 @@
             });
         });
     </script>
+
+    <!-- Mobile Sticky Add to Cart Bar -->
+    <div class="mobile-sticky-bar">
+        <div class="sticky-price-info">
+            <span class="sticky-price-label">Precio</span>
+            <span class="sticky-price" th:text="'$' + ${#numbers.formatInteger(perfume.precio, 3, 'POINT')} + ' COP'">$1.000.000</span>
+        </div>
+        <form th:action="@{/carrito/agregar/{id}(id=${perfume.id})}" method="post" style="flex: 1; display: flex; margin: 0;">
+            <input type="hidden" name="cantidad" value="1">
+            <button type="submit" class="sticky-add-btn">
+                <i class="fas fa-shopping-bag"></i> Añadir Bolsa
+            </button>
+        </form>
+    </div>
+
 </body>
 
 </html>
