@@ -1048,10 +1048,12 @@
                         <div class="status-board" style="margin: 0;">
                             <h3 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #fff; margin-bottom: 12px;">🏆 Top Perfumes Más Vendidos</h3>
                             <div style="display: flex; flex-direction: column; gap: 8px;">
-                                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; padding-bottom: 6px; border-bottom: 1px solid var(--border);" th:each="p, stat : ${perfumes}" th:if="${stat.index < 4}">
+                                <th:block th:each="p, stat : ${perfumes}">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; padding-bottom: 6px; border-bottom: 1px solid var(--border);" th:if="${stat.index < 4}">
                                     <span th:text="${stat.count} + '. ' + ${p.nombre}">1. Good Girl</span>
                                     <strong style="color: var(--accent);" th:text="${stat.index == 0 ? '48 Ventas' : (stat.index == 1 ? '36 Ventas' : '20 Ventas')}">48 Ventas</strong>
                                 </div>
+                            </th:block>
                             </div>
                         </div>
                         
