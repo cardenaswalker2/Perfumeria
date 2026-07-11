@@ -684,6 +684,15 @@
                 .nova-modal-right { padding: 25px; }
                 .nova-p-card, .nova-compare-box, .nova-gallery-grid, .nova-p-carousel { width: 100%; }
             }
+
+            @media (max-width: 768px) {
+                #nova-launcher {
+                    bottom: 95px !important; /* Float safely above sticky bars */
+                }
+                #nova-chat-container {
+                    bottom: 155px !important; /* Align chat container above launcher */
+                }
+            }
         </style>
 
         <script>
