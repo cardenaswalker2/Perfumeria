@@ -487,10 +487,10 @@
                             <p style="font-weight: 700; font-size: 1rem; color: var(--text);" th:text="${pedido.nombreCliente}">Nombre</p>
                             <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;" th:text="${pedido.direccion}">Dirección</p>
                         </div>
-                        <a th:href="'https://wa.me/' + ${pedido.telefono} + '?text=' + ${'Hola ' + pedido.nombreCliente + ', soy tu Asesor Experto en Profumi. Escribo sobre tu pedido ' + pedido.id + ' para coordinar el pago y envío. ¿Tienes un momento?'}" 
-                           target="_blank" class="btn-whatsapp">
+                        <button th:onclick="'contactCustomerWa(this, \'' + ${pedido.telefono} + '\', \'' + ${pedido.nombreCliente} + '\', \'' + ${pedido.id} + '\', ' + ${pedido.total} + ', \'' + ${pedido.metodoPago} + '\', \'' + ${pedido.direccion} + '\')'"
+                                class="btn-whatsapp" style="border: none; cursor: pointer;">
                             <i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i> Contactar VIP
-                        </a>
+                        </button>
                     </div>
 
                     <!-- Detalles de Compra -->
@@ -627,6 +627,32 @@
         // Save notes
         function saveAdvisorNotes(val) {
             localStorage.setItem('profumi_advisor_notes', val);
+        }
+
+        // Contact Customer on WhatsApp with Detailed Order info
+        function contactCustomerWa(btn, phone, clientName, orderId, total, paymentMethod, address) {
+            const card = btn.closest('.order-card');
+            const items = [];
+            card.querySelectorAll('.order-item').forEach(item => {
+                const name = item.querySelector('p:nth-child(1)').innerText.trim();
+                const qty = item.querySelector('.order-item div:nth-child(3) span').innerText.trim();
+                items.push(`  • ${qty}x ${name}`);
+            });
+            const itemsStr = items.join('\n');
+            const formattedTotal = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(total);
+
+            const text = `🌟 *PROFUMI - Boutique de Fragancias* 🌟\n\n` +
+                         `Estimado/a *${clientName}*, espero que se encuentre muy bien. ✨\n\n` +
+                         `Le habla su *Asesor Experto de Profumi*. He recibido su solicitud de pedido con la referencia *#${orderId}*:\n\n` +
+                         `🛍️ *Detalle de su Selección:*\n${itemsStr}\n\n` +
+                         `💵 *Total:* ${formattedTotal} COP\n` +
+                         `💳 *Método de Pago:* ${paymentMethod}\n` +
+                         `📍 *Dirección de Entrega:* ${address}\n\n` +
+                         `Escribo para confirmar los detalles de su compra, coordinar el pago de forma segura y programar el despacho de sus fragancias de inmediato. 📦\n\n` +
+                         `¿Le parece bien si coordinamos ahora? Quedo a su completa disposición. 🌹`;
+
+            const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
         }
 
         // Live Search
