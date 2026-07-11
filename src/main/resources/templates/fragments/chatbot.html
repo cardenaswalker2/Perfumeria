@@ -1055,11 +1055,9 @@
                         </div>
                         <div class="p-actions">
                             <button class="p-btn primary" onclick="addNovaToCart(event, '${p.id}')">Agregar 🛍️</button>
-                            <button class="p-btn secondary" onclick="openNovaDetails('${p.id}')">Detalles 🔍</button>
-                            <button class="p-btn secondary" onclick="window.location.href='/producto/${p.id}'">Ver Producto</button>
-                            <button class="p-btn secondary" onclick="quickSearch('Compara ${p.nombre}')">Comparar</button>
-                            <button class="p-btn secondary" onclick="shareProduct('${p.id}', '${p.nombre}')">Compartir 🔗</button>
-                            <button class="p-btn secondary" onclick="quickSearch('Recomiéndame perfumes similares a ${p.nombre}')">Similares</button>
+                            <button class="p-btn primary" style="background: linear-gradient(135deg, #111 0%, #222 100%); color: var(--gold-light); border: 1px solid var(--gold-dark);" onclick="window.location.href='/producto/${p.id}'">Ver Producto 🔍</button>
+                            <button class="p-btn secondary" onclick="openNovaDetails('${p.id}')">Detalles Rápidos ⚡</button>
+                            <button class="p-btn secondary" onclick="quickSearch('Recomiéndame perfumes similares a ${p.nombre}')">Similares 🌿</button>
                         </div>
                     </div>
                 `;
