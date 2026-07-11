@@ -62,6 +62,12 @@ public class SecurityConfig {
                 .loginPage("/login")
                 .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
                 .successHandler(successHandler)
+                .failureHandler((request, response, exception) -> {
+                    System.err.println("=== ERROR EN AUTENTICACIÓN GOOGLE OAUTH2 ===");
+                    System.err.println("Mensaje: " + exception.getMessage());
+                    exception.printStackTrace();
+                    response.sendRedirect("/login?error=true");
+                })
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
