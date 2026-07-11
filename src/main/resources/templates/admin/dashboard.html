@@ -290,59 +290,8 @@
                     <h1>admin console.</h1>
                     <p>Resumen analítico y estadísticas de rendimiento comercial.</p>
                 </div>
-                <div class="header-actions">
-                    <!-- Ver Tienda -->
+                <div class="header-actions" style="display: flex; gap: 10px; align-items: center;">
                     <a href="/catalogo" class="btn-action btn-secondary" style="text-decoration: none;"><i class="fas fa-store"></i> Ver Tienda</a>
-                    
-                    <!-- Alertas de Negocio -->
-                    <div class="bell-btn-container">
-                        <button class="btn-action btn-secondary" onclick="toggleHeaderDropdown(event, 'alerts-dropdown')" style="padding: 10px 14px;"><i class="fas fa-bell"></i><span class="badge-dot"></span></button>
-                        <div class="header-dropdown" id="alerts-dropdown">
-                            <span class="dropdown-title">Notificaciones</span>
-                            <div class="dropdown-item" onclick="triggerNotificationAction('stock')" style="cursor: pointer;">
-                                <i class="fas fa-exclamation-triangle" style="color: #f1c40f;"></i>
-                                <span>3 perfumes con poco stock (Ver aquí)</span>
-                            </div>
-                            <div class="dropdown-item" onclick="triggerNotificationAction('stripe')" style="cursor: pointer;">
-                                <i class="fas fa-check-circle" style="color: #2ecc71;"></i>
-                                <span>Pasarela de Stripe activa y segura</span>
-                            </div>
-                            <div class="dropdown-item" onclick="triggerNotificationAction('chatbot')" style="cursor: pointer;">
-                                <i class="fas fa-robot" style="color: var(--accent);"></i>
-                                <span>Nova AI en línea (Configurar)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Acciones Rápidas -->
-                    <div class="bell-btn-container">
-                        <button class="btn-action btn-secondary" onclick="toggleHeaderDropdown(event, 'actions-dropdown')" style="padding: 10px 14px;"><i class="fas fa-bolt"></i> Acciones</button>
-                        <div class="header-dropdown" id="actions-dropdown">
-                            <span class="dropdown-title">Acciones Rápidas</span>
-                            <div class="dropdown-item" onclick="triggerQuickAction('coupon')" style="cursor: pointer; padding: 5px 0;">
-                                <i class="fas fa-percent" style="color: var(--accent); width: 18px;"></i>
-                                <span>Crear Nuevo Cupón</span>
-                            </div>
-                            <div class="dropdown-item" onclick="triggerQuickAction('audit')" style="cursor: pointer; padding: 5px 0;">
-                                <i class="fas fa-history" style="color: #3498db; width: 18px;"></i>
-                                <span>Ver Bitácora de Auditoría</span>
-                            </div>
-                            <div class="dropdown-item" onclick="triggerQuickAction('config')" style="cursor: pointer; padding: 5px 0;">
-                                <i class="fas fa-cog" style="color: #9b59b6; width: 18px;"></i>
-                                <span>Configuración de Tienda</span>
-                            </div>
-                            <div class="dropdown-item" onclick="triggerQuickAction('backup')" style="cursor: pointer; padding: 5px 0;">
-                                <i class="fas fa-database" style="color: #e67e22; width: 18px;"></i>
-                                <span>Respaldar Base de Datos</span>
-                            </div>
-                            <div class="dropdown-item" onclick="triggerQuickAction('export')" style="cursor: pointer; padding: 5px 0;">
-                                <i class="fas fa-file-excel" style="color: #2ecc71; width: 18px;"></i>
-                                <span>Exportar Catálogo (Excel)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Nuevo Producto -->
                     <button onclick="openPerfumeDrawer(null)" class="btn-action"><i class="fas fa-plus"></i> NUEVO PRODUCTO</button>
                 </div>
             </div>
