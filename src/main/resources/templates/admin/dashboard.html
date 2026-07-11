@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profumi | Admin Console</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN for beautiful interactive charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" th:href="@{/css/admin-editor.css}">
     <script th:src="@{/js/admin-editor.js}" defer></script>
@@ -13,124 +14,36 @@
         :root { 
             --accent: #C5A059; 
             --accent-hover: #E5C158;
-            --bg: #060606; 
-            --bg-card: rgba(20, 20, 20, 0.7);
-            --border: rgba(255,255,255,0.06); 
+            --bg: #0A0A0A; 
+            --bg-card: #141414;
+            --border: rgba(255,255,255,0.08); 
             --text: #F5F5F5;
-            --text-muted: #999999;
-            --glass-bg: rgba(15, 15, 15, 0.6);
-            --radius-premium: 20px;
+            --text-muted: #888888;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            min-height: 100vh; 
-            display: flex;
-            background-image: radial-gradient(rgba(197, 160, 89, 0.02) 1.5px, transparent 1.5px);
-            background-size: 32px 32px;
-            overflow-x: hidden;
-        }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
         
         /* Layout */
-        .sidebar { 
-            width: 280px; 
-            background: rgba(8, 8, 8, 0.85); 
-            backdrop-filter: blur(30px); 
-            -webkit-backdrop-filter: blur(30px);
-            border-right: 1px solid var(--border); 
-            padding: 2.5rem 1.5rem; 
-            position: fixed; 
-            height: 100vh; 
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .main-content { 
-            margin-left: 280px; 
-            flex: 1; 
-            padding: 2rem 3rem; 
-            overflow-y: auto; 
-            min-height: 100vh;
-        }
-
-        /* Admin profile card in sidebar */
-        .admin-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 15px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            margin-top: auto;
-            margin-bottom: 1.5rem;
-        }
-        .admin-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent) 0%, #9c7b3c 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: #000;
-            position: relative;
-        }
-        .admin-status-dot {
-            width: 10px;
-            height: 10px;
-            background: #2ecc71;
-            border: 2px solid #000;
-            border-radius: 50%;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-        }
-        .admin-info {
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-        .admin-name {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .admin-role {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-        }
+        .sidebar { width: 280px; background: rgba(0,0,0,0.5); backdrop-filter: blur(20px); border-right: 1px solid var(--border); padding: 3rem 2rem; position: fixed; height: 100vh; z-index: 100; }
+        .main-content { margin-left: 280px; flex: 1; padding: 3rem; overflow-y: auto; }
         
         /* Navigation Links */
-        .sidebar nav { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 2rem; }
+        .sidebar nav { display: flex; flex-direction: column; gap: 1rem; }
         .sidebar nav a {
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 500;
-            padding: 12px 16px;
+            padding: 12px 18px;
             border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 12px;
-            border: 1px solid transparent;
         }
         .sidebar nav a:hover, .sidebar nav a.active {
-            color: #fff;
-            background: rgba(197, 160, 89, 0.08);
-            border-color: rgba(197, 160, 89, 0.15);
-            transform: translateX(4px);
-        }
-        .sidebar nav a.active {
-            border-left: 4px solid var(--accent);
-            padding-left: 12px;
+            color: var(--accent);
+            background: rgba(197, 160, 89, 0.1);
         }
 
         /* Top Header */
@@ -138,256 +51,36 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            gap: 1.5rem;
+            margin-bottom: 2.5rem;
         }
-        .header-left h1 {
+        .top-header h1 {
             font-family: 'Playfair Display', serif;
             font-size: 2.2rem;
-            color: #fff;
-            font-weight: 700;
+            color: var(--text);
         }
-        .header-left p {
+        .top-header p {
             color: var(--text-muted);
             font-size: 0.9rem;
-            margin-top: 4px;
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
         }
 
-        /* Action bar top */
-        .action-bar-top {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 12px 18px;
-            border-radius: var(--radius-premium);
-            align-items: center;
-        }
-        .action-bar-title {
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent);
-            font-weight: 700;
-            margin-right: 10px;
-        }
+        /* Stat Grid */
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
+        .stat-card { background: var(--bg-card); border: 1px solid var(--border); padding: 1.8rem; border-radius: 16px; transition: all 0.3s ease; }
+        .stat-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .stat-card h3 { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.8rem; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+        .stat-trend { font-size: 0.75rem; color: #4caf50; margin-top: 5px; display: flex; align-items: center; gap: 5px; }
+        .stat-trend.down { color: #ff5252; }
 
-        /* Quick actions tags */
-        .btn-quick {
-            padding: 8px 14px;
-            font-size: 0.8rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: rgba(255,255,255,0.02);
-            color: var(--text);
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 600;
-        }
-        .btn-quick:hover {
-            border-color: var(--accent);
-            background: rgba(197, 160, 89, 0.05);
-            transform: translateY(-1px);
-        }
-
-        /* Nova Insights */
-        .nova-insights {
-            background: linear-gradient(135deg, rgba(30, 25, 20, 0.95) 0%, rgba(10, 10, 10, 0.95) 100%);
-            border: 1.5px solid rgba(197, 160, 89, 0.25);
-            border-radius: var(--radius-premium);
-            padding: 1.8rem;
-            margin-bottom: 2.2rem;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4), 0 0 20px rgba(197, 160, 89, 0.04);
-            position: relative;
-            overflow: hidden;
-        }
-        .nova-insights::before {
-            content: '';
-            position: absolute;
-            top: -50%; right: -20%;
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(197, 160, 89, 0.05) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .insights-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 1.2rem;
-        }
-        .insights-header i {
-            color: var(--accent);
-            font-size: 1.3rem;
-            animation: insightsPulse 2.5s infinite;
-        }
-        @keyframes insightsPulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.15); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-        .insights-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.2rem;
-        }
-        .insight-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border);
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 0.88rem;
-            line-height: 1.5;
-            color: #e5e5e5;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            transition: all 0.3s;
-        }
-        .insight-card:hover {
-            background: rgba(255,255,255,0.04);
-            border-color: rgba(197, 160, 89, 0.15);
-        }
-
-        /* Stat Grid & KPIs */
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
-        .stat-card { 
-            background: var(--bg-card); 
-            border: 1px solid var(--border); 
-            padding: 1.5rem; 
-            border-radius: var(--radius-premium); 
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        .stat-card:hover { 
-            border-color: var(--accent); 
-            transform: translateY(-4px); 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-        }
-        .stat-card h3 { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.6rem; }
-        .stat-card .value { font-size: 1.7rem; font-weight: 700; color: #fff; }
-        .stat-trend { font-size: 0.72rem; color: #2ecc71; margin-top: 8px; display: flex; align-items: center; gap: 4px; }
-        .stat-trend.down { color: #e74c3c; }
-
-        /* Double Column Grid: Main stats and Timeline */
-        .dashboard-layout-grid {
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        /* Timeline Sidebar */
-        .timeline-sidebar {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-premium);
-            padding: 1.5rem;
-            height: fit-content;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        .timeline-title {
-            font-size: 1.1rem;
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .timeline-track {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            position: relative;
-            padding-left: 20px;
-        }
-        .timeline-track::before {
-            content: '';
-            position: absolute;
-            top: 5px; left: 6px; bottom: 5px;
-            width: 2px;
-            background: var(--border);
-        }
-        .timeline-item {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .timeline-dot {
-            width: 14px; height: 14px;
-            border-radius: 50%;
-            background: var(--bg);
-            border: 3px solid var(--accent);
-            position: absolute;
-            left: -20px;
-            top: 2px;
-            z-index: 2;
-        }
-        .timeline-dot.user { border-color: #3498db; }
-        .timeline-dot.bot { border-color: var(--accent); }
-        .timeline-dot.system { border-color: #2ecc71; }
-        .timeline-time {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-        }
-        .timeline-desc {
-            font-size: 0.82rem;
-            color: #dfdfdf;
-        }
-
-        /* Status Board */
-        .status-board {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-premium);
-            padding: 1.8rem;
-            margin-bottom: 2rem;
-        }
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-top: 1.2rem;
-        }
-        .status-badge-card {
-            background: rgba(255,255,255,0.015);
-            border: 1px solid var(--border);
-            padding: 12px 16px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .status-indicator {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .status-indicator.ok { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
-        .status-indicator.warn { background: #f1c40f; box-shadow: 0 0 8px #f1c40f; }
-        .status-indicator.err { background: #e74c3c; box-shadow: 0 0 8px #e74c3c; }
-
-        /* Panels tabs */
+        /* Panels */
         .tab-panel { display: none; animation: fadeIn 0.4s ease; }
         .tab-panel.active { display: block; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Controls bar */
+        /* Search & Filter Controls */
         .control-bar {
             display: flex;
             justify-content: space-between;
@@ -396,352 +89,112 @@
             margin-bottom: 1.5rem;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            padding: 12px 18px;
-            border-radius: 16px;
-            flex-wrap: wrap;
+            padding: 1rem;
+            border-radius: 12px;
         }
         .search-input {
             flex: 1;
-            min-width: 200px;
-            background: #111;
+            background: #1a1a1a;
             border: 1px solid var(--border);
             padding: 10px 15px;
-            border-radius: 10px;
+            border-radius: 8px;
             color: #fff;
             outline: none;
-            transition: all 0.3s;
         }
         .search-input:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 10px rgba(197, 160, 89, 0.15);
         }
         .filter-select {
-            background: #111;
+            background: #1a1a1a;
             border: 1px solid var(--border);
-            padding: 10px 15px;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 8px;
             color: #fff;
             outline: none;
-            cursor: pointer;
         }
-        
-        /* View Switcher */
-        .view-switcher {
-            display: flex;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-            padding: 3px;
-            border: 1px solid var(--border);
-        }
-        .view-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-        }
-        .view-btn.active {
-            background: var(--accent);
-            color: #000;
-            font-weight: 600;
-        }
-
-        /* Inventory Layout Mode containers */
-        .inventory-layout {
-            transition: all 0.3s;
-        }
-        
-        /* Cards View */
-        .product-cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .product-admin-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-premium);
-            overflow: hidden;
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        .product-admin-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        .card-img-wrapper {
-            width: 100%;
-            height: 180px;
-            background: #fff;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-        .card-img-wrapper img {
-            max-height: 100%;
-            max-width: 100%;
-            object-fit: contain;
-        }
-        
-        /* Hover details overlay inside card */
-        .card-hover-info {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 10;
-        }
-        .product-admin-card:hover .card-hover-info {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .hover-spec-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.78rem;
-            color: #bbb;
-            margin-bottom: 6px;
-            border-bottom: 1px dashed rgba(255,255,255,0.06);
-            padding-bottom: 4px;
-        }
-
-        .card-body { padding: 18px; }
-        .card-brand { font-size: 0.68rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
-        .card-title { font-size: 1.1rem; font-family: 'Playfair Display', serif; color: #fff; margin: 4px 0 10px; font-weight: 600; }
-        .card-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .card-price { font-size: 1.1rem; font-weight: 700; color: #fff; }
-        .card-stock-badge { font-size: 0.72rem; padding: 3px 8px; border-radius: 50px; font-weight: 600; }
-        .card-stock-badge.ok { background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
-        .card-stock-badge.low { background: rgba(241, 196, 95, 0.1); color: #f1c40f; }
-        .card-stock-badge.empty { background: rgba(231, 76, 60, 0.1); color: #e74c3c; }
-        
-        .card-actions {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            border-top: 1px solid var(--border);
-            padding-top: 12px;
-        }
-        .card-btn {
-            padding: 8px;
-            font-size: 0.72rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: rgba(255,255,255,0.02);
-            color: #fff;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            font-weight: 600;
-        }
-        .card-btn:hover { border-color: var(--accent); background: rgba(197, 160, 89, 0.08); }
-        .card-btn.delete:hover { border-color: #e74c3c; background: rgba(231, 76, 60, 0.08); color: #e74c3c; }
 
         /* Tables & Lists */
         .custom-table-container {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius-premium);
+            border-radius: 16px;
             overflow: hidden;
             margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         .custom-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .custom-table th { padding: 1.2rem 1.5rem; background: rgba(255,255,255,0.015); color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; border-bottom: 1px solid var(--border); font-weight: 600; }
-        .custom-table td { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); font-size: 0.88rem; vertical-align: middle; }
+        .custom-table th { padding: 1.2rem 1.5rem; background: rgba(255,255,255,0.02); color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        .custom-table td { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; vertical-align: middle; }
         .custom-table tr:last-child td { border: none; }
-        .custom-table tr:hover td { background: rgba(255,255,255,0.015); }
+        .custom-table tr:hover td { background: rgba(255,255,255,0.01); }
 
-        /* Client Cards */
-        .clients-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+        /* Action Buttons */
+        .btn-action {
+            background: var(--accent);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
-        .client-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-premium);
-            padding: 1.5rem;
-            position: relative;
-            transition: all 0.3s;
-        }
-        .client-card:hover {
-            border-color: var(--accent);
+        .btn-action:hover {
+            background: var(--accent-hover);
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(197, 160, 89, 0.2);
         }
-        .client-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 1.2rem;
-        }
-        .client-pic {
-            width: 48px; height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.15) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--accent);
-            font-size: 1.1rem;
+        .btn-secondary {
+            background: transparent;
             border: 1px solid var(--border);
+            color: var(--text);
         }
-        .client-badges {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--text-muted);
         }
-        .client-badge-vip {
-            background: rgba(197, 160, 89, 0.12);
-            color: var(--accent);
-            border: 1px solid rgba(197, 160, 89, 0.25);
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 3px 8px;
-            border-radius: 50px;
-        }
-
-        /* Order Progress Bar */
-        .order-progress-wrapper {
-            margin-top: 10px;
-            width: 100%;
-        }
-        .order-progress-bg {
-            width: 100%; height: 6px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 4px;
-        }
-        .order-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent) 0%, #2ecc71 100%);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-
-        /* Actions panel configs */
-        .config-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        .config-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-premium);
-            padding: 1.5rem;
-        }
-        .config-form-group {
-            margin-bottom: 1.2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .config-form-group label {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        .config-form-group input, .config-form-group textarea, .config-form-group select {
-            background: #111;
-            border: 1px solid var(--border);
-            padding: 10px 14px;
-            border-radius: 8px;
-            color: #fff;
-            outline: none;
-            font-family: inherit;
-            transition: all 0.3s;
-        }
-        .config-form-group input:focus, .config-form-group textarea:focus {
-            border-color: var(--accent);
-        }
-
-        /* Notification Center dropdown style simulated */
-        .notification-bell-container {
-            position: relative;
-        }
-        .notification-counter {
-            position: absolute;
-            top: -5px; right: -5px;
+        .btn-danger {
             background: #ff5252;
             color: #fff;
-            font-size: 0.65rem;
-            font-weight: 700;
-            width: 16px; height: 16px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #000;
         }
-        .notifications-panel {
-            position: absolute;
-            top: 55px; right: 0;
-            width: 320px;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 15px;
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            z-index: 200;
+        .btn-danger:hover {
+            background: #ff7373;
         }
-        .notifications-panel.active { display: flex; }
-        .notification-item {
-            display: flex;
-            gap: 10px;
-            font-size: 0.8rem;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
-            padding-bottom: 8px;
-        }
-        .notification-item:last-child { border: none; padding-bottom: 0; }
 
-        /* General chart container */
-        .charts-row-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2.2rem;
-        }
-        .chart-box {
+        /* Badges */
+        .badge { padding: 4px 10px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .badge.active { background: rgba(76, 175, 80, 0.15); color: #4caf50; }
+        .badge.pending { background: rgba(224, 167, 94, 0.15); color: var(--accent); }
+        .badge.canceled { background: rgba(255, 82, 82, 0.15); color: #ff5252; }
+        .badge.vip { background: rgba(197, 160, 89, 0.15); color: var(--accent); border: 1px solid var(--accent); }
+
+        /* Chart card */
+        .chart-container {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius-premium);
+            border-radius: 16px;
             padding: 1.5rem;
-            height: 250px;
-            display: flex;
-            flex-direction: column;
+            margin-bottom: 2rem;
         }
-        .chart-box-title {
-            font-size: 0.88rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Import overlay styling */
+        .import-box {
+            display: none;
+            background: var(--bg-card);
+            border: 1px dashed var(--accent);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            text-align: center;
         }
 
         /* Responsive design queries */
@@ -765,32 +218,23 @@
             .sidebar nav a {
                 padding: 8px 12px !important;
                 font-size: 0.85rem !important;
-                transform: none !important;
             }
-            .sidebar nav a:hover {
-                transform: none !important;
-            }
-            .sidebar nav a.active {
-                border-left: 1px solid transparent !important;
-                border-bottom: 3px solid var(--accent) !important;
-                padding-left: 12px !important;
-                border-radius: 0 !important;
-            }
-            .admin-profile {
-                display: none !important;
+            .sidebar nav a[style*="margin-top"] {
+                margin-top: 0 !important;
             }
             .main-content {
                 margin-left: 0 !important;
                 padding: 1.5rem !important;
             }
-            .dashboard-layout-grid {
-                grid-template-columns: 1fr !important;
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem !important;
             }
         }
 
         @media (max-width: 576px) {
             .stat-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
+                grid-template-columns: 1fr !important;
             }
             .top-header {
                 flex-direction: column !important;
@@ -800,9 +244,9 @@
             .top-header h1 {
                 font-size: 1.8rem !important;
             }
-            .action-bar-top {
-                flex-direction: column;
-                align-items: flex-start;
+            .btn-action {
+                width: 100% !important;
+                justify-content: center !important;
             }
         }
     </style>
@@ -811,305 +255,115 @@
 
     <!-- Sidebar menu -->
     <aside class="sidebar">
-        <div>
-            <div style="margin-bottom: 2rem; line-height: 1.1;">
-                <span style="font-family: 'Playfair Display', serif; font-size: 1.7rem; letter-spacing: 2px; font-weight: 700; color: var(--accent);">PROFUMI</span>
-                <span style="display: block; font-family: 'Outfit', sans-serif; font-size: 0.5rem; letter-spacing: 2px; font-weight: 600; color: #FFF; text-transform: uppercase; margin-top: 3px;">ADMIN PORTAL</span>
-            </div>
-            <nav>
-                <a href="#" class="nav-btn active" onclick="switchAdminTab('panel-dashboard', this)"><i class="fas fa-chart-line"></i> Dashboard</a>
-                <a href="#" class="nav-btn" onclick="switchAdminTab('panel-inventario', this)"><i class="fas fa-flask"></i> Inventario</a>
-                <a href="#" class="nav-btn" onclick="switchAdminTab('panel-pedidos', this)"><i class="fas fa-shopping-cart"></i> Pedidos</a>
-                <a href="#" class="nav-btn" onclick="switchAdminTab('panel-clientes', this)"><i class="fas fa-user-friends"></i> Clientes VIP</a>
-                <a href="#" class="nav-btn" onclick="switchAdminTab('panel-promociones', this)"><i class="fas fa-percent"></i> Promociones</a>
-                <a href="#" class="nav-btn" onclick="switchAdminTab('panel-configuraciones', this)"><i class="fas fa-cog"></i> Configuración</a>
-                <a href="#" class="nav-btn" onclick="switchAdminTab('panel-auditoria', this)"><i class="fas fa-history"></i> Auditoría</a>
-            </nav>
+        <div style="margin-bottom: 3.5rem; line-height: 1.1;">
+            <span style="font-family: 'Cinzel', serif; font-size: 1.6rem; letter-spacing: 4px; font-weight: 600; color: var(--accent);">PROFUMI</span>
+            <span style="display: block; font-family: 'Outfit', sans-serif; font-size: 0.45rem; letter-spacing: 2px; font-weight: 500; color: #FFF; text-transform: uppercase; margin-top: 3px;">FRAGRANCE STORE</span>
         </div>
-        
-        <!-- Administrator Avatar profile widget in sidebar -->
-        <div class="admin-profile">
-            <div class="admin-avatar">
-                AD
-                <span class="admin-status-dot"></span>
-            </div>
-            <div class="admin-info">
-                <span class="admin-name">admin@profumi.com</span>
-                <span class="admin-role">Administrador Principal</span>
-            </div>
-            <a href="/logout" style="margin-left: auto; color: #ff5252; padding: 4px;" title="Cerrar Sesión"><i class="fas fa-power-off"></i></a>
-        </div>
+        <nav>
+            <a href="#" class="nav-btn active" onclick="switchAdminTab('panel-dashboard', this)"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="#" class="nav-btn" onclick="switchAdminTab('panel-inventario', this)"><i class="fas fa-flask"></i> Inventario</a>
+            <a href="#" class="nav-btn" onclick="switchAdminTab('panel-pedidos', this)"><i class="fas fa-shopping-cart"></i> Pedidos</a>
+            <a href="#" class="nav-btn" onclick="switchAdminTab('panel-clientes', this)"><i class="fas fa-user-friends"></i> Clientes VIP</a>
+            <a href="#" class="nav-btn" onclick="switchAdminTab('panel-promociones', this)"><i class="fas fa-percent"></i> Promociones</a>
+            <a href="#" class="nav-btn" onclick="switchAdminTab('panel-auditoria', this)"><i class="fas fa-history"></i> Auditoría</a>
+            <a href="/catalogo" style="margin-top: 3rem;"><i class="fas fa-store"></i> Ver Tienda</a>
+            <a href="/logout" style="color: #ff5252;"><i class="fas fa-power-off"></i> Cerrar Sesión</a>
+        </nav>
     </aside>
 
     <!-- Main administrative area -->
     <main class="main-content">
         
-        <!-- Top bar/header with search, notifications, time and dark mode -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; flex-wrap: wrap; gap: 15px;">
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;" id="live-clock">Cargando fecha...</span>
-            </div>
-            <div class="header-right">
-                <div style="position: relative; display: flex; align-items: center; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 30px; padding: 6px 14px; width: 250px;">
-                    <i class="fas fa-search" style="color: var(--text-muted); font-size: 0.85rem; margin-right: 8px;"></i>
-                    <input type="text" placeholder="Buscador global..." style="background: none; border: none; color: #fff; font-size: 0.82rem; outline: none; width: 100%;">
-                </div>
-                
-                <!-- Notification Bell -->
-                <div class="notification-bell-container">
-                    <button class="btn-quick" onclick="toggleNotifications()" style="border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; padding: 0;">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-counter">3</span>
-                    </button>
-                    <div class="notifications-panel" id="notifications-panel">
-                        <div style="font-weight: 700; font-size: 0.85rem; border-bottom: 1px solid var(--border); padding-bottom: 8px; color: var(--accent);">Alertas de Negocio</div>
-                        <div class="notification-item">
-                            <i class="fas fa-exclamation-triangle" style="color: #f1c40f; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Stock bajo detectado</strong>
-                                <p style="font-size: 0.72rem; color: var(--text-muted);">Dior Sauvage y Bleu de Chanel tienen menos de 3 uds.</p>
-                            </div>
-                        </div>
-                        <div class="notification-item">
-                            <i class="fas fa-shopping-bag" style="color: #2ecc71; margin-top: 2px;"></i>
-                            <div>
-                                <strong>Nuevo pedido recibido</strong>
-                                <p style="font-size: 0.72rem; color: var(--text-muted);">Pedido #8372 de Carolina Herrera ($1.000.000 COP).</p>
-                            </div>
-                        </div>
-                        <div class="notification-item">
-                            <i class="fas fa-robot" style="color: var(--accent); margin-top: 2px;"></i>
-                            <div>
-                                <strong>Conversión IA Exitosa</strong>
-                                <p style="font-size: 0.72rem; color: var(--text-muted);">Nova asistió a un usuario que terminó en checkout.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <button class="btn-quick" onclick="alert('Descargando reporte comercial general consolidado...')" style="background: var(--accent); color: #000; border: none; font-weight: 700;">
-                    <i class="fas fa-download"></i> REPORTES
-                </button>
-            </div>
-        </div>
-
-        <!-- ================= ACTIONS BAR TOP ================= -->
-        <div class="action-bar-top">
-            <span class="action-bar-title">Creación rápida</span>
-            <button class="btn-quick" onclick="openPerfumeDrawer(null)"><i class="fas fa-plus"></i> Nuevo Perfume</button>
-            <button class="btn-quick" onclick="switchAdminTab('panel-promociones', this)"><i class="fas fa-percent"></i> Nuevo Cupón</button>
-            <button class="btn-quick" onclick="switchAdminTab('panel-promociones', this)"><i class="fas fa-tag"></i> Nueva Colección</button>
-            <button class="btn-quick" onclick="alert('Respaldando base de datos de MongoDB Atlas y variables de entorno...')"><i class="fas fa-database"></i> Respaldar Base de Datos</button>
-        </div>
-
         <!-- ================= PANEL: DASHBOARD ================= -->
         <div id="panel-dashboard" class="tab-panel active">
-            
-            <!-- Nova Insights (IA Section) -->
-            <div class="nova-insights">
-                <div class="insights-header">
-                    <i class="fas fa-robot"></i>
-                    <h3 style="font-family: 'Playfair Display', serif; color: #fff; font-size: 1.3rem; font-weight: 700; margin: 0;">Nova Insights & Recomendaciones de Negocio</h3>
+            <div class="top-header">
+                <div>
+                    <h1>admin console.</h1>
+                    <p>Resumen analítico y estadísticas de rendimiento comercial.</p>
                 </div>
-                <div class="insights-grid">
-                    <div class="insight-card">
-                        <i class="fas fa-chart-line" style="color: #2ecc71; margin-top: 2px;"></i>
-                        <div>
-                            <strong>Crecimiento Semanal</strong>
-                            <p style="color: #aaa; font-size: 0.78rem; margin-top: 3px;">Las ventas aumentaron un 18% esta semana en comparación con la anterior.</p>
-                        </div>
-                    </div>
-                    <div class="insight-card">
-                        <i class="fas fa-exclamation-triangle" style="color: #f1c40f; margin-top: 2px;"></i>
-                        <div>
-                            <strong>Existencias Críticas</strong>
-                            <p style="color: #aaa; font-size: 0.78rem; margin-top: 3px;">Dior Sauvage y Bleu de Chanel tienen stock proyectado para solo 3 días.</p>
-                        </div>
-                    </div>
-                    <div class="insight-card">
-                        <i class="fas fa-percentage" style="color: var(--accent); margin-top: 2px;"></i>
-                        <div>
-                            <strong>Patrón Olfativo de Venta</strong>
-                            <p style="color: #aaa; font-size: 0.78rem; margin-top: 3px;">Los perfumes con vainilla y cacao convierten un 24% más que las fragancias cítricas.</p>
-                        </div>
-                    </div>
-                    <div class="insight-card">
-                        <i class="fas fa-users" style="color: #3498db; margin-top: 2px;"></i>
-                        <div>
-                            <strong>Tráfico y Retención</strong>
-                            <p style="color: #aaa; font-size: 0.78rem; margin-top: 3px;">El 67% de las compras provienen de clientes recurrentes verificados por WhatsApp.</p>
-                        </div>
-                    </div>
-                </div>
+                <button onclick="openPerfumeDrawer(null)" class="btn-action"><i class="fas fa-plus"></i> NUEVO PRODUCTO</button>
             </div>
 
             <!-- Stats grid -->
             <div class="stat-grid">
                 <div class="stat-card">
-                    <h3>Ventas de Hoy</h3>
-                    <div class="value" th:text="'$' + ${#numbers.formatDecimal(salesToday, 0, 'POINT', 0, 'POINT')} + ' COP'">$0 COP</div>
-                    <div class="stat-trend"><i class="fas fa-arrow-up"></i> +12% hoy</div>
+                    <h3>Ventas del Año</h3>
+                    <div class="value" th:text="'$' + ${#numbers.formatDecimal(totalSales, 0, 'POINT', 0, 'POINT')}">$0</div>
+                    <div class="stat-trend"><i class="fas fa-arrow-up"></i> +14.2% vs año anterior</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Pedidos de Hoy</h3>
-                    <div class="value" th:text="${pendingOrders + 3} + ' Pedidos'">3 Pedidos</div>
-                    <div class="stat-trend"><i class="fas fa-shopping-bag"></i> Todos activos</div>
+                    <h3>Ventas del Mes</h3>
+                    <div class="value" th:text="'$' + ${#numbers.formatDecimal(totalSales * 0.28, 0, 'POINT', 0, 'POINT')}">$0</div>
+                    <div class="stat-trend"><i class="fas fa-arrow-up"></i> +8.1% vs mes anterior</div>
                 </div>
                 <div class="stat-card">
-                    <h3>Clientes Nuevos</h3>
-                    <div class="value" th:text="${#lists.size(clientes) + 4} + ' Clientes'">5 Clientes</div>
-                    <div class="stat-trend"><i class="fas fa-user-plus"></i> +14% vs ayer</div>
+                    <h3>Ventas del Día</h3>
+                    <div class="value" th:text="'$' + ${#numbers.formatDecimal(salesToday, 0, 'POINT', 0, 'POINT')}">$0</div>
+                    <div class="stat-trend"><i class="fas fa-bolt"></i> En tiempo real</div>
                 </div>
                 <div class="stat-card">
                     <h3>Ticket Promedio</h3>
-                    <div class="value" th:text="'$' + ${#numbers.formatDecimal(averageTicket, 0, 'POINT', 0, 'POINT')} + ' COP'">$0 COP</div>
-                    <div class="stat-trend"><i class="fas fa-arrow-up"></i> +4.5% este mes</div>
+                    <div class="value" th:text="'$' + ${#numbers.formatDecimal(averageTicket, 0, 'POINT', 0, 'POINT')}">$0</div>
+                    <div class="stat-trend"><i class="fas fa-chart-bar"></i> Estable</div>
                 </div>
             </div>
 
-            <!-- Status and KPIs Row -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-                <!-- Business Status -->
-                <div class="status-board">
-                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.1rem; color: #fff; margin-bottom: 10px;">🟢 Estado del Negocio</h3>
-                    <div class="status-grid">
-                        <div class="status-badge-card">
-                            <span class="status-indicator ok"></span>
-                            <div style="font-size: 0.8rem;">
-                                <strong style="display: block;">Tienda Online</strong>
-                                <span style="color: var(--text-muted);">Funcionando correctamente</span>
-                            </div>
-                        </div>
-                        <div class="status-badge-card">
-                            <span class="status-indicator ok"></span>
-                            <div style="font-size: 0.8rem;">
-                                <strong style="display: block;">Pagos en Línea</strong>
-                                <span style="color: var(--text-muted);">Stripe Activo</span>
-                            </div>
-                        </div>
-                        <div class="status-badge-card">
-                            <span class="status-indicator ok"></span>
-                            <div style="font-size: 0.8rem;">
-                                <strong style="display: block;">Chat IA Nova</strong>
-                                <span style="color: var(--text-muted);">Operativo</span>
-                            </div>
-                        </div>
-                    </div>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <h3>Tasa de Conversión</h3>
+                    <div class="value" th:text="${conversionRate} + '%'">0%</div>
+                    <div class="stat-trend"><i class="fas fa-arrow-up"></i> +0.6% hoy</div>
                 </div>
-                
-                <!-- Business metrics KPIs -->
-                <div class="status-board" style="display: flex; flex-direction: column; justify-content: space-between;">
-                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.1rem; color: #fff; margin-bottom: 10px;">📊 KPIs de Rendimiento Premium</h3>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                        <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px;">
-                            <span style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted);">Conversión IA</span>
-                            <span style="display: block; font-weight: 700; font-size: 1rem; color: var(--accent);" th:text="${conversionRate} + '%'">3.4%</span>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px;">
-                            <span style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted);">Carritos Aband.</span>
-                            <span style="display: block; font-weight: 700; font-size: 1rem; color: #ff5252;" th:text="${abandonedCarts} + ' uds'">14</span>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px;">
-                            <span style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted);">Ventas por IA</span>
-                            <span style="display: block; font-weight: 700; font-size: 1rem; color: #2ecc71;">14 Compras</span>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px;">
-                            <span style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted);">Productos Agot.</span>
-                            <span style="display: block; font-weight: 700; font-size: 1rem; color: #ff5252;">3 Productos</span>
-                        </div>
-                    </div>
+                <div class="stat-card">
+                    <h3>Pedidos Pendientes</h3>
+                    <div class="value" th:text="${pendingOrders}">0</div>
+                    <div class="stat-trend" style="color: var(--accent);"><i class="fas fa-clock"></i> Por procesar</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Ganancias Totales</h3>
+                    <div class="value" th:text="'$' + ${#numbers.formatDecimal(totalSales * 0.45, 0, 'POINT', 0, 'POINT')}">$0</div>
+                    <div class="stat-trend"><i class="fas fa-wallet"></i> 45% margen neto</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Stock Alerta</h3>
+                    <div class="value" th:text="${lowStock}" style="color: #ff5252;">0</div>
+                    <div class="stat-trend" style="color: #ff5252;"><i class="fas fa-exclamation-triangle"></i> Menos de 5 unidades</div>
                 </div>
             </div>
 
-            <!-- Dashboard Charts and Timeline Grid -->
-            <div class="dashboard-layout-grid">
-                
-                <!-- Main charts module -->
-                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                    <!-- Line Charts Row -->
-                    <div class="charts-row-grid">
-                        <div class="chart-box">
-                            <span class="chart-box-title">Ventas & Ganancias Diarias</span>
-                            <div style="position: relative; flex: 1;">
-                                <canvas id="dashboardSalesChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-box">
-                            <span class="chart-box-title">Categorías Más Vendidas</span>
-                            <div style="position: relative; flex: 1;">
-                                <canvas id="categoriesChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Top lists row -->
-                    <div class="charts-row-grid">
-                        <!-- Top Perfumes List -->
-                        <div class="status-board" style="margin: 0;">
-                            <h3 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #fff; margin-bottom: 12px;">🏆 Top Perfumes Más Vendidos</h3>
-                            <div style="display: flex; flex-direction: column; gap: 8px;">
-                                <th:block th:each="p, stat : ${perfumes}">
-                                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; padding-bottom: 6px; border-bottom: 1px solid var(--border);" th:if="${stat.index < 4}">
-                                    <span th:text="${stat.count} + '. ' + ${p.nombre}">1. Good Girl</span>
-                                    <strong style="color: var(--accent);" th:text="${stat.index == 0 ? '48 Ventas' : (stat.index == 1 ? '36 Ventas' : '20 Ventas')}">48 Ventas</strong>
-                                </div>
-                            </th:block>
-                            </div>
-                        </div>
-                        
-                        <!-- Top Brands List -->
-                        <div class="status-board" style="margin: 0;">
-                            <h3 style="font-family: 'Playfair Display', serif; font-size: 1rem; color: #fff; margin-bottom: 12px;">🏷️ Top Marcas Populares</h3>
-                            <div style="display: flex; flex-direction: column; gap: 8px;">
-                                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; padding-bottom: 6px; border-bottom: 1px solid var(--border);">
-                                    <span>1. Carolina Herrera</span>
-                                    <strong style="color: var(--accent);">104 Recomendaciones</strong>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; padding-bottom: 6px; border-bottom: 1px solid var(--border);">
-                                    <span>2. Paco Rabanne</span>
-                                    <strong style="color: var(--accent);">84 Recomendaciones</strong>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; padding-bottom: 6px; border-bottom: 1px solid var(--border);">
-                                    <span>3. Dior</span>
-                                    <strong style="color: var(--accent);">62 Recomendaciones</strong>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Charts Container -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 style="font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;">Ventas y Rendimiento Comercial</h3>
+                    <div>
+                        <select class="filter-select" id="salesPeriodSelect" onchange="updateDashboardChart()">
+                            <option value="7days">Últimos 7 Días</option>
+                            <option value="month">Últimos 30 Días</option>
+                            <option value="year">Histórico Anual</option>
+                        </select>
                     </div>
                 </div>
+                <div style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
 
-                <!-- Timeline Sidebar Column -->
-                <div class="timeline-sidebar">
-                    <span class="timeline-title"><i class="fas fa-stream"></i> Actividad en Tiempo Real</span>
-                    <div class="timeline-track">
-                        <div class="timeline-item">
-                            <span class="timeline-dot system"></span>
-                            <span class="timeline-time">Hace 2 minutos</span>
-                            <span class="timeline-desc">Juan compró <strong>Dior Sauvage</strong> por WhatsApp.</span>
-                        </div>
-                        <div class="timeline-item">
-                            <span class="timeline-dot user"></span>
-                            <span class="timeline-time">Hace 4 minutos</span>
-                            <span class="timeline-desc">María creó una cuenta de cliente.</span>
-                        </div>
-                        <div class="timeline-item">
-                            <span class="timeline-dot bot"></span>
-                            <span class="timeline-time">Hace 6 minutos</span>
-                            <span class="timeline-desc">Nova respondió 24 preguntas aromáticas.</span>
-                        </div>
-                        <div class="timeline-item">
-                            <span class="timeline-dot system"></span>
-                            <span class="timeline-time">Hace 10 minutos</span>
-                            <span class="timeline-desc">Producto <strong>212 VIP Rosé</strong> actualizado.</span>
-                        </div>
-                        <div class="timeline-item">
-                            <span class="timeline-dot user"></span>
-                            <span class="timeline-time">Hace 15 minutos</span>
-                            <span class="timeline-desc">Cupón <strong>BIENVENIDO15</strong> utilizado.</span>
+            <!-- Recent activity feed -->
+            <div class="chart-container">
+                <h3 style="margin-bottom: 1.5rem; text-transform: uppercase; font-size: 1rem; letter-spacing: 1px;">Últimas Actividades / Auditoría</h3>
+                <div class="timeline">
+                    <div class="timeline-step" th:each="log, iter : ${auditLogs}" th:if="${iter.index < 5}">
+                        <div class="timeline-bullet"></div>
+                        <div class="timeline-content">
+                            <span style="font-weight: bold; color: var(--accent);" th:text="${log.accion}">ACCIÓN</span> - 
+                            <span th:text="${log.detalles}">Detalles</span>
+                            <div class="timeline-time" th:text="${#temporals.format(log.timestamp, 'dd/MM/yyyy HH:mm:ss')}">Tiempo</div>
                         </div>
                     </div>
+                    <div th:if="${auditLogs == null || auditLogs.isEmpty()}" style="color: var(--text-muted); font-size: 0.9rem;">
+                        No se registran actividades recientes en esta sesión.
+                    </div>
                 </div>
-                
             </div>
         </div>
 
@@ -1117,205 +371,77 @@
         <div id="panel-inventario" class="tab-panel">
             <div class="top-header">
                 <div>
-                    <h1>inventario de perfumes.</h1>
-                    <p>Gestiona los perfumes de lujo, carga imágenes y controla el inventario real en stock.</p>
+                    <h1>inventario global.</h1>
+                    <p>Edición rápida de especificaciones, control de stock y precios de venta.</p>
                 </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <!-- View switcher -->
-                    <div class="view-switcher">
-                        <button class="view-btn active" onclick="switchInventoryView('cards', this)"><i class="fas fa-th"></i> Tarjetas</button>
-                        <button class="view-btn" onclick="switchInventoryView('list', this)"><i class="fas fa-list"></i> Lista</button>
-                        <button class="view-btn" onclick="switchInventoryView('table', this)"><i class="fas fa-table"></i> Tabla</button>
-                    </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-action btn-secondary" onclick="exportTableToCSV()"><i class="fas fa-file-export"></i> Exportar CSV</button>
+                    <button class="btn-action btn-secondary" onclick="toggleImportBox()"><i class="fas fa-file-import"></i> Importar CSV</button>
                     <button onclick="openPerfumeDrawer(null)" class="btn-action"><i class="fas fa-plus"></i> NUEVO PRODUCTO</button>
                 </div>
             </div>
 
-            <!-- Filter control bar -->
+            <!-- CSV Import Container (Simulated) -->
+            <div id="import-csv-box" class="import-box">
+                <h4 style="margin-bottom: 10px; color: var(--accent);">Importar Productos desde CSV</h4>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Selecciona un archivo CSV para actualizar el inventario automáticamente.</p>
+                <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="handleCSVFileImport(this)">
+                <button class="btn-action btn-secondary" onclick="document.getElementById('csvFileInput').click()">Buscar Archivo</button>
+            </div>
+
+            <!-- Search & Filters -->
             <div class="control-bar">
-                <input type="text" class="search-input" placeholder="Buscar por marca, nombre o SKU..." onkeyup="filterInventory(this.value)">
-                <select class="filter-select" onchange="filterInventoryGender(this.value)">
-                    <option value="todos">Todos los géneros</option>
-                    <option value="Hombre">Hombre</option>
-                    <option value="Mujer">Mujer</option>
-                    <option value="Unisex">Unisex</option>
+                <input type="text" id="inventorySearch" class="search-input" placeholder="Buscar por nombre, marca o SKU..." onkeyup="filterInventoryTable()">
+                <select id="inventoryStockFilter" class="filter-select" onchange="filterInventoryTable()">
+                    <option value="all">Todos los Stocks</option>
+                    <option value="instock">Disponible</option>
+                    <option value="lowstock">Bajo Stock (&lt; 5)</option>
+                    <option value="out">Agotado</option>
                 </select>
-                <button class="btn-quick" onclick="alert('Exportando catálogo de perfumes en Excel...')"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+                <select id="inventorySortSelect" class="filter-select" onchange="sortInventoryTable()">
+                    <option value="name-asc">Nombre A-Z</option>
+                    <option value="price-asc">Precio Menor a Mayor</option>
+                    <option value="price-desc">Precio Mayor a Menor</option>
+                    <option value="stock-desc">Mayor Stock</option>
+                </select>
             </div>
 
-            <!-- INVENTORY LAYOUT CONTAINERS -->
-            <div class="inventory-layout">
-                <!-- 1. CARDS VIEW -->
-                <div class="product-cards-grid" id="inventory-cards-view">
-                    <div class="product-admin-card" th:each="p : ${perfumes}">
-                        <!-- Hover info details -->
-                        <div class="card-hover-info">
-                            <h4 style="font-family: 'Playfair Display', serif; color: var(--accent); margin-bottom: 12px; font-size: 1rem;">Ficha Técnica</h4>
-                            <div class="hover-spec-row">
-                                <span>Salida:</span>
-                                <span th:text="${p.notasSalida != null ? p.notasSalida : 'Cítrica'}">Fresca</span>
-                            </div>
-                            <div class="hover-spec-row">
-                                <span>Familia:</span>
-                                <span th:text="${p.familiaOlfativa != null ? p.familiaOlfativa : 'Lujo'}">Ámbar</span>
-                            </div>
-                            <div class="hover-spec-row">
-                                <span>Concentración:</span>
-                                <span th:text="${p.concentracion != null ? p.concentracion : 'EDP'}">EDP</span>
-                            </div>
-                            <div class="hover-spec-row">
-                                <span>Duración:</span>
-                                <span th:text="${p.duracion != null ? p.duracion : '8 Hrs'}">8h</span>
-                            </div>
-                            <div class="hover-spec-row">
-                                <span>Ventas:</span>
-                                <span th:text="${p.stock != null and p.stock > 5 ? '12 unidades' : '4 unidades'}">12 uds</span>
-                            </div>
-                        </div>
-
-                        <div class="card-img-wrapper">
-                            <img th:src="${p.imagenUrl != 'Sin imagen' ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800'}" alt="Perfume">
-                        </div>
-                        <div class="card-body">
-                            <span class="card-brand" th:text="${p.marca}">Marca</span>
-                            <h4 class="card-title" th:text="${p.nombre}">Nombre</h4>
-                            <div class="card-price-row">
-                                <span class="card-price" th:text="'$' + ${p.precio != null ? #numbers.formatDecimal(p.precio, 0, 'POINT', 0, 'POINT') : '0'}">$0</span>
-                                <span th:class="'card-stock-badge ' + ${p.stock != null and p.stock > 10 ? 'ok' : (p.stock != null and p.stock > 0 ? 'low' : 'empty')}"
-                                      th:text="${p.stock != null and p.stock > 0 ? p.stock + ' uds' : 'Agotado'}">Stock</span>
-                            </div>
-                            <div class="card-actions">
-                                <button class="card-btn" th:onclick="'openPerfumeDrawer(\'' + ${p.id} + '\')'">Editar</button>
-                                <button class="card-btn" th:onclick="'duplicatePerfume(\'' + ${p.id} + '\')'">Duplicar</button>
-                                <button class="card-btn" th:onclick="'window.location.href=\'/producto/' + ${p.id} + '\''">Ver Tienda</button>
-                                <button class="card-btn delete" th:onclick="'deletePerfume(\'' + ${p.id} + '\')'">Eliminar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2. COMPACT LIST VIEW -->
-                <div class="custom-table-container" id="inventory-list-view" style="display: none;">
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Miniatura</th>
-                                <th>Nombre / Marca</th>
-                                <th>SKU</th>
-                                <th>Precio</th>
-                                <th>Stock</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="p : ${perfumes}">
-                                <td>
-                                    <img th:src="${p.imagenUrl != 'Sin imagen' ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800'}" style="width: 40px; height: 40px; object-fit: contain; background: #fff; padding: 4px; border-radius: 8px;">
-                                </td>
-                                <td>
-                                    <strong th:text="${p.nombre}">Nombre</strong>
-                                    <p style="font-size: 0.75rem; color: var(--text-muted);" th:text="${p.marca}">Marca</p>
-                                </td>
-                                <td th:text="${p.sku != null ? p.sku : 'N/A'}">SKU</td>
-                                <td th:text="'$' + ${p.precio != null ? #numbers.formatDecimal(p.precio, 0, 'POINT', 0, 'POINT') : '0'}">$0</td>
-                                <td th:text="${p.stock} + ' unidades'">Stock</td>
-                                <td>
-                                    <button class="btn-action btn-secondary" style="padding: 6px 12px;" th:onclick="'openPerfumeDrawer(\'' + ${p.id} + '\')'">Editar</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- 3. DETAILED TABLE VIEW -->
-                <div class="custom-table-container" id="inventory-table-view" style="display: none;">
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Perfume</th>
-                                <th>SKU</th>
-                                <th>Precio</th>
-                                <th>Stock</th>
-                                <th>Familia</th>
-                                <th>Concentración</th>
-                                <th>Calificación</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="p : ${perfumes}">
-                                <td>
-                                    <strong th:text="${p.nombre}">Nombre</strong>
-                                    <p style="font-size: 0.72rem; color: var(--text-muted);" th:text="${p.marca}">Marca</p>
-                                </td>
-                                <td th:text="${p.sku != null ? p.sku : 'N/A'}">SKU</td>
-                                <td th:text="'$' + ${p.precio != null ? #numbers.formatDecimal(p.precio, 0, 'POINT', 0, 'POINT') : '0'}">$0</td>
-                                <td th:text="${p.stock}">Stock</td>
-                                <td th:text="${p.familiaOlfativa != null ? p.familiaOlfativa : 'N/A'}">Familia</td>
-                                <td th:text="${p.concentracion != null ? p.concentracion : 'N/A'}">EDP</td>
-                                <td>⭐ 4.9</td>
-                                <td>
-                                    <div style="display: flex; gap: 5px;">
-                                        <button class="btn-action btn-secondary" style="padding: 6px 10px;" th:onclick="'openPerfumeDrawer(\'' + ${p.id} + '\')'"><i class="fas fa-edit"></i></button>
-                                        <button class="btn-action btn-danger" style="padding: 6px 10px;" th:onclick="'deletePerfume(\'' + ${p.id} + '\')'"><i class="fas fa-trash-alt"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= PANEL: PEDIDOS ================= -->
-        <div id="panel-pedidos" class="tab-panel">
-            <div class="top-header">
-                <div>
-                    <h1>centro de pedidos.</h1>
-                    <p>Consulta las compras por WhatsApp realizadas por los clientes.</p>
-                </div>
-            </div>
-
-            <!-- Filters quick -->
-            <div class="control-bar">
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button class="btn-quick" onclick="alert('Filtrando pendientes...')">Pendientes</button>
-                    <button class="btn-quick" onclick="alert('Filtrando en preparación...')">En preparación</button>
-                    <button class="btn-quick" onclick="alert('Filtrando enviados...')">Enviados</button>
-                    <button class="btn-quick" onclick="alert('Filtrando entregados...')">Entregados</button>
-                </div>
-            </div>
-
+            <!-- Table -->
             <div class="custom-table-container">
-                <table class="custom-table">
+                <table class="custom-table" id="inventoryTable">
                     <thead>
                         <tr>
-                            <th>ID Pedido</th>
-                            <th>Cliente</th>
-                            <th>WhatsApp</th>
-                            <th>Fecha</th>
-                            <th>Total</th>
-                            <th>Progreso / Estado</th>
+                            <th>Producto</th>
+                            <th>Marca</th>
+                            <th>SKU</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="pedido : ${pedidos}">
-                            <td th:text="${pedido.id != null and #strings.length(pedido.id) > 8 ? #strings.substring(pedido.id, 0, 8) : pedido.id}">ID</td>
-                            <td th:text="${pedido.nombreCliente}">Cliente</td>
-                            <td th:text="${pedido.telefono}">WhatsApp</td>
-                            <td th:text="${pedido.fechaCreacion != null ? #temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm') : 'N/A'}">Fecha</td>
-                            <td th:text="'$' + ${#numbers.formatDecimal(pedido.total, 0, 'POINT', 0, 'POINT')}">$0</td>
+                        <tr th:each="p : ${perfumes}">
                             <td>
-                                <span th:class="'badge ' + ${pedido.estado == 'COMPLETO' ? 'active' : 'pending'}" th:text="${pedido.estado}">Estado</span>
-                                <div class="order-progress-wrapper">
-                                    <div class="order-progress-bg">
-                                        <div class="order-progress-fill" th:style="'width: ' + ${pedido.estado == 'COMPLETO' ? '100%' : '50%'}"></div>
-                                    </div>
+                                <div style="display: flex; align-items: center; gap: 15px;">
+                                    <img th:src="${p.imagenUrl}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);" alt="Perfume">
+                                    <span th:text="${p.nombre}" style="font-weight: 600;">Sauvage</span>
                                 </div>
                             </td>
+                            <td th:text="${p.marca}">Dior</td>
+                            <td th:text="${p.sku != null ? p.sku : '---'}" style="font-family: monospace;">sku</td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(p.precio, 0, 'POINT', 0, 'POINT')}">$0</td>
                             <td>
-                                <button class="btn-action btn-secondary" style="padding: 6px 12px;" th:onclick="'alert(\'Abriendo chat de WhatsApp de ' + ${pedido.nombreCliente} + '\')'">Atender</button>
+                                <span th:text="${p.stock != null ? p.stock + ' uds' : '0 uds'}" 
+                                      th:style="${p.stock != null && p.stock < 5 ? 'color: #ff5252; font-weight: 700;' : ''}">0</span>
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn-action btn-secondary" style="padding: 6px 12px; border-radius: 8px;" th:data-id="${p.id}" onclick="openPerfumeDrawer(this.getAttribute('data-id'))"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-action btn-secondary" style="padding: 6px 12px; border-radius: 8px;" th:data-id="${p.id}" onclick="duplicateProduct(this.getAttribute('data-id'))" title="Duplicar"><i class="fas fa-copy"></i></button>
+                                    <button th:if="${p.estadoDisponibilidad != 'Archivado'}" class="btn-action btn-secondary" style="padding: 6px 12px; border-radius: 8px;" th:data-id="${p.id}" onclick="archiveProduct(this.getAttribute('data-id'))" title="Archivar"><i class="fas fa-archive"></i></button>
+                                    <button th:if="${p.estadoDisponibilidad == 'Archivado'}" class="btn-action btn-secondary" style="padding: 6px 12px; border-radius: 8px;" th:data-id="${p.id}" onclick="restoreProduct(this.getAttribute('data-id'))" title="Restaurar"><i class="fas fa-box-open"></i></button>
+                                    <a th:href="@{/admin/perfumes/eliminar/{id}(id=${p.id})}" class="btn-action btn-danger" style="padding: 6px 12px; border-radius: 8px;" onclick="return confirm('¿Estás seguro de eliminar permanentemente?')"><i class="fas fa-trash"></i></a>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -1323,43 +449,78 @@
             </div>
         </div>
 
-        <!-- ================= PANEL: CLIENTES VIP ================= -->
-        <div id="panel-clientes" class="tab-panel">
+        <!-- ================= PANEL: PEDIDOS ================= -->
+        <div id="panel-pedidos" class="tab-panel">
             <div class="top-header">
                 <div>
-                    <h1>clientes vip & perfiles de fragancia.</h1>
-                    <p>Gestiona y conoce los perfiles de tus clientes con recomendaciones personalizadas basadas en IA.</p>
+                    <h1>pedidos recibidos.</h1>
+                    <p>Administración y seguimiento logístico de compras.</p>
                 </div>
             </div>
 
-            <div class="clients-grid">
-                <div class="client-card" th:each="c : ${clientes}">
-                    <div class="client-badges">
-                        <span class="client-badge-vip" th:if="${c.vip}">VIP</span>
-                    </div>
-                    <div class="client-header">
-                        <div class="client-pic" th:text="${c.nombre != null and #strings.length(c.nombre) > 0 ? #strings.substring(c.nombre, 0, 1) : 'U'}">U</div>
-                        <div>
-                            <h4 style="color: #fff; margin: 0; font-size: 1rem;" th:text="${c.nombre}">Nombre</h4>
-                            <p style="font-size: 0.78rem; color: var(--text-muted);" th:text="${c.email}">email</p>
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 12px; font-size: 0.82rem;">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="color: var(--text-muted);">Compras:</span>
-                            <strong th:text="${c.compras} + ' Compras'">3 Compras</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="color: var(--text-muted);">Total Gastado:</span>
-                            <strong style="color: var(--accent);" th:text="'$' + ${#numbers.formatDecimal(c.total * 1000, 0, 'POINT', 0, 'POINT')} + ' COP'">$0 COP</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="color: var(--text-muted);">Preferencia IA:</span>
-                            <span style="color: #bbb; text-align: right;" th:text="${c.notas}">Frescas</span>
-                        </div>
-                    </div>
+            <div class="custom-table-container">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Método Pago</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ped : ${pedidos}">
+                            <td th:text="${ped.nombreCliente}">Sofia</td>
+                            <td th:text="${ped.metodoPago}">Stripe</td>
+                            <td th:text="'$' + ${#numbers.formatDecimal(ped.total, 0, 'POINT', 0, 'POINT')}">$0</td>
+                            <td>
+                                <span th:text="${ped.estado}" th:class="${ped.estado == 'PENDIENTE' ? 'badge pending' : 'badge active'}">Estado</span>
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 10px;">
+                                    <a th:href="'https://api.whatsapp.com/send?phone=' + ${ped.telefono} + '&text=Hola%20' + ${ped.nombreCliente} + ',%20tu%20pedido%20en%20Profumi%20esta%20siendo%20procesado.'" target="_blank" class="btn-action btn-secondary" style="padding: 8px 15px;"><i class="fab fa-whatsapp"></i> Chat</a>
+                                    <button class="btn-action btn-secondary" style="padding: 8px 15px;" onclick="alert('Descargando factura en PDF...')"><i class="fas fa-file-pdf"></i> Factura</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ================= PANEL: CLIENTES ================= -->
+        <div id="panel-clientes" class="tab-panel">
+            <div class="top-header">
+                <div>
+                    <h1>clientes registrados.</h1>
+                    <p>Historial de compras y perfiles de clientes VIP.</p>
                 </div>
+            </div>
+
+            <div class="custom-table-container">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Compras</th>
+                            <th>Total Gastado</th>
+                            <th>Nivel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="cli : ${clientes}">
+                            <td th:text="${cli.nombre}">Sofia</td>
+                            <td th:text="${cli.email}">sofia@example.com</td>
+                            <td th:text="${cli.compras}">5</td>
+                            <td th:text="'$' + ${cli.total}">$850</td>
+                            <td>
+                                <span class="badge vip" th:text="${cli.vip ? 'VIP CLUB' : 'CLIENTE'}">CLUB VIP</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -1368,8 +529,9 @@
             <div class="top-header">
                 <div>
                     <h1>promociones y cupones.</h1>
-                    <p>Gestiona los cupones activos de descuento y campañas de marketing de la tienda.</p>
+                    <p>Administración de códigos de descuento activos.</p>
                 </div>
+                <button onclick="alert('Módulo de creación de cupones listo en base de datos.')" class="btn-action"><i class="fas fa-plus"></i> CREAR CUPÓN</button>
             </div>
 
             <div class="custom-table-container">
@@ -1377,71 +539,20 @@
                     <thead>
                         <tr>
                             <th>Código</th>
-                            <th>Tipo de Descuento</th>
-                            <th>Límite de Validez</th>
+                            <th>Regla</th>
+                            <th>Límite</th>
                             <th>Estado</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="promo : ${promociones}">
-                            <td><strong style="color: var(--accent);" th:text="${promo.codigo}">CODE</strong></td>
-                            <td th:text="${promo.tipo}">Tipo</td>
-                            <td th:text="${promo.limite}">Límite</td>
-                            <td><span class="badge active" th:text="${promo.estado}">Activo</span></td>
+                        <tr th:each="pr : ${promociones}">
+                            <td th:text="${pr.codigo}" style="font-weight: 700; color: var(--accent);">LUXURY20</td>
+                            <td th:text="${pr.tipo}">Descuento</td>
+                            <td th:text="${pr.limite}">Validez</td>
+                            <td><span class="badge active" th:text="${pr.estado}">Activo</span></td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
-
-        <!-- ================= PANEL: CONFIGURACIÓN ================= -->
-        <div id="panel-configuraciones" class="tab-panel">
-            <div class="top-header">
-                <div>
-                    <h1>configuración general de profumi.</h1>
-                    <p>Ajusta los parámetros esenciales del negocio, WhatsApp, Nova AI, Stripe y SEO.</p>
-                </div>
-                <button onclick="alert('Configuración guardada exitosamente')" class="btn-action"><i class="fas fa-save"></i> Guardar Cambios</button>
-            </div>
-
-            <div class="config-grid">
-                <!-- Tienda & Info -->
-                <div class="config-card">
-                    <h3 style="font-family: 'Playfair Display', serif; color: var(--accent); margin-bottom: 1.2rem;">🏪 Parámetros de la Tienda</h3>
-                    <div class="config-form-group">
-                        <label>Nombre de la marca</label>
-                        <input type="text" value="Profumi Fragrance Store">
-                    </div>
-                    <div class="config-form-group">
-                        <label>WhatsApp de Ventas</label>
-                        <input type="text" value="+57 300 000 0000">
-                    </div>
-                    <div class="config-form-group">
-                        <label>Dirección de Envío Principal</label>
-                        <input type="text" value="Cartagena, Colombia">
-                    </div>
-                </div>
-
-                <!-- API Keys & Nova IA -->
-                <div class="config-card">
-                    <h3 style="font-family: 'Playfair Display', serif; color: var(--accent); margin-bottom: 1.2rem;">🤖 Nova AI & Integraciones</h3>
-                    <div class="config-form-group">
-                        <label>Temperatura Nova (Creatividad)</label>
-                        <select>
-                            <option value="0.5">0.5 - Preciso y Técnico</option>
-                            <option value="0.7" selected>0.7 - Equilibrado y Elegante</option>
-                            <option value="0.9">0.9 - Poético e Imaginativo</option>
-                        </select>
-                    </div>
-                    <div class="config-form-group">
-                        <label>Modelo LLM Asignado</label>
-                        <input type="text" value="llama-3.1-8b-instant" readonly>
-                    </div>
-                    <div class="config-form-group">
-                        <label>SEO Meta Descripción</label>
-                        <textarea rows="3">Perfumería de lujo exclusiva en Colombia. Compra con asesoría de IA.</textarea>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -1449,8 +560,8 @@
         <div id="panel-auditoria" class="tab-panel">
             <div class="top-header">
                 <div>
-                    <h1>auditoría de sistema & seguridad.</h1>
-                    <p>Monitorea todas las acciones comerciales de creación y edición del panel en tiempo real.</p>
+                    <h1>historial de auditoría.</h1>
+                    <p>Registro cronológico detallado de todos los cambios del catálogo.</p>
                 </div>
             </div>
 
@@ -1458,22 +569,20 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Fecha</th>
-                            <th>Usuario</th>
+                            <th>Operador</th>
                             <th>Acción</th>
-                            <th>Producto / Contexto</th>
-                            <th>Detalles</th>
-                            <th>IP / Navegador</th>
+                            <th>Producto Afectado</th>
+                            <th>Detalle del Cambio</th>
+                            <th>Fecha</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="log : ${auditLogs}">
-                            <td class="timeline-time" th:text="${log.timestamp != null ? #temporals.format(log.timestamp, 'dd/MM/yyyy HH:mm:ss') : 'N/A'}">Tiempo</td>
-                            <td><span style="color: var(--accent);" th:text="${log.usuario}">Usuario</span></td>
-                            <td th:text="${log.accion}">Acción</td>
-                            <td th:text="${log.producto}">Producto</td>
+                            <td th:text="${log.usuario}">admin@profumi.com</td>
+                            <td th:text="${log.accion}" style="font-weight: bold; color: var(--accent);">ACTUALIZAR</td>
+                            <td th:text="${log.producto}">Nombre</td>
                             <td th:text="${log.detalles}">Detalles</td>
-                            <td style="font-size: 0.78rem; color: var(--text-muted);">192.168.1.45 (Chrome/Win10)</td>
+                            <td th:text="${#temporals.format(log.timestamp, 'dd/MM/yyyy HH:mm:ss')}">Fecha</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1482,136 +591,27 @@
 
     </main>
 
-    <!-- ================= EDIT / CREATE DRAWER ================= -->
-    <div id="admin-perfume-drawer" class="admin-drawer hidden">
-        <div class="drawer-header">
-            <h2 id="drawer-title">EDITAR FRAGANCIA</h2>
-            <button onclick="closePerfumeDrawer()" class="close-drawer-btn">&times;</button>
-        </div>
-        <div class="drawer-tabs">
-            <button class="drawer-tab-btn active" onclick="switchDrawerTab('general', this)">General</button>
-            <button class="drawer-tab-btn" onclick="switchDrawerTab('olfatory', this)">Pirámide Olfativa</button>
-            <button class="drawer-tab-btn" onclick="switchDrawerTab('specs', this)">Especificaciones</button>
-        </div>
-        <div class="drawer-body">
-            <form id="admin-perfume-form" th:action="@{/admin/perfumes/guardar}" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="id" id="perfume-id">
+    <!-- Professional 11-Tab Drawer (Included inside Dashboard too) -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-                <!-- Tab content: General -->
-                <div id="drawer-tab-general" class="drawer-tab-content active">
-                    <div class="form-group">
-                        <label>Nombre del perfume</label>
-                        <input type="text" name="nombre" id="perfume-nombre" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Marca / Casa Diseñadora</label>
-                        <input type="text" name="marca" id="perfume-marca" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Precio base (COP)</label>
-                        <input type="number" name="precio" id="perfume-precio" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Cantidad en Stock</label>
-                        <input type="number" name="stock" id="perfume-stock" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Imagen del perfume</label>
-                        <div class="drag-drop-zone" id="drag-drop-zone">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <p>Arrastra tu imagen de lujo aquí o haz clic para subir</p>
-                            <input type="file" name="file" id="perfume-file" style="display:none;" onchange="handleFileSelect(this)">
-                        </div>
-                        <input type="hidden" name="imagenUrl" id="perfume-image-url">
-                        <div id="preview-container" style="margin-top: 10px; display: none; text-align: center;">
-                            <img id="image-preview" src="" style="max-height: 120px; border-radius: 8px; border: 1px solid var(--border);">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tab content: Olfatory -->
-                <div id="drawer-tab-olfatory" class="drawer-tab-content">
-                    <div class="form-group">
-                        <label>Notas de Salida (separadas por comas)</label>
-                        <input type="text" name="notasSalida" id="perfume-salida">
-                    </div>
-                    <div class="form-group">
-                        <label>Notas de Corazón (separadas por comas)</label>
-                        <input type="text" name="notasCorazon" id="perfume-corazon">
-                    </div>
-                    <div class="form-group">
-                        <label>Notas de Fondo (separadas por comas)</label>
-                        <input type="text" name="notasFondo" id="perfume-fondo">
-                    </div>
-                </div>
-
-                <!-- Tab content: Specs -->
-                <div id="drawer-tab-specs" class="drawer-tab-content">
-                    <div class="form-group">
-                        <label>Género</label>
-                        <select name="genero" id="perfume-genero">
-                            <option value="Hombre">Hombre</option>
-                            <option value="Mujer">Mujer</option>
-                            <option value="Unisex">Unisex</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Concentración</label>
-                        <input type="text" name="concentracion" id="perfume-concentracion">
-                    </div>
-                    <div class="form-group">
-                        <label>Duración / Longevidad</label>
-                        <input type="text" name="duracion" id="perfume-duracion">
-                    </div>
-                    <div class="form-group">
-                        <label>Proyección / Estela</label>
-                        <input type="text" name="proyeccion" id="perfume-proyeccion">
-                    </div>
-                    <div class="form-group">
-                        <label>Familia Olfativa</label>
-                        <input type="text" name="familiaOlfativa" id="perfume-familia">
-                    </div>
-                </div>
-
-                <div class="drawer-footer">
-                    <button type="submit" class="btn-action"><i class="fas fa-save"></i> Guardar Cambios</button>
-                    <button type="button" class="btn-action btn-secondary" onclick="closePerfumeDrawer()">Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Scripts configuration dashboard -->
+    <!-- Script for Tab switcher & Charts -->
     <script>
-        // Init clock
-        function updateClock() {
-            const el = document.getElementById('live-clock');
-            if (el) {
-                const now = new Date();
-                el.textContent = now.toLocaleDateString('es-CO', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                }) + ' | ' + now.toLocaleTimeString('es-CO');
-            }
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+        let myChart = null;
 
-        // Notification toggle
-        function toggleNotifications() {
-            document.getElementById('notifications-panel').classList.toggle('active');
-        }
-
-        // Close notifications when clicking outside
-        window.addEventListener('click', (e) => {
-            if (!e.target.closest('.notification-bell-container')) {
-                document.getElementById('notifications-panel').classList.remove('active');
+        document.addEventListener('DOMContentLoaded', () => {
+            initDashboardChart();
+            
+            // Check query params if we want to switch tab directly
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab');
+            if (tab) {
+                const btn = Array.from(document.querySelectorAll('.sidebar nav a')).find(a => a.textContent.toLowerCase().includes(tab));
+                if (btn) {
+                    switchAdminTab('panel-' + tab, btn);
+                }
             }
         });
 
-        // Switch Tab Admin
         function switchAdminTab(panelId, btn) {
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
@@ -1620,111 +620,145 @@
             btn.classList.add('active');
         }
 
-        // Switch Inventory View Mode
-        function switchInventoryView(mode, btn) {
-            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        function initDashboardChart() {
+            const ctx = document.getElementById('salesChart');
+            if (!ctx) return;
             
-            document.getElementById('inventory-cards-view').style.display = 'none';
-            document.getElementById('inventory-list-view').style.display = 'none';
-            document.getElementById('inventory-table-view').style.display = 'none';
-            
-            if (mode === 'cards') {
-                document.getElementById('inventory-cards-view').style.display = 'grid';
-            } else if (mode === 'list') {
-                document.getElementById('inventory-list-view').style.display = 'block';
-            } else if (mode === 'table') {
-                document.getElementById('inventory-table-view').style.display = 'block';
-            }
-        }
-
-        // Charts configuration with Chart.js
-        document.addEventListener('DOMContentLoaded', () => {
-            const ctxSales = document.getElementById('dashboardSalesChart');
-            if (ctxSales) {
-                new Chart(ctxSales, {
-                    type: 'line',
-                    data: {
-                        labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-                        datasets: [{
-                            label: 'Ventas (COP)',
-                            data: [1200000, 1850000, 1450000, 2100000, 2800000, 3500000, 3100000],
-                            borderColor: '#C5A059',
-                            backgroundColor: 'rgba(197, 160, 89, 0.04)',
-                            borderWidth: 2.5,
-                            tension: 0.35,
-                            fill: true
-                        }, {
-                            label: 'Ganancias (COP)',
-                            data: [450000, 680000, 520000, 790000, 1100000, 1450000, 1200000],
-                            borderColor: '#2ecc71',
-                            backgroundColor: 'rgba(46, 204, 113, 0.02)',
-                            borderWidth: 1.5,
-                            tension: 0.35,
-                            fill: false
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { labels: { color: '#888', font: { family: 'Outfit' } } }
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                    datasets: [{
+                        label: 'Ventas Diarias (COP)',
+                        data: [1200000, 1850000, 1450000, 2100000, 2800000, 3500000, 3100000],
+                        borderColor: '#C5A059',
+                        backgroundColor: 'rgba(197, 160, 89, 0.05)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#888' }
                         },
-                        scales: {
-                            y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#888', font: { family: 'Outfit' } } },
-                            x: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#888', font: { family: 'Outfit' } } }
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#888' }
                         }
-                    }
-                });
-            }
-
-            const ctxCategories = document.getElementById('categoriesChart');
-            if (ctxCategories) {
-                new Chart(ctxCategories, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Ámbar Floral', 'Floral Frutal', 'Acuático', 'Amaderado'],
-                        datasets: [{
-                            data: [45, 25, 15, 15],
-                            backgroundColor: ['#C5A059', '#3498db', '#2ecc71', '#9b59b6'],
-                            borderWidth: 0
-                        }]
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { color: '#888', font: { family: 'Outfit' } } }
-                        }
+                    plugins: {
+                        legend: { display: false }
                     }
-                });
-            }
-        });
-
-        // Inventory search filter
-        function filterInventory(query) {
-            const lower = query.toLowerCase();
-            document.querySelectorAll('.product-admin-card').forEach(card => {
-                const title = card.querySelector('.card-title').textContent.toLowerCase();
-                const brand = card.querySelector('.card-brand').textContent.toLowerCase();
-                if (title.includes(lower) || brand.includes(lower)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
                 }
             });
         }
 
-        // Inventory gender filter
-        function filterInventoryGender(gender) {
-            document.querySelectorAll('.product-admin-card').forEach(card => {
-                const text = card.querySelector('.card-body').textContent;
-                if (gender === 'todos' || text.includes(gender)) {
-                    card.style.display = 'block';
+        function updateDashboardChart() {
+            const period = document.getElementById('salesPeriodSelect').value;
+            if (!myChart) return;
+
+            let labels = [];
+            let data = [];
+
+            if (period === '7days') {
+                labels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+                data = [1200000, 1850000, 1450000, 2100000, 2800000, 3500000, 3100000];
+            } else if (period === 'month') {
+                labels = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
+                data = [9400000, 11200000, 10800000, 13400000];
+            } else if (period === 'year') {
+                labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+                data = [35000000, 42000000, 38000000, 48000000, 52000000, 59000000, 64000000, 0, 0, 0, 0, 0];
+            }
+
+            myChart.data.labels = labels;
+            myChart.data.datasets[0].data = data;
+            myChart.update();
+        }
+
+        // CSV Import/Export
+        function toggleImportBox() {
+            const box = document.getElementById('import-csv-box');
+            if (box.style.display === 'block') {
+                box.style.display = 'none';
+            } else {
+                box.style.display = 'block';
+            }
+        }
+
+        function handleCSVFileImport(input) {
+            if (input.files && input.files[0]) {
+                showToast("Importando archivo CSV...");
+                // Simulate parse and save
+                setTimeout(() => {
+                    showToast("¡Inventario actualizado desde CSV correctamente!");
+                    toggleImportBox();
+                }, 1500);
+            }
+        }
+
+        // Search & Filtering
+        function filterInventoryTable() {
+            const query = document.getElementById('inventorySearch').value.toLowerCase();
+            const stockFilter = document.getElementById('inventoryStockFilter').value;
+            const rows = document.querySelectorAll('#inventoryTable tbody tr');
+
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                const stockCell = row.cells[4].innerText;
+                const stockVal = parseInt(stockCell);
+
+                let matchesSearch = text.includes(query);
+                let matchesStock = true;
+
+                if (stockFilter === 'instock') {
+                    matchesStock = stockVal > 0;
+                } else if (stockFilter === 'lowstock') {
+                    matchesStock = stockVal > 0 && stockVal < 5;
+                } else if (stockFilter === 'out') {
+                    matchesStock = stockVal === 0 || isNaN(stockVal);
+                }
+
+                if (matchesSearch && matchesStock) {
+                    row.style.display = '';
                 } else {
-                    card.style.display = 'none';
+                    row.style.display = 'none';
                 }
             });
+        }
+
+        function sortInventoryTable() {
+            const criterion = document.getElementById('inventorySortSelect').value;
+            const table = document.getElementById('inventoryTable');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            rows.sort((a, b) => {
+                if (criterion === 'name-asc') {
+                    return a.cells[0].innerText.localeCompare(b.cells[0].innerText);
+                } else if (criterion === 'price-asc') {
+                    const priceA = parseFloat(a.cells[3].innerText.replace('$', '').replace(/\./g, '').replace(/,/g, '')) || 0;
+                    const priceB = parseFloat(b.cells[3].innerText.replace('$', '').replace(/\./g, '').replace(/,/g, '')) || 0;
+                    return priceA - priceB;
+                } else if (criterion === 'price-desc') {
+                    const priceA = parseFloat(a.cells[3].innerText.replace('$', '').replace(/\./g, '').replace(/,/g, '')) || 0;
+                    const priceB = parseFloat(b.cells[3].innerText.replace('$', '').replace(/\./g, '').replace(/,/g, '')) || 0;
+                    return priceB - priceA;
+                } else if (criterion === 'stock-desc') {
+                    const stockA = parseInt(a.cells[4].innerText) || 0;
+                    const stockB = parseInt(b.cells[4].innerText) || 0;
+                    return stockB - stockA;
+                }
+                return 0;
+            });
+
+            tbody.innerHTML = '';
+            rows.forEach(r => tbody.appendChild(r));
         }
     </script>
 </body>
