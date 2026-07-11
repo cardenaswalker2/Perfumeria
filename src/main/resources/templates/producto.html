@@ -188,6 +188,41 @@
                     </p>
                 </div>
 
+                <!-- Add to Cart Form -->
+                <form th:action="@{/carrito/agregar/{id}(id=${perfume.id})}" method="post" class="product-cart-form"
+                    style="margin-bottom: 3rem;">
+                    <div class="cart-buttons-container" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <!-- Quantity Selector -->
+                        <div
+                            style="display: flex; align-items: center; background: #f8f8f8; border-radius: 16px; border: 2px solid #eee; overflow: hidden;">
+                            <button type="button" onclick="updateQty(-1)"
+                                style="width: 50px; height: 56px; background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #999; transition: all 0.3s; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-minus" style="font-size: 0.7rem;"></i>
+                            </button>
+                            <input type="number" name="cantidad" id="qty-input" value="1" min="1" max="10"
+                                style="width: 60px; height: 56px; border: none; background: none; text-align: center; font-weight: 700; font-size: 1.1rem; color: #333; outline: none; -moz-appearance: textfield; font-family: 'Outfit', sans-serif;">
+                            <button type="button" onclick="updateQty(1)"
+                                style="width: 50px; height: 56px; background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #999; transition: all 0.3s; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-plus" style="font-size: 0.7rem;"></i>
+                            </button>
+                        </div>
+
+                        <!-- Add Button -->
+                        <button type="submit" class="add-to-cart-main"
+                            style="flex: 1; min-width: 250px; padding: 1rem 2rem; background: linear-gradient(135deg, var(--accent-primary) 0%, #e8890c 100%); color: #fff; border: none; border-radius: 16px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-family: 'Outfit', sans-serif; box-shadow: 0 10px 30px rgba(244,154,31,0.3); position: relative; overflow: hidden;">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>Añadir a mi bolsa</span>
+                        </button>
+                    </div>
+
+                    <!-- Shipping Info -->
+                    <div
+                        style="margin-top: 1rem; display: flex; align-items: center; gap: 0.8rem; color: #888; font-size: 0.85rem;">
+                        <i class="fas fa-truck" style="color: var(--accent-primary);"></i>
+                        <span>Envío gratis en compras superiores a $300.000 COP</span>
+                    </div>
+                </form>
+
                 <!-- Descripción Comercial -->
                 <div style="margin-bottom: 2.5rem;">
                     <p style="color: #444; font-size: 1.1rem; line-height: 1.9; margin: 0; font-weight: 300;"
@@ -294,40 +329,7 @@
                     </div>
                 </div>
 
-                <!-- Add to Cart Form -->
-                <form th:action="@{/carrito/agregar/{id}(id=${perfume.id})}" method="post" class="product-cart-form"
-                    style="margin-bottom: 3rem;">
-                    <div class="cart-buttons-container" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <!-- Quantity Selector -->
-                        <div
-                            style="display: flex; align-items: center; background: #f8f8f8; border-radius: 16px; border: 2px solid #eee; overflow: hidden;">
-                            <button type="button" onclick="updateQty(-1)"
-                                style="width: 50px; height: 56px; background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #999; transition: all 0.3s; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-minus" style="font-size: 0.7rem;"></i>
-                            </button>
-                            <input type="number" name="cantidad" id="qty-input" value="1" min="1" max="10"
-                                style="width: 60px; height: 56px; border: none; background: none; text-align: center; font-weight: 700; font-size: 1.1rem; color: #333; outline: none; -moz-appearance: textfield; font-family: 'Outfit', sans-serif;">
-                            <button type="button" onclick="updateQty(1)"
-                                style="width: 50px; height: 56px; background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #999; transition: all 0.3s; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-plus" style="font-size: 0.7rem;"></i>
-                            </button>
-                        </div>
 
-                        <!-- Add Button -->
-                        <button type="submit" class="add-to-cart-main"
-                            style="flex: 1; min-width: 250px; padding: 1rem 2rem; background: linear-gradient(135deg, var(--accent-primary) 0%, #e8890c 100%); color: #fff; border: none; border-radius: 16px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-family: 'Outfit', sans-serif; box-shadow: 0 10px 30px rgba(244,154,31,0.3); position: relative; overflow: hidden;">
-                            <i class="fas fa-shopping-bag"></i>
-                            <span>Añadir a mi bolsa</span>
-                        </button>
-                    </div>
-
-                    <!-- Shipping Info -->
-                    <div
-                        style="margin-top: 1rem; display: flex; align-items: center; gap: 0.8rem; color: #888; font-size: 0.85rem;">
-                        <i class="fas fa-truck" style="color: var(--accent-primary);"></i>
-                        <span>Envío gratis en compras superiores a $300.000 COP</span>
-                    </div>
-                </form>
 
                 <!-- Payment Methods -->
                 <div
@@ -835,80 +837,7 @@
                 grid-template-columns: 1fr !important;
             }
         }
-
-        /* MOBILE STICKY ADD TO BAG BAR */
-        .mobile-sticky-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 12px 20px calc(12px + env(safe-area-inset-bottom)) 20px;
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            z-index: 10400;
-            box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.05);
-        }
-
-        .sticky-price-info {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
-
-        .sticky-price-label {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            color: #999;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .sticky-price {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #111;
-        }
-
-        .sticky-add-btn {
-            flex: 1;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, var(--accent-primary) 0%, #e8890c 100%);
-            color: #fff;
-            border: none;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(244, 154, 31, 0.2);
-            font-family: 'Outfit', sans-serif;
-            transition: all 0.3s;
-        }
-
-        .sticky-add-btn:active {
-            transform: scale(0.97);
-        }
-
-        @media (max-width: 768px) {
-            .mobile-sticky-bar {
-                display: flex;
-            }
-            body {
-                padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
-            }
-        }
-            </style>
+    </style>
 
     <!-- SCRIPTS -->
     <script>
@@ -1106,20 +1035,6 @@
             });
         });
     </script>
-
-    <!-- Mobile Sticky Add to Cart Bar -->
-    <div class="mobile-sticky-bar">
-        <div class="sticky-price-info">
-            <span class="sticky-price-label">Precio</span>
-            <span class="sticky-price" th:text="'$' + ${perfume.precio != null ? #numbers.formatDecimal(perfume.precio, 0, 'POINT', 0, 'POINT') : '0'} + ' COP'">$1.000.000</span>
-        </div>
-        <form th:action="@{/carrito/agregar/{id}(id=${perfume.id})}" method="post" style="flex: 1; display: flex; margin: 0;">
-            <input type="hidden" name="cantidad" value="1">
-            <button type="submit" class="sticky-add-btn">
-                <i class="fas fa-shopping-bag"></i> Añadir Bolsa
-            </button>
-        </form>
-    </div>
 
 </body>
 
