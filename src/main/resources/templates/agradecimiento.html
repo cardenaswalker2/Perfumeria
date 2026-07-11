@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Confirmación | Profumi</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body style="background: #faf8f5; font-family: 'Outfit', sans-serif; overflow-x: hidden;">
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <!-- SUCCESS HERO SECTION -->
+    <section
+        style="padding-top: 140px; padding-bottom: 4rem; background: linear-gradient(180deg, #fff 0%, #fff9f2 30%, #faf8f5 100%); position: relative; overflow: hidden; min-height: 100vh;">
+
+        <!-- Partículas de celebración -->
+        <div class="confetti-container"
+            style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1;"></div>
+
+        <!-- Círculos decorativos -->
+        <div
+            style="position: absolute; top: 10%; right: 5%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(244,154,31,0.06) 0%, transparent 70%); border-radius: 50%; animation: float 8s ease-in-out infinite;">
+        </div>
+        <div
+            style="position: absolute; bottom: 20%; left: 5%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(34,197,94,0.04) 0%, transparent 70%); border-radius: 50%; animation: float-reverse 10s ease-in-out infinite;">
+        </div>
+
+        <div
+            style="max-width: 800px; margin: 0 auto; padding: 0 2rem; text-align: center; position: relative; z-index: 2;">
+
+            <!-- Progress Steps (Completado) -->
+            <div
+                style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 3rem; position: relative;">
+                <div
+                    style="position: absolute; top: 15px; left: 15%; right: 15%; height: 3px; background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary)); border-radius: 3px; z-index: 0;">
+                </div>
+
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; position: relative; z-index: 2;">
+                    <div
+                        style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; box-shadow: 0 5px 15px rgba(244,154,31,0.3);">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span
+                        style="font-weight: 700; font-size: 0.75rem; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 1px;">Bolsa</span>
+                </div>
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; position: relative; z-index: 2;">
+                    <div
+                        style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; box-shadow: 0 5px 15px rgba(244,154,31,0.3);">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span
+                        style="font-weight: 700; font-size: 0.75rem; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 1px;">Finalizar</span>
+                </div>
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; position: relative; z-index: 2;">
+                    <div
+                        style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; box-shadow: 0 5px 15px rgba(34,197,94,0.3); animation: pulse-green 2s infinite;">
+                        <i class="fas fa-check" style="font-size: 0.7rem;"></i>
+                    </div>
+                    <span
+                        style="font-weight: 700; font-size: 0.75rem; color: #22c55e; text-transform: uppercase; letter-spacing: 1px;">Confirmado</span>
+                </div>
+            </div>
+
+            <!-- Success Icon -->
+            <div style="position: relative; margin-bottom: 2.5rem;">
+                <div
+                    style="width: 140px; height: 140px; background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 20px 60px rgba(34,197,94,0.2); position: relative; animation: scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);">
+                    <div
+                        style="width: 100px; height: 100px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(34,197,94,0.3);">
+                        <i class="fas fa-check"
+                            style="font-size: 3rem; color: #fff; animation: check-pop 0.5s ease 0.3s both;"></i>
+                    </div>
+                </div>
+                <!-- Rings animation -->
+                <div
+                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 180px; border: 2px solid rgba(34,197,94,0.1); border-radius: 50%; animation: ring-expand 2s ease-out infinite;">
+                </div>
+                <div
+                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; border: 2px solid rgba(34,197,94,0.05); border-radius: 50%; animation: ring-expand 2s ease-out 0.5s infinite;">
+                </div>
+            </div>
+
+            <!-- Badge -->
+            <div
+                style="display: inline-flex; align-items: center; gap: 0.6rem; background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); padding: 0.5rem 1.2rem; border-radius: 50px; margin-bottom: 1.5rem; border: 1px solid rgba(34,197,94,0.15);">
+                <span
+                    style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; animation: pulse-dot 2s infinite;"></span>
+                <span
+                    style="font-size: 0.8rem; color: #16a34a; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Pedido
+                    Confirmado</span>
+            </div>
+
+            <!-- Title -->
+            <h1
+                style="font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 1.2rem; line-height: 1.1; color: #1a1a1a; font-weight: 700; animation: fade-in-up 0.6s ease 0.2s both;">
+                ¡Gracias por tu<br>
+                <span style="color: var(--accent-primary); position: relative; display: inline-block;">
+                    confianza!
+                    <svg style="position: absolute; bottom: -8px; left: 0; width: 100%; height: 10px;"
+                        viewBox="0 0 200 10" preserveAspectRatio="none">
+                        <path d="M0,6 Q50,0 100,6 T200,6" stroke="var(--accent-primary)" stroke-width="2.5" fill="none"
+                            opacity="0.25" />
+                    </svg>
+                </span>
+            </h1>
+
+            <!-- Description -->
+            <p
+                style="color: #777; font-size: 1.15rem; line-height: 1.9; max-width: 550px; margin: 0 auto 2.5rem; animation: fade-in-up 0.6s ease 0.4s both;">
+                Tu pedido ha sido registrado exitosamente. Ahora solo falta un paso: enviar los detalles a nuestro
+                asesor por WhatsApp para coordinar el pago y la entrega.
+            </p>
+
+            <!-- WhatsApp CTA Button -->
+            <div style="animation: fade-in-up 0.6s ease 0.6s both;">
+                <a th:href="${whatsappUrl}" target="_blank"
+                    style="display: inline-flex; align-items: center; gap: 1rem; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; padding: 1.3rem 3rem; border-radius: 16px; text-decoration: none; font-weight: 700; font-size: 1.05rem; transition: all 0.3s; box-shadow: 0 15px 40px rgba(34,197,94,0.35); text-transform: uppercase; letter-spacing: 1.5px; position: relative; overflow: hidden; font-family: 'Outfit', sans-serif;">
+                    <i class="fab fa-whatsapp" style="font-size: 1.5rem;"></i>
+                    <span>Enviar Pedido por WhatsApp</span>
+                </a>
+                <p style="font-size: 0.85rem; color: #aaa; margin-top: 1rem;">Un asesor te responderá en minutos</p>
+            </div>
+
+            <!-- Order Details Card -->
+            <div th:if="${pedido != null}"
+                style="margin-top: 3rem; background: #fff; border-radius: 28px; padding: 2.5rem; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 10px 40px rgba(0,0,0,0.04); text-align: left; max-width: 500px; margin-left: auto; margin-right: auto; animation: fade-in-up 0.6s ease 0.8s both;">
+                <div
+                    style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f5f5f5;">
+                    <div
+                        style="width: 40px; height: 40px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-receipt" style="color: var(--accent-primary); font-size: 1rem;"></i>
+                    </div>
+                    <div>
+                        <p
+                            style="font-size: 0.85rem; color: #999; margin: 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">
+                            Número de Pedido</p>
+                        <p style="font-size: 1.1rem; font-weight: 700; color: #1a1a1a; margin: 0;"
+                            th:text="${pedido.id != null ? '#' + pedido.id : '#PENDING'}">#000</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.9rem; color: #888;">Estado</span>
+                        <span
+                            style="display: inline-flex; align-items: center; gap: 0.4rem; background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); color: #16a34a; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: 700;">
+                            <span style="width: 6px; height: 6px; background: #22c55e; border-radius: 50%;"></span>
+                            Pendiente de Pago
+                        </span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.9rem; color: #888;">Fecha</span>
+                        <span style="font-size: 0.9rem; font-weight: 600; color: #333;"
+                            th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">07/05/2026</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.9rem; color: #888;">Método de Pago</span>
+                        <span style="font-size: 0.9rem; font-weight: 600; color: #333;"
+                            th:text="${pedido.metodoPago != null ? pedido.metodoPago : 'Por confirmar'}">Por
+                            confirmar</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHAT HAPPENS NEXT -->
+    <section
+        style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 6rem 2rem; position: relative; overflow: hidden;">
+        <div
+            style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(244,154,31,0.3), transparent);">
+        </div>
+        <div
+            style="position: absolute; top: 10%; right: 5%; width: 250px; height: 250px; background: radial-gradient(circle, rgba(244,154,31,0.05) 0%, transparent 70%); border-radius: 50%;">
+        </div>
+
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <div
+                    style="display: inline-flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.05); padding: 0.6rem 1.2rem; border-radius: 50px; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.1);">
+                    <i class="fas fa-route" style="color: var(--accent-primary); font-size: 0.8rem;"></i>
+                    <span
+                        style="font-size: 0.8rem; color: var(--accent-primary); font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Proceso
+                        de Entrega</span>
+                </div>
+                <h2
+                    style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 2.8rem); color: #fff; margin-bottom: 1rem;">
+                    ¿Qué sucede después?</h2>
+                <p style="color: #888; max-width: 500px; margin: 0 auto; line-height: 1.7;">Te guiamos paso a paso hasta
+                    que tu fragancia llegue a tus manos.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                <!-- Step 1 -->
+                <div class="next-step"
+                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 24px; padding: 2.5rem; transition: all 0.4s; position: relative; overflow: hidden;">
+                    <div
+                        style="position: absolute; top: 15px; right: 20px; font-size: 4rem; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.03); font-weight: 700; line-height: 1;">
+                        01</div>
+                    <div
+                        style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 10px 30px rgba(244,154,31,0.2);">
+                        <i class="fab fa-whatsapp" style="color: #fff; font-size: 1.3rem;"></i>
+                    </div>
+                    <h4 style="font-size: 1.3rem; color: #fff; margin-bottom: 0.8rem; font-weight: 700;">Confirmación
+                        Inmediata</h4>
+                    <p style="color: #aaa; line-height: 1.7; font-size: 0.95rem; margin: 0;">Recibes confirmación del
+                        asesor vía chat en menos de 5 minutos. Validamos tu pedido y disponibilidad.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="next-step"
+                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 24px; padding: 2.5rem; transition: all 0.4s; position: relative; overflow: hidden;">
+                    <div
+                        style="position: absolute; top: 15px; right: 20px; font-size: 4rem; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.03); font-weight: 700; line-height: 1;">
+                        02</div>
+                    <div
+                        style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 10px 30px rgba(244,154,31,0.2);">
+                        <i class="fas fa-credit-card" style="color: #fff; font-size: 1.3rem;"></i>
+                    </div>
+                    <h4 style="font-size: 1.3rem; color: #fff; margin-bottom: 0.8rem; font-weight: 700;">Pago Seguro
+                    </h4>
+                    <p style="color: #aaa; line-height: 1.7; font-size: 0.95rem; margin: 0;">Realizas el pago si
+                        elegiste Nequi o Tarjeta. Te enviamos instrucciones claras y un comprobante digital.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="next-step"
+                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 24px; padding: 2.5rem; transition: all 0.4s; position: relative; overflow: hidden;">
+                    <div
+                        style="position: absolute; top: 15px; right: 20px; font-size: 4rem; font-family: 'Playfair Display', serif; color: rgba(255,255,255,0.03); font-weight: 700; line-height: 1;">
+                        03</div>
+                    <div
+                        style="width: 56px; height: 56px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 10px 30px rgba(34,197,94,0.2);">
+                        <i class="fas fa-truck-fast" style="color: #fff; font-size: 1.3rem;"></i>
+                    </div>
+                    <h4 style="font-size: 1.3rem; color: #fff; margin-bottom: 0.8rem; font-weight: 700;">Despacho
+                        Express</h4>
+                    <p style="color: #aaa; line-height: 1.7; font-size: 0.95rem; margin: 0;">Despachamos tu fragancia el
+                        mismo día. Recibirás notificaciones de seguimiento en tiempo real.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRUST SECTION -->
+    <section style="background: #fff; padding: 4rem 2rem;">
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                    <div
+                        style="width: 40px; height: 40px; background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-shield-halved" style="color: #16a34a; font-size: 1rem;"></i>
+                    </div>
+                    <div style="text-align: left;">
+                        <p style="font-weight: 700; color: #333; margin: 0; font-size: 0.9rem;">Pago Seguro</p>
+                        <p style="color: #999; margin: 0; font-size: 0.8rem;">Tus datos protegidos</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                    <div
+                        style="width: 40px; height: 40px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-clock" style="color: var(--accent-primary); font-size: 1rem;"></i>
+                    </div>
+                    <div style="text-align: left;">
+                        <p style="font-weight: 700; color: #333; margin: 0; font-size: 0.9rem;">24-48 Horas</p>
+                        <p style="color: #999; margin: 0; font-size: 0.8rem;">Entrega garantizada</p>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                    <div
+                        style="width: 40px; height: 40px; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-rotate-left" style="color: #2563eb; font-size: 1rem;"></i>
+                    </div>
+                    <div style="text-align: left;">
+                        <p style="font-weight: 700; color: #333; margin: 0; font-size: 0.9rem;">Devolución Fácil</p>
+                        <p style="color: #999; margin: 0; font-size: 0.8rem;">30 días de garantía</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA BACK TO SHOP -->
+    <section
+        style="background: linear-gradient(135deg, #fff9f2 0%, #fff5e8 100%); padding: 4rem 2rem; text-align: center;">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <i class="fas fa-gift"
+                style="font-size: 2.5rem; color: var(--accent-primary); margin-bottom: 1rem; display: block; opacity: 0.6;"></i>
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #1a1a1a; margin-bottom: 1rem;">
+                ¿Te falta algo?</h3>
+            <p style="color: #888; margin-bottom: 2rem; line-height: 1.7;">Explora más fragancias o descubre nuestros
+                kits de descubrimiento.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a th:href="@{/catalogo}"
+                    style="display: inline-flex; align-items: center; gap: 0.6rem; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); color: #fff; padding: 1rem 2rem; border-radius: 14px; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 8px 25px rgba(244,154,31,0.25);">
+                    <i class="fas fa-compass"></i>
+                    Ver Catálogo
+                </a>
+                <a th:href="@{/kits}"
+                    style="display: inline-flex; align-items: center; gap: 0.6rem; background: #fff; color: #333; padding: 1rem 2rem; border-radius: 14px; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; border: 2px solid #eee;">
+                    <i class="fas fa-box-open"></i>
+                    Explorar Kits
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- STYLES -->
+    <style>
+        :root {
+            --accent-primary: #f49a1f;
+            --accent-secondary: #e8890c;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes float-reverse {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(15px);
+            }
+        }
+
+        @keyframes pulse-green {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+            }
+
+            50% {
+                opacity: 0.9;
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+            }
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.3);
+            }
+        }
+
+        @keyframes scale-in {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes check-pop {
+            0% {
+                transform: scale(0) rotate(-45deg);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.2) rotate(0deg);
+            }
+
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes ring-expand {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* WhatsApp Button */
+        a[href*="wa.me"]:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 20px 50px rgba(34, 197, 94, 0.4) !important;
+        }
+
+        a[href*="wa.me"]:active {
+            transform: scale(0.98) !important;
+        }
+
+        /* Next Step Cards */
+        .next-step:hover {
+            background: rgba(255, 255, 255, 0.06) !important;
+            transform: translateY(-5px);
+            border-color: rgba(244, 154, 31, 0.15) !important;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
+            border-radius: 4px;
+        }
+    </style>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Confetti Animation
+        function createConfetti() {
+            const container = document.querySelector('.confetti-container');
+            const colors = ['#f49a1f', '#e8890c', '#22c55e', '#16a34a', '#3b82f6', '#8b5cf6', '#ec4899', '#fbbf24'];
+
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                const size = Math.random() * 10 + 5;
+                const left = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 3 + 3;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+
+                confetti.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: ${color};
+                    left: ${left}%;
+                    top: -20px;
+                    border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+                    opacity: ${Math.random() * 0.6 + 0.4};
+                    animation: confetti-fall ${duration}s linear ${delay}s infinite;
+                    pointer-events: none;
+                `;
+
+                container.appendChild(confetti);
+            }
+        }
+
+        // Animate elements on load
+        document.addEventListener('DOMContentLoaded', () => {
+            createConfetti();
+
+            // Animate next steps
+            document.querySelectorAll('.next-step').forEach((step, i) => {
+                step.style.opacity = '0';
+                step.style.transform = 'translateY(30px)';
+                step.style.transition = `all 0.6s ease ${i * 0.15}s`;
+
+                setTimeout(() => {
+                    step.style.opacity = '1';
+                    step.style.transform = 'translateY(0)';
+                }, 800 + (i * 150));
+            });
+        });
+    </script>
+</body>
+
+</html>

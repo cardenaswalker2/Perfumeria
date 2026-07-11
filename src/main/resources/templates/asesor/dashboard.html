@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Dashboard Asesor | Profumi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-sidebar { width: 280px; background: #fff; border-right: 1px solid #eee; height: 100vh; position: fixed; padding: 2rem; }
+        .admin-main { margin-left: 280px; padding: 3rem 5%; background: #fbfbfb; min-height: 100vh; display: grid; grid-template-columns: 2.5fr 1fr; gap: 3rem; }
+        .order-card { background: #fff; border-radius: 25px; padding: 2rem; margin-bottom: 2rem; border: 1px solid #eee; box-shadow: var(--shadow-soft); transition: 0.3s; }
+        .order-card:hover { border-color: var(--accent-primary); }
+        .status-badge { padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .status-pendiente { background: #fff9f2; color: var(--accent-primary); }
+        .status-confirmado { background: #e8f5e9; color: #2e7d32; }
+        .btn-action { padding: 0.8rem 1.5rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.3s; border: none; }
+        .btn-confirm { background: var(--accent-primary); color: #fff; }
+        .btn-cancel { background: #f5f5f5; color: #888; }
+        .btn-whatsapp { background: #25D366; color: #fff; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 0.6rem 1.2rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; }
+        .btn-whatsapp:hover { background: #1ebc5a; color: #fff; }
+        
+        .side-widget { background: #fff; border-radius: 25px; padding: 2rem; border: 1px solid #eee; box-shadow: var(--shadow-soft); margin-bottom: 2rem; }
+        .side-widget h3 { font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 1.5rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 1rem; }
+        .vip-client { display: flex; align-items: center; gap: 15px; padding: 1rem 0; border-bottom: 1px solid #f9f9f9; }
+        .vip-client:last-child { border-bottom: none; }
+        .vip-avatar { width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--text-muted); }
+        
+        .order-item { display: flex; align-items: center; gap: 15px; padding: 1rem; background: #fafafa; border-radius: 15px; margin-bottom: 0.5rem; }
+        .order-item img { width: 50px; height: 50px; border-radius: 10px; object-fit: cover; }
+
+        /* Responsive Overrides */
+        @media (max-width: 992px) {
+            body {
+                flex-direction: column !important;
+            }
+            .admin-sidebar {
+                position: static !important;
+                width: 100% !important;
+                height: auto !important;
+                padding: 1.5rem !important;
+                border-right: none !important;
+                border-bottom: 1px solid #eee !important;
+            }
+            .admin-sidebar nav {
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                gap: 0.5rem !important;
+            }
+            .admin-sidebar nav a {
+                margin-top: 0 !important;
+            }
+            .admin-main {
+                margin-left: 0 !important;
+                grid-template-columns: 1fr !important;
+                padding: 1.5rem !important;
+                gap: 1.5rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div style="margin-bottom: 3rem; line-height: 1.1;">
+            <span style="font-family: 'Cinzel', serif; font-size: 1.6rem; letter-spacing: 4px; font-weight: 600; color: var(--accent-primary);">PROFUMI</span>
+            <span style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.45rem; letter-spacing: 2px; font-weight: 500; color: #FFF; text-transform: uppercase; margin-top: 3px;">ASESOR BOUTIQUE</span>
+        </div>
+        <nav style="display: flex; flex-direction: column; gap: 1rem;">
+            <a th:href="@{/asesor/dashboard}" style="color: var(--accent-primary); font-weight: 700;"><i class="fas fa-th-large" style="margin-right: 10px;"></i> Escritorio VIP</a>
+            <a th:href="@{/catalogo}"><i class="fas fa-store" style="margin-right: 10px;"></i> Ver Catálogo Público</a>
+            <a th:href="@{/logout}" style="margin-top: 5rem; color: #ff5252;"><i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i> Cerrar Sesión</a>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <!-- Columna Principal: Pedidos -->
+        <div>
+            <header style="margin-bottom: 4rem;">
+                <h1 style="font-size: 2.5rem; font-weight: 700;">gestión de boutique</h1>
+                <p style="color: var(--text-muted);">Bienvenido de nuevo. Aquí tienes las solicitudes pendientes de atención.</p>
+            </header>
+
+            <section>
+                <h2 style="margin-bottom: 2rem; font-size: 1.5rem; display: flex; align-items: center; gap: 15px;">
+                    Atención Requerida <span style="background: var(--accent-primary); color: #fff; font-size: 0.8rem; padding: 2px 10px; border-radius: 10px;" th:text="${pendientes.size()}">0</span>
+                </h2>
+                
+                <div th:if="${pendientes.empty}" style="text-align: center; padding: 5rem; background: #fff; border-radius: 30px; border: 1px dashed #ddd;">
+                    <i class="fas fa-check-circle" style="font-size: 3rem; color: #e8f5e9; margin-bottom: 1rem;"></i>
+                    <p style="color: #bbb;">Excelente, no hay pedidos pendientes por atender.</p>
+                </div>
+
+                <div th:each="pedido : ${pendientes}" class="order-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                        <div>
+                            <span class="status-badge status-pendiente">Pendiente de Confirmación</span>
+                            <h3 style="margin-top: 1rem; font-size: 1.2rem;" th:text="'Ref: ' + ${pedido.id}">Ref</h3>
+                            <p style="font-size: 0.9rem; color: #888;" th:text="${#temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm')}">Fecha</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="font-size: 1.5rem; font-weight: 700; color: var(--text-dark);" th:text="'$' + ${#numbers.formatDecimal(pedido.total, 0, 'POINT', 0, 'POINT')} + ' COP'">Total</p>
+                            <p style="font-size: 0.8rem; color: var(--accent-primary); font-weight: 700;" th:text="${pedido.metodoPago}">Método</p>
+                        </div>
+                    </div>
+
+                    <!-- Datos del Cliente -->
+                    <div style="background: #fdfdfd; padding: 1.5rem; border-radius: 20px; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid #f0f0f0;">
+                        <div>
+                            <p style="font-weight: 700; font-size: 1.1rem; color: var(--text-dark);" th:text="${pedido.nombreCliente}">Nombre</p>
+                            <p style="font-size: 0.9rem; color: #888;" th:text="${pedido.direccion}">Dirección</p>
+                        </div>
+                        <a th:href="'https://wa.me/' + ${pedido.telefono} + '?text=' + ${'Hola ' + pedido.nombreCliente + ', soy tu Asesor Experto en Profumi. Escribo sobre tu pedido ' + pedido.id + ' para coordinar el pago y envío. ¿Tienes un momento?'}" 
+                           target="_blank" class="btn-whatsapp">
+                            <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Contactar VIP
+                        </a>
+                    </div>
+
+                    <!-- Detalles de Compra -->
+                    <h4 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 1rem;">Detalle de la Colección</h4>
+                    <div style="margin-bottom: 2rem;">
+                        <div th:each="entry : ${pedido.items}" class="order-item" th:with="perfume=${perfumeMap.get(entry.key)}">
+                            <img th:if="${perfume != null}" th:src="${perfume.imagenUrl}" alt="Perfume">
+                            <div th:if="${perfume == null}" style="width: 50px; height: 50px; background: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-box" style="color: #ccc;"></i></div>
+                            
+                            <div style="flex: 1;">
+                                <p style="font-weight: 600;" th:text="${perfume != null ? perfume.nombre : 'Producto Removido'}">Nombre</p>
+                                <p style="font-size: 0.8rem; color: #888;" th:text="${perfume != null ? perfume.marca : 'Desconocido'}">Marca</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <p style="font-size: 0.85rem; color: #666;">Cant: <span style="font-weight: 700; color: #000;" th:text="${entry.value}">1</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end; border-top: 1px solid #f0f0f0; padding-top: 1.5rem;">
+                        <form th:action="@{/asesor/cancelar/{id}(id=${pedido.id})}" method="post">
+                            <button type="submit" class="btn-action btn-cancel">Rechazar Solicitud</button>
+                        </form>
+                        <form th:action="@{/asesor/confirmar/{id}(id=${pedido.id})}" method="post">
+                            <button type="submit" class="btn-action btn-confirm"><i class="fas fa-check"></i> Pago Verificado - Aprobar</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <section style="margin-top: 4rem;">
+                <h2 style="margin-bottom: 2rem; font-size: 1.5rem; color: #888;">Historial Reciente (Confirmados)</h2>
+                <div th:each="pedido : ${confirmados}" class="order-card" style="opacity: 0.8; padding: 1.5rem;">
+                     <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span class="status-badge status-confirmado" style="font-size: 0.65rem;">Confirmado</span>
+                            <h4 style="margin-top: 0.5rem;" th:text="${pedido.nombreCliente}">Cliente</h4>
+                            <p style="font-size: 0.8rem; color: #999;" th:text="${pedido.id}"></p>
+                        </div>
+                        <p style="font-weight: 700; color: var(--accent-primary);" th:text="'$' + ${#numbers.formatDecimal(pedido.total, 0, 'POINT', 0, 'POINT')}"></p>
+                     </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Columna Lateral: Herramientas VIP -->
+        <div>
+            <!-- Widget de Alertas de Stock -->
+            <div class="side-widget" style="border-top: 4px solid #ff5252;">
+                <h3><i class="fas fa-exclamation-triangle" style="color: #ff5252; margin-right: 10px;"></i> Alertas de Inventario</h3>
+                <p th:if="${lowStockPerfumes.empty}" style="font-size: 0.9rem; color: #888;">El stock está saludable. No hay alertas.</p>
+                
+                <div th:each="p : ${lowStockPerfumes}" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-size: 0.9rem;">
+                    <div>
+                        <p style="font-weight: 600; color: var(--text-dark);" th:text="${p.nombre}">Nombre</p>
+                        <p style="font-size: 0.75rem; color: #888;" th:text="${p.marca}">Marca</p>
+                    </div>
+                    <span style="background: #ffebee; color: #d32f2f; padding: 2px 8px; border-radius: 5px; font-weight: 700; font-size: 0.8rem;" th:text="${p.stock} + ' un'">0 un</span>
+                </div>
+            </div>
+
+            <!-- Widget Directorio VIP -->
+            <div class="side-widget">
+                <h3><i class="fas fa-crown" style="color: var(--accent-primary); margin-right: 10px;"></i> Directorio VIP</h3>
+                <p style="font-size: 0.8rem; color: #888; margin-bottom: 1.5rem;">Listado de clientes registrados en la plataforma.</p>
+                
+                <div th:if="${clientesVip.empty}" style="text-align: center; color: #bbb; font-size: 0.9rem;">
+                    Aún no hay clientes registrados.
+                </div>
+
+                <div th:each="cliente : ${clientesVip}" class="vip-client">
+                    <div class="vip-avatar" th:text="${#strings.substring(cliente.nombre,0,1)}">A</div>
+                    <div style="flex: 1; overflow: hidden;">
+                        <p style="font-weight: 600; font-size: 0.95rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" th:text="${cliente.nombre}">Nombre</p>
+                        <p style="font-size: 0.8rem; color: #888; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" th:text="${cliente.email}">Email</p>
+                    </div>
+                    <a th:href="'mailto:' + ${cliente.email}" style="color: var(--accent-primary);"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

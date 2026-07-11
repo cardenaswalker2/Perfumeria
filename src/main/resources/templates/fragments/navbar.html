@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header th:fragment="navbar">
+        <link sec:authorize="hasRole('ADMIN')" rel="stylesheet" th:href="@{/css/admin-editor.css}">
+        <script sec:authorize="hasRole('ADMIN')" th:src="@{/js/admin-editor.js}" defer></script>
+        <!-- Barra de Administrador Flotante -->
+        <div sec:authorize="hasRole('ADMIN')" id="admin-floating-bar" class="admin-floating-bar">
+            <div class="admin-bar-logo"><i class="fas fa-gem"></i> PROFUMI EDITOR</div>
+            <div class="admin-bar-modes">
+                <button class="admin-mode-btn active" onclick="setAdminDeviceView('desktop')" title="Vista Escritorio"><i class="fas fa-desktop"></i></button>
+                <button class="admin-mode-btn" onclick="setAdminDeviceView('tablet')" title="Vista Tablet"><i class="fas fa-tablet-alt"></i></button>
+                <button class="admin-mode-btn" onclick="setAdminDeviceView('mobile')" title="Vista Móvil"><i class="fas fa-mobile-alt"></i></button>
+            </div>
+            <div class="admin-bar-actions">
+                <button class="admin-action-btn" id="admin-builder-btn" onclick="togglePageBuilderMode()"><i class="fas fa-cubes"></i> Constructor Visual</button>
+                <a th:href="@{/admin/dashboard}" class="admin-action-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <button class="admin-action-btn primary-gold" onclick="openPerfumeDrawer(null)"><i class="fas fa-plus"></i> Crear Perfume</button>
+            </div>
+        </div>
+
+        <div class="navbar">
+            <button class="menu-toggle-btn" onclick="toggleMobileMenu()" aria-label="Menu" style="background: none; border: none; font-size: 1.4rem; color: var(--text-dark); cursor: pointer; display: none;">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <a th:href="@{/}" style="display: flex; flex-direction: column; align-items: center; line-height: 1.1; text-decoration: none;">
+                    <span style="font-family: 'Cinzel', serif; font-size: 1.75rem; letter-spacing: 6px; font-weight: 700; color: #111111; text-transform: uppercase; transition: color 0.3s ease;">profumi</span>
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 0.48rem; letter-spacing: 4.5px; font-weight: 600; color: var(--accent-primary); margin-top: 2px; text-transform: uppercase;">fragrance store</span>
+                </a>
+            </div>
+            <nav class="nav-links">
+                <a th:href="@{/catalogo}">catálogo</a>
+                <a th:href="@{/diagnostico}">diagnóstico</a>
+                <a th:href="@{/kits}">kits</a>
+                <a th:href="@{/buscar}">buscar</a>
+                
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/dashboard}" class="nav-highlight">panel admin</a>
+            </nav>
+            <div class="nav-actions">
+                <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="icon-link" title="Cerrar Sesión"><i class="fas fa-sign-out-alt"></i></a>
+                <a sec:authorize="isAnonymous()" th:href="@{/login}" class="icon-link" title="Mi Cuenta"><i class="far fa-user"></i></a>
+                
+                <a th:href="@{/carrito}" class="icon-link" style="position: relative;">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cart-badge" class="cart-badge" 
+                          th:style="${session.carrito == null || session.carrito.isEmpty()} ? 'display:none' : ''"
+                          th:text="${session.carrito != null && !session.carrito.isEmpty() ? #aggregates.sum(session.carrito.values()) : 0}">
+                        0
+                    </span>
+                </a>
+            </div>
+        </div>
+        <!-- Panel Lateral de Edición de Perfumes (Shopify Style) -->
+        <div sec:authorize="hasRole('ADMIN')" id="admin-perfume-drawer" class="admin-drawer hidden">
+            <div class="admin-drawer-header">
+                <h3><i class="fas fa-flask"></i> EDITOR PROFESIONAL</h3>
+                <button class="close-drawer-btn" onclick="closePerfumeDrawer()">&times;</button>
+            </div>
+            <div class="admin-drawer-body">
+                <form id="admin-perfume-form" onsubmit="savePerfumeDrawer(event)" novalidate>
+                    <input type="hidden" id="edit-perfume-id" name="id">
+                    
+                    <!-- PESTAÑAS (8 TABS) -->
+                    <div class="drawer-tabs" style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
+                        <button type="button" class="drawer-tab-btn active" onclick="switchDrawerTab('general')">General</button>
+                        <button type="button" class="drawer-tab-btn" onclick="switchDrawerTab('olfativa')">Inf. Olfativa</button>
+                        <button type="button" class="drawer-tab-btn" onclick="switchDrawerTab('experiencia')">Experiencia</button>
+                        <button type="button" class="drawer-tab-btn" onclick="switchDrawerTab('caracteristicas')">Características</button>
+                        <button type="button" class="drawer-tab-btn" onclick="switchDrawerTab('media')">Multimedia</button>
+                        <button type="button" class="drawer-tab-btn" onclick="switchDrawerTab('comercial')">Inf. Comercial</button>
+                        <button type="button" class="drawer-tab-btn" onclick="switchDrawerTab('seo')">SEO</button>
+                        <button type="button" class="drawer-tab-btn" onclick="switchDrawerTab('preview')">Vista Previa</button>
+                    </div>
+
+                    <!-- 1. TAB GENERAL -->
+                    <div class="drawer-tab-content active" id="tab-general">
+                        <div class="admin-form-group">
+                            <label>Nombre del Perfume</label>
+                            <input type="text" id="edit-nombre" name="nombre" placeholder="Ej: Good Girl Tradicional" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Marca / Diseñador</label>
+                            <input type="text" id="edit-marca" name="marca" placeholder="Ej: Carolina Herrera" required>
+                        </div>
+                        <div class="form-row-3">
+                            <div class="admin-form-group">
+                                <label>SKU Referencia</label>
+                                <input type="text" id="edit-sku" name="sku" placeholder="Ej: CH-GG-01" required>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Código Interno</label>
+                                <input type="text" id="edit-skuBarra" name="skuBarra" placeholder="Ej: GG-001">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Stock Actual</label>
+                                <input type="number" id="edit-stock" name="stock" placeholder="0" required>
+                            </div>
+                        </div>
+                        <div class="form-row-2">
+                            <div class="admin-form-group">
+                                <label>Estado Disponibilidad</label>
+                                <select id="edit-estadoDisponibilidad" name="estadoDisponibilidad">
+                                    <option value="Disponible">Disponible</option>
+                                    <option value="Agotado">Agotado</option>
+                                    <option value="Próximamente">Próximamente</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Presentaciones Disponibles</label>
+                                <input type="text" id="edit-tamanosDisponibles" name="tamanosDisponibles" placeholder="Ej: 30 ml, 50 ml, 100 ml">
+                            </div>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Descripción Comercial (Venta)</label>
+                            <textarea id="edit-descripcion" name="descripcion" rows="4" placeholder="Escribe una descripción comercial atractiva y elegante..." required></textarea>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Historia del Perfume (Inspiración)</label>
+                            <textarea id="edit-historia" name="historia" rows="3" placeholder="Origen o inspiración de la fragancia..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 2. TAB INFORMACIÓN OLFATIVA -->
+                    <div class="drawer-tab-content" id="tab-olfativa">
+                        <div class="admin-form-group">
+                            <label>Familia Olfativa</label>
+                            <select id="edit-familiaOlfativa" name="familiaOlfativa">
+                                <option value="Ámbar Floral">Ámbar Floral</option>
+                                <option value="Floral Floral">Floral Floral</option>
+                                <option value="Cítrico Fresco">Cítrico Fresco</option>
+                                <option value="Amaderado Especiado">Amaderado Especiado</option>
+                                <option value="Oriental Ambarado">Oriental Ambarado</option>
+                                <option value="Fougère">Fougère</option>
+                                <option value="Chipre">Chipre</option>
+                                <option value="Frutal">Frutal</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Notas de Salida</label>
+                            <input type="text" id="edit-notasSalida" name="notasSalida" placeholder="Ej: Almendra, Café, Bergamota, Limón">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Notas de Corazón</label>
+                            <input type="text" id="edit-notasCorazon" name="notasCorazon" placeholder="Ej: Jazmín Sambac, Nardo, Rosa Búlgara">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Notas de Fondo</label>
+                            <input type="text" id="edit-notasFondo" name="notasFondo" placeholder="Ej: Haba Tonka, Vainilla, Cacao, Pachulí">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Perfil Olfativo (Resumen Sensorial)</label>
+                            <textarea id="edit-perfilOlfativo" name="perfilOlfativo" rows="3" placeholder="Ej: Aroma intenso, elegante y muy femenino, con excelente duración..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- 3. TAB EXPERIENCIA -->
+                    <div class="drawer-tab-content" id="tab-experiencia">
+                        <div class="admin-form-group">
+                            <label>Ideal Para</label>
+                            <input type="text" id="edit-idealPara" name="idealPara" placeholder="Ej: Citas, cenas elegantes, fiestas nocturnas...">
+                        </div>
+                        <div class="form-row-3">
+                            <div class="admin-form-group">
+                                <label>Intensidad</label>
+                                <select id="edit-intensidad" name="intensidad">
+                                    <option value="Suave">Suave</option>
+                                    <option value="Moderada">Moderada</option>
+                                    <option value="Fuerte">Fuerte</option>
+                                    <option value="Intensa">Intensa</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Duración Aproximada</label>
+                                <select id="edit-duracion" name="duracion">
+                                    <option value="Corta (2-4h)">Corta (2-4h)</option>
+                                    <option value="Moderada (4-8h)">Moderada (4-8h)</option>
+                                    <option value="Larga duración (8-12h)">Larga duración (8-12h)</option>
+                                    <option value="Eterna (12h+)">Eterna (12h+)</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Proyección</label>
+                                <select id="edit-proyeccion" name="proyeccion">
+                                    <option value="Íntima">Íntima</option>
+                                    <option value="Moderada">Moderada</option>
+                                    <option value="Fuerte / Pesada">Fuerte / Pesada</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row-3">
+                            <div class="admin-form-group">
+                                <label>Temporada Recomendada</label>
+                                <select id="edit-temporadaRecomendada" name="temporadaRecomendada">
+                                    <option value="Primavera">Primavera</option>
+                                    <option value="Verano">Verano</option>
+                                    <option value="Otoño">Otoño</option>
+                                    <option value="Invierno">Invierno</option>
+                                    <option value="Todas las estaciones">Todas las estaciones</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Clima Recomendado</label>
+                                <select id="edit-climaRecomendado" name="climaRecomendado">
+                                    <option value="Cálido">Cálido</option>
+                                    <option value="Templado">Templado</option>
+                                    <option value="Frío">Frío</option>
+                                    <option value="Todos los climas">Todos los climas</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Uso Recomendado</label>
+                                <select id="edit-usoRecomendado" name="usoRecomendado">
+                                    <option value="Día">Día</option>
+                                    <option value="Noche">Noche</option>
+                                    <option value="Ambos">Ambos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row-2">
+                            <div class="admin-form-group">
+                                <label>Estilo Recomendado</label>
+                                <select id="edit-estilo" name="estilo">
+                                    <option value="Elegante">Elegante</option>
+                                    <option value="Casual">Casual</option>
+                                    <option value="Deportivo">Deportivo</option>
+                                    <option value="Romántico">Romántico</option>
+                                    <option value="Ejecutivo">Ejecutivo</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Edad Recomendada (Opcional)</label>
+                                <input type="text" id="edit-edadRecomendada" name="edadRecomendada" placeholder="Ej: 20 años en adelante">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. TAB CARACTERÍSTICAS -->
+                    <div class="drawer-tab-content" id="tab-caracteristicas">
+                        <div class="form-row-2">
+                            <div class="admin-form-group">
+                                <label>Género</label>
+                                <select id="edit-genero" name="genero">
+                                    <option value="Mujer">Mujer</option>
+                                    <option value="Hombre">Hombre</option>
+                                    <option value="Uniséx">Uniséx</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Tipo Concentración</label>
+                                <select id="edit-concentracion" name="concentracion">
+                                    <option value="EDP (Eau de Parfum)">EDP (Eau de Parfum)</option>
+                                    <option value="EDT (Eau de Toilette)">EDT (Eau de Toilette)</option>
+                                    <option value="Parfum">Parfum</option>
+                                    <option value="Elixir">Elixir</option>
+                                    <option value="Colonia">Colonia</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row-3">
+                            <div class="admin-form-group">
+                                <label>País de Origen</label>
+                                <input type="text" id="edit-paisOrigen" name="paisOrigen" placeholder="Ej: Francia">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Año Lanzamiento</label>
+                                <input type="number" id="edit-anoLanzamiento" name="anoLanzamiento" placeholder="2021">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Perfumista</label>
+                                <input type="text" id="edit-perfumista" name="perfumista" placeholder="Ej: Louise Turner">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. TAB MULTIMEDIA -->
+                    <div class="drawer-tab-content" id="tab-media">
+                        <div class="admin-form-group">
+                            <label>Imagen Principal (URL / Subida Directa)</label>
+                            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                <input type="text" id="edit-imagenUrl" name="imagenUrl" placeholder="https://..." style="flex: 1;" onchange="previewMainImage(this.value)">
+                                <button type="button" class="drawer-action-btn secondary" style="padding: 10px;" onclick="document.getElementById('main-upload-file').click()"><i class="fas fa-upload"></i> Subir</button>
+                                <input type="file" id="main-upload-file" style="display: none;" onchange="uploadMainImage(this)">
+                            </div>
+                            <div class="main-img-preview-container">
+                                <img id="main-image-preview" src="" alt="Vista previa" style="max-height: 180px; width: auto; display: none; margin: 10px auto; border-radius: 12px; border: 1px solid var(--admin-border); object-fit: cover;">
+                            </div>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Galería de Imágenes (Drag & Drop)</label>
+                            <div class="media-drag-zone" id="media-drag-zone">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Arrastra imágenes aquí o haz clic para subir</p>
+                                <input type="file" id="drag-zone-file" multiple style="display: none;">
+                            </div>
+                            <div class="drag-images-list" id="drag-images-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- 6. TAB INFORMACIÓN COMERCIAL -->
+                    <div class="drawer-tab-content" id="tab-comercial">
+                        <div class="form-row-3">
+                            <div class="admin-form-group">
+                                <label>Precio ($)</label>
+                                <input type="number" step="0.01" id="edit-precio" name="precio" placeholder="0.00" required>
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Precio Anterior (Opcional)</label>
+                                <input type="number" step="0.01" id="edit-precioAnterior" name="precioAnterior" placeholder="0.00">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Descuento (%)</label>
+                                <input type="number" step="0.1" id="edit-descuento" name="descuento" placeholder="Ej: 15">
+                            </div>
+                        </div>
+                        <div class="admin-form-group" style="margin-bottom: 20px;">
+                            <label style="margin-bottom: 10px; display: block;">Etiquetas Comerciales</label>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                                <label style="display: flex; align-items: center; gap: 5px; font-size: 0.8rem; color: #ccc;">
+                                    <input type="checkbox" id="edit-destacado" name="destacado"> Destacado
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-size: 0.8rem; color: #ccc;">
+                                    <input type="checkbox" id="edit-topVentas" name="topVentas"> Más Vendido
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-size: 0.8rem; color: #ccc;">
+                                    <input type="checkbox" id="edit-nuevo" name="nuevo"> Nuevo
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-size: 0.8rem; color: #ccc;">
+                                    <input type="checkbox" id="edit-oferta" name="oferta"> En Oferta
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-size: 0.8rem; color: #ccc;">
+                                    <input type="checkbox" id="edit-exclusivo" name="exclusivo"> Exclusivo
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-size: 0.8rem; color: #ccc;">
+                                    <input type="checkbox" id="edit-edicionLimitada" name="edicionLimitada"> Ed. Limitada
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-size: 0.8rem; color: #ccc;">
+                                    <input type="checkbox" id="edit-envioGratis" name="envioGratis"> Envío Gratis
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-row-2">
+                            <div class="admin-form-group">
+                                <label>Garantía Comercial</label>
+                                <input type="text" id="edit-garantia" name="garantia" placeholder="Ej: 1 mes por defectos">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Sello de Autenticidad</label>
+                                <input type="text" id="edit-autenticidad" name="autenticidad" placeholder="Ej: 100% Original Sellado">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7. TAB SEO -->
+                    <div class="drawer-tab-content" id="tab-seo">
+                        <div class="admin-form-group">
+                            <label>Meta Título (SEO)</label>
+                            <input type="text" id="edit-metaTitle" name="metaTitle" placeholder="Ej: Perfume Good Girl Carolina Herrera | Profumi">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Meta Descripción (SEO)</label>
+                            <textarea id="edit-metaDescription" name="metaDescription" rows="3" placeholder="Encuentra el perfume original Good Girl al mejor precio..."></textarea>
+                        </div>
+                        <div class="form-row-2">
+                            <div class="admin-form-group">
+                                <label>Friendly URL (Slug)</label>
+                                <input type="text" id="edit-friendlyUrl" name="friendlyUrl" placeholder="Ej: good-girl-tradicional">
+                            </div>
+                            <div class="admin-form-group">
+                                <label>Palabras Clave (Coma sep.)</label>
+                                <input type="text" id="edit-keywords" name="keywords" placeholder="Ej: perfume, mujer, carolina herrera">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 8. TAB VISTA PREVIA -->
+                    <div class="drawer-tab-content" id="tab-preview">
+                        <h4 style="margin-bottom: 15px; color: var(--admin-gold); text-align: center;">Vista Previa del Catálogo</h4>
+                        <div class="product-card" style="max-width: 280px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; overflow: hidden; background: #0c0c0c;">
+                            <div style="height: 250px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                <img id="prev-card-img" src="" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div style="padding: 15px; background: #0a0a0a;">
+                                <span id="prev-card-brand" style="font-size: 0.75rem; text-transform: uppercase; color: var(--admin-gold); font-weight: 700; letter-spacing: 1px;">MARCA</span>
+                                <h4 id="prev-card-title" style="color: #fff; margin: 5px 0; font-family: 'Playfair Display', serif; font-size: 1.1rem;">Nombre del Perfume</h4>
+                                <p id="prev-card-desc" style="font-size: 0.8rem; color: #888; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3;">Descripción corta...</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                                    <span id="prev-card-price" style="font-weight: 700; color: #fff; font-size: 1.05rem;">$0</span>
+                                    <span id="prev-card-stock" style="font-size: 0.7rem; color: var(--admin-gold);">0 unidades</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 11. TAB AUDITORÍA / HISTORIAL -->
+                    <div class="drawer-tab-content" id="tab-historial">
+                        <h4 style="margin-bottom: 15px; color: var(--admin-gold);">Historial de Cambios</h4>
+                        <div class="timeline" id="product-timeline-list" style="max-height: 250px; overflow-y: auto;">
+                            <div class="timeline-step">
+                                <div class="timeline-bullet"></div>
+                                <div class="timeline-content">
+                                    <span style="font-weight: 600; color: var(--admin-gold);">CREADO</span> - Por admin@profumi.com
+                                    <div class="timeline-time">Registrado automáticamente en base de datos.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ACCIONES FINALES -->
+                    <div class="drawer-footer-actions">
+                        <button type="button" class="drawer-action-btn secondary" onclick="closePerfumeDrawer()">Cancelar</button>
+                        <button type="button" class="drawer-action-btn danger" id="delete-perfume-btn" onclick="deletePerfumeFromDrawer()">Eliminar</button>
+                        <button type="submit" class="drawer-action-btn primary">Guardar Perfume</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Constructor de Páginas (Secciones Dinámicas) Control Panel -->
+        <div sec:authorize="hasRole('ADMIN')" id="admin-page-builder-panel" class="admin-builder-panel hidden">
+            <div class="builder-panel-header">
+                <h4><i class="fas fa-cubes"></i> SECCIONES DEL TEMPLATE</h4>
+                <button class="close-builder-btn" onclick="togglePageBuilderMode()">&times;</button>
+            </div>
+            <div class="builder-panel-body">
+                <div class="builder-sections-list" id="builder-sections-list">
+                    <!-- Dynamic Page builder sections lists -->
+                </div>
+                <button class="add-section-btn" onclick="openAddSectionModal()"><i class="fas fa-plus"></i> AGREGAR SECCIÓN</button>
+            </div>
+            <div class="builder-panel-footer">
+                <button class="builder-footer-btn publish" onclick="publishBuilderChanges()"><i class="fas fa-cloud-upload-alt"></i> PUBLICAR CAMBIOS</button>
+            </div>
+        </div>
+
+        <!-- Modal de Selección de Nueva Sección -->
+        <div sec:authorize="hasRole('ADMIN')" id="builder-add-section-modal" class="builder-modal hidden">
+            <div class="builder-modal-content">
+                <div class="builder-modal-header">
+                    <h4>Agregar Nueva Sección</h4>
+                    <button class="close-modal-btn" onclick="closeAddSectionModal()">&times;</button>
+                </div>
+                <div class="builder-modal-body">
+                    <div class="section-types-grid">
+                        <div class="section-type-card" onclick="addSectionToPage('banner')">
+                            <i class="fas fa-image"></i>
+                            <span>Banner Héroe</span>
+                        </div>
+                        <div class="section-type-card" onclick="addSectionToPage('carousel')">
+                            <i class="fas fa-images"></i>
+                            <span>Carrusel</span>
+                        </div>
+                        <div class="section-type-card" onclick="addSectionToPage('featured')">
+                            <i class="fas fa-crown"></i>
+                            <span>Productos Destacados</span>
+                        </div>
+                        <div class="section-type-card" onclick="addSectionToPage('new')">
+                            <i class="fas fa-fire"></i>
+                            <span>Productos Nuevos</span>
+                        </div>
+                        <div class="section-type-card" onclick="addSectionToPage('history')">
+                            <i class="fas fa-book-open"></i>
+                            <span>Historia</span>
+                        </div>
+                        <div class="section-type-card" onclick="addSectionToPage('newsletter')">
+                            <i class="fas fa-envelope-open-text"></i>
+                            <span>Boletín / Newsletter</span>
+                        </div>
+                        <div class="section-type-card" onclick="addSectionToPage('faq')">
+                            <i class="fas fa-question-circle"></i>
+                            <span>FAQ / Preguntas</span>
+                        </div>
+                        <div class="section-type-card" onclick="addSectionToPage('reviews')">
+                            <i class="fas fa-star"></i>
+                            <span>Reseñas de Clientes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Bot Nova AI (Incluido desde fragmento) -->
+        <div th:replace="~{fragments/chatbot :: chatbot}"></div>
+        <script>
+            function toggleMobileMenu() {
+                const navLinks = document.querySelector('.nav-links');
+                if (navLinks) {
+                    navLinks.classList.toggle('mobile-active');
+                }
+            }
+        </script>
+    </header>
+</body>
+</html>

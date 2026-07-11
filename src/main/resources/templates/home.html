@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profumi Cartagena | Alta Perfumería de Autor</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Shared & Dedicated Stylesheets -->
+    <link rel="stylesheet" th:href="@{/css/style.css(v=5)}">
+    <link rel="stylesheet" th:href="@{/css/home.css(v=5)}">
+
+    <style>
+        :root {
+            --gold: #C9A96E;
+            --gold-light: #E5D5B0;
+            --dark: #0F0F0F;
+            --darker: #050505;
+            --cream: #FAF6F1;
+            --cream-dark: #E6DCD0;
+            --text: #2C2C2C;
+            --text-light: #8A8A8A;
+            --transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            overflow-x: hidden;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        .serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 500;
+            color: var(--gold);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.5rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+            mix-blend-mode: difference;
+        }
+
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            mix-blend-mode: normal;
+            box-shadow: 0 1px 20px rgba(0, 0, 0, 0.05);
+            padding: 1rem 4%;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: white;
+            text-decoration: none;
+            letter-spacing: 6px;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+
+        nav.scrolled .logo {
+            color: var(--dark);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 400;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        nav.scrolled .nav-links a {
+            color: var(--text);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gold);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-actions a {
+            color: white;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        nav.scrolled .nav-actions a {
+            color: var(--dark);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--gold);
+            color: white;
+            font-size: 0.6rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+            color: var(--dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(201, 169, 110, 0.3);
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(201, 169, 110, 0.05);
+        }
+
+        .btn-dark {
+            background: var(--dark);
+            color: white;
+        }
+
+        .btn-dark:hover {
+            background: var(--gold);
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* Section Spacing */
+        section {
+            padding: 8rem 4%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-top: 1rem;
+            line-height: 1.1;
+        }
+
+        /* Marquee Brands */
+        .marquee-section {
+            background: var(--dark);
+            padding: 3rem 0;
+            overflow: hidden;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Occasions */
+        .occasions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .occasion-card {
+            position: relative;
+            height: 600px;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .occasion-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 100%);
+            z-index: 2;
+            transition: var(--transition);
+        }
+
+        .occasion-card:hover::before {
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.1) 100%);
+        }
+
+        .occasion-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .occasion-card:hover .occasion-bg {
+            transform: scale(1.08);
+        }
+
+        .occasion-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 3rem;
+            z-index: 3;
+            color: white;
+        }
+
+        .occasion-number {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 5rem;
+            color: rgba(255, 255, 255, 0.1);
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            line-height: 1;
+            z-index: 3;
+        }
+
+        .occasion-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .occasion-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .occasion-desc {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+            max-width: 300px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .occasion-card:hover .occasion-desc {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .occasion-link {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .occasion-link i {
+            transition: var(--transition);
+        }
+
+        .occasion-card:hover .occasion-link i {
+            transform: translateX(5px);
+        }
+
+        /* Featured Products Headers & Grid */
+        .featured-section {
+            background: white;
+        }
+
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 4rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-brand {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .product-price {
+            font-size: 1.1rem;
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .product-notes {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .action-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn:hover {
+            background: var(--gold);
+            color: white;
+        }
+
+        /* Olfactory Pyramid Section */
+        .pyramid-section {
+            background: var(--dark);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pyramid-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(201, 169, 110, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .pyramid-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        /* AI Section & Stats */
+        .ai-section {
+            background: var(--cream);
+        }
+
+        .ai-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .ai-visual {
+            position: relative;
+        }
+
+        .ai-visual img {
+            width: 100%;
+            border-radius: 4px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.15);
+        }
+
+        .ai-card {
+            position: absolute;
+            bottom: -2rem;
+            right: -2rem;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 4px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            border-left: 3px solid var(--gold);
+        }
+
+        .ai-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            color: var(--gold);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 600;
+        }
+
+        .ai-card p {
+            font-size: 0.9rem;
+            color: var(--text);
+            font-style: italic;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .ai-content h2 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            margin: 1rem 0 2rem;
+            line-height: 1.1;
+        }
+
+        .ai-content>p {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 4rem;
+            margin-bottom: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--cream-dark);
+        }
+
+        .stat-item h4 {
+            font-size: 3rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-light);
+        }
+
+        /* VIP Section */
+        .vip-section {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vip-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(201, 169, 110, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.3;
+        }
+
+        .vip-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .vip-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 2rem;
+        }
+
+        .vip-content h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .vip-content>p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .vip-form {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .vip-form input {
+            flex: 1;
+            padding: 1.2rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border-radius: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .vip-form input:focus {
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .vip-form input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .vip-note {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 1.5rem;
+        }
+
+        /* Standards Section */
+        .standards-section {
+            background: white;
+        }
+
+        .standards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .standard-item {
+            text-align: center;
+        }
+
+        .standard-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--cream);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            color: var(--gold);
+            font-size: 1.3rem;
+            transition: var(--transition);
+        }
+
+        .standard-item:hover .standard-icon {
+            background: var(--gold);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .standard-item h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .standard-item p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* High-End Responsive Nav Layouts */
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .occasions-grid {
+                grid-template-columns: 1fr;
+            }
+            .occasion-card {
+                height: 400px;
+            }
+            .pyramid-grid, .ai-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            .standards-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle-btn {
+                display: block !important;
+            }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: #0f0f0f;
+                padding: 1.5rem 5%;
+                gap: 1rem;
+                z-index: 1001;
+            }
+            .nav-links.mobile-active {
+                display: flex !important;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-row {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            .vip-form {
+                flex-direction: column;
+            }
+            .ai-card {
+                position: relative;
+                bottom: 0;
+                right: 0;
+                margin-top: 2rem;
+                max-width: 100%;
+            }
+            section {
+                padding: 4rem 4%;
+            }
+        }
+
+        /* Scroll reveal class animations (Handled by GSAP, no transition conflicts) */
+        .reveal {
+            opacity: 0;
+        }
+
+        /* Footer styling */
+        footer {
+            background: var(--dark) !important;
+            color: white !important;
+            padding: 6rem 4% 3rem !important;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-bottom: 4rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-brand h3 {
+            font-size: 1.8rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .social-links a:hover {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: white;
+        }
+
+        .footer-col h4 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 2rem;
+            color: var(--gold);
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .footer-col a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .footer-col a:hover {
+            color: var(--gold);
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 3rem auto 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+        }
+
+        .payment-icons {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .payment-icons img {
+            height: 20px !important;
+            max-height: 20px !important;
+            width: auto !important;
+            opacity: 0.4;
+            filter: grayscale(100%) brightness(2);
+            transition: var(--transition);
+        }
+
+        .payment-icons img:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. NAVIGATION BAR -->
+    <nav id="navbar">
+        <button class="menu-toggle-btn" onclick="toggleHomeMobileMenu()" aria-label="Menu" style="background: none; border: none; font-size: 1.4rem; color: var(--gold); cursor: pointer; display: none; margin-right: 15px;">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a th:href="@{/}" class="logo" style="display: flex; flex-direction: column; align-items: center; line-height: 1.1; text-decoration: none;">
+            <span style="font-family: 'Cinzel', serif; font-size: 1.6rem; letter-spacing: 5px; font-weight: 600; background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">PROFUMI</span>
+            <span style="font-family: 'Montserrat', sans-serif; font-size: 0.45rem; letter-spacing: 3px; font-weight: 500; color: var(--gold); margin-top: 3px; text-transform: uppercase;">FRAGRANCE STORE</span>
+        </a>
+        <ul class="nav-links">
+            <li><a th:href="@{/catalogo}">Catálogo</a></li>
+            <li><a th:href="@{/diagnostico}">Diagnóstico IA</a></li>
+            <li><a th:href="@{/kits}">Discovery Kits</a></li>
+            <li><a th:href="@{/buscar}">Buscar</a></li>
+        </ul>
+        <div class="nav-actions">
+            <a th:href="@{/buscar}" aria-label="Buscar"><i class="fas fa-search"></i></a>
+            <a th:href="@{/carrito}" style="position: relative;" aria-label="Carrito">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count" th:if="${session.carrito != null && !session.carrito.isEmpty()}" 
+                      th:text="${#aggregates.sum(session.carrito.values())}">0</span>
+                <span class="cart-count" th:unless="${session.carrito != null && !session.carrito.isEmpty()}">0</span>
+            </a>
+            <a th:href="@{/login}" aria-label="Mi Cuenta"><i class="fas fa-user"></i></a>
+        </div>
+    </nav>
+
+    <!-- 2. HIGH-IMPACT HERO WITH PARALLAX & 3D CSS BOTTLE -->
+    <section class="hero" id="hero-section">
+        <!-- Floating Amber Particles Canvas -->
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-smoke-bg"></div>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content" style="z-index: 10; margin-right: auto; margin-left: 8%; text-align: left; max-width: 600px;">
+            <span class="hero-label" style="animation: fadeInUp 1s ease-out;">Profumi Haute Parfumerie • Cartagena</span>
+            <h1 style="animation: fadeInUp 1s ease-out 0.2s both; color:#fff;">Tu Firma<br>Olfativa, <em style="font-family:'Cormorant Garamond',serif; color:var(--gold); font-style:italic;">Elevada</em></h1>
+            <p style="animation: fadeInUp 1s ease-out 0.4s both; font-size:1.05rem; line-height:1.7; color:rgba(255,255,255,0.75);">
+                Importamos directamente desde casas matrices en Grasse, París y Dubái. Cada perfume es cuidadosamente curado por nuestros expertos para resistir el clima tropical de Cartagena de Indias y fundirse con tu piel.
+            </p>
+            <div class="hero-cta" style="justify-content: flex-start; animation: fadeInUp 1s ease-out 0.6s both;">
+                <a th:href="@{/catalogo}" class="btn btn-primary" style="border-radius: 40px;">
+                    <i class="fas fa-arrow-right"></i> Colección de Lujo
+                </a>
+                <a th:href="@{/diagnostico}" class="btn btn-outline" style="border-radius: 40px; backdrop-filter: blur(5px);">
+                    <i class="fas fa-sparkles"></i> Nova AI Engine
+                </a>
+            </div>
+        </div>
+
+        <!-- 3D CSS Perfume Bottle Simulation -->
+        <div class="hero-scene-3d" id="hero-scene-3d">
+            <div class="perfume-bottle-3d" id="perfume-bottle-3d">
+                <!-- Bottle Body -->
+                <div class="bottle-face bottle-front">
+                    <div class="bottle-liquid"></div>
+                    <div class="bottle-label-niche">
+                        <span>Profumi</span>
+                        <h3>Cartagena</h3>
+                    </div>
+                </div>
+                <div class="bottle-face bottle-back"><div class="bottle-liquid"></div></div>
+                <div class="bottle-face bottle-left"><div class="bottle-liquid"></div></div>
+                <div class="bottle-face bottle-right"><div class="bottle-liquid"></div></div>
+                <div class="bottle-face bottle-top"></div>
+                <div class="bottle-face bottle-bottom"></div>
+                
+                <!-- 3D Cap -->
+                <div class="bottle-cap-3d">
+                    <div class="cap-face cap-front"></div>
+                    <div class="cap-face cap-back"></div>
+                    <div class="cap-face cap-left"></div>
+                    <div class="cap-face cap-right"></div>
+                    <div class="cap-face cap-top"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator" onclick="document.getElementById('marcas').scrollIntoView({behavior: 'smooth'})">
+            <i class="fas fa-chevron-down"></i> Descubrir
+        </div>
+    </section>
+
+    <!-- 3. BRAND MARQUEE (Black & White Gold Hover) -->
+    <div class="marquee-section" id="marcas">
+        <div class="brand-marquee-track">
+            <span class="brand-marquee-item">Tom Ford</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Creed</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Dior</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Chanel</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Guerlain</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Hermès</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Maison Francis Kurkdjian</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Byredo</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Le Labo</span>
+            <span class="brand-marquee-item">•</span>
+            <!-- Loop Duplicate -->
+            <span class="brand-marquee-item">Tom Ford</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Creed</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Dior</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Chanel</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Guerlain</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Hermès</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Maison Francis Kurkdjian</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Byredo</span>
+            <span class="brand-marquee-item">•</span>
+            <span class="brand-marquee-item">Le Labo</span>
+            <span class="brand-marquee-item">•</span>
+        </div>
+    </div>
+
+    <!-- 4. OCCASIONS BOUTIQUE SECTION -->
+    <section id="ocasiones" style="background:#FAF6F1;">
+        <div class="section-header reveal">
+            <span class="label">Experiencia Boutique</span>
+            <h2 style="color:var(--dark);">Una Esencia para Cada Momento</h2>
+        </div>
+        <div class="occasions-grid">
+            <a th:href="@{/catalogo(categoria='Noche')}" class="occasion-card reveal">
+                <div class="occasion-bg" style="background-image: url('https://images.unsplash.com/photo-1515562141207-7a8efbf884ce?q=80&w=800&auto=format&fit=crop')"></div>
+                <span class="occasion-number">01</span>
+                <div class="occasion-content">
+                    <span class="occasion-label">Noche</span>
+                    <h3 class="occasion-title">Noches de<br>Gala</h3>
+                    <p class="occasion-desc">Aromas con proyección imperial para eventos en la Ciudad Amurallada. Oud, ámbar y especias orientales intensas.</p>
+                    <span class="occasion-link">Explorar <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+            <a th:href="@{/catalogo(categoria='Trabajo')}" class="occasion-card reveal">
+                <div class="occasion-bg" style="background-image: url('https://images.unsplash.com/photo-1488161628813-04466f872be2?q=80&w=800&auto=format&fit=crop')"></div>
+                <span class="occasion-number">02</span>
+                <div class="occasion-content">
+                    <span class="occasion-label">Oficina</span>
+                    <h3 class="occasion-title">Firma<br>Ejecutiva</h3>
+                    <p class="occasion-desc">Perfiles limpios y sofisticados que proyectan autoridad sin invadir. Cítricos estructurados y maderas nobles.</p>
+                    <span class="occasion-link">Explorar <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+            <a th:href="@{/catalogo(categoria='Diario')}" class="occasion-card reveal">
+                <div class="occasion-bg" style="background-image: url('https://images.unsplash.com/photo-1496661415325-ef852f9e8e7c?q=80&w=800&auto=format&fit=crop')"></div>
+                <span class="occasion-number">03</span>
+                <div class="occasion-content">
+                    <span class="occasion-label">Día</span>
+                    <h3 class="occasion-title">Brisa<br>Caribeña</h3>
+                    <p class="occasion-desc">Frescura de gran rendimiento para la humedad de Cartagena. Notas marinas, ozónicas y florales tropicales.</p>
+                    <span class="occasion-link">Explorar <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- 5. FEATURED LUXURY PRODUCT CATALOGUE -->
+    <section class="featured-section" id="coleccion" style="background:#ffffff;">
+        <div class="products-header reveal">
+            <div>
+                <span class="label">Curaduría Experta</span>
+                <h2 style="color:var(--dark); margin-top: 10px;">Selección del Mes</h2>
+            </div>
+            <a th:href="@{/catalogo}" class="btn btn-dark" style="border-radius:30px;">Catálogo Completo</a>
+        </div>
+        <div class="products-grid">
+            <div th:each="p : ${featured}" class="luxury-product-card reveal" th:data-id="${p.id}">
+                <!-- Badges -->
+                <div class="luxury-indicator-badges">
+                    <span class="luxury-badge premium-tag" th:if="${pStat.index == 0}">Más Vendido</span>
+                    <span class="luxury-badge exclusive-tag" th:if="${(p.destacado ?: false) || (p.exclusivo ?: false)}">Exclusivo</span>
+                </div>
+
+                <!-- Hover actions overlay -->
+                <div class="luxury-card-actions">
+                    <button class="action-btn" aria-label="Favorito"><i class="fa-regular fa-heart"></i></button>
+                    <a th:href="@{/producto/{id}(id=${p.id})}" class="action-btn" aria-label="Detalles"><i class="fa-regular fa-eye"></i></a>
+                </div>
+
+                <!-- Product image wrapper -->
+                <div class="luxury-card-image-box">
+                    <img th:src="${p.imagenUrl}" th:alt="${p.nombre}">
+                </div>
+
+                <!-- Technical Specification Drawer (reveals on hover) -->
+                <div class="luxury-card-tech-info">
+                    <div class="tech-spec-grid">
+                        <div class="tech-spec-item"><strong>Género</strong><span th:text="${p.genero}">Unisex</span></div>
+                        <div class="tech-spec-item"><strong>Familia</strong><span th:text="${p.familiaOlfativa ?: 'Florales'}">Ambarino</span></div>
+                        <div class="tech-spec-item"><strong>Duración</strong><span th:text="${p.duracion ?: '8 Horas'}">8 Horas</span></div>
+                        <div class="tech-spec-item"><strong>Concentración</strong><span th:text="${p.concentracion ?: 'EDP'}">EDP</span></div>
+                    </div>
+                    <div class="card-pyramid-chips">
+                        <span><strong>Salida:</strong> <span th:text="${p.notasSalida ?: 'Bergamota, Cítricos'}">Cítricos</span></span>
+                        <span><strong>Corazón:</strong> <span th:text="${p.notasCorazon ?: 'Jazmín, Rosa'}">Jazmín</span></span>
+                        <span><strong>Fondo:</strong> <span th:text="${p.notasFondo ?: 'Oud, Almizcle'}">Oud</span></span>
+                    </div>
+                </div>
+
+                <!-- Visible Product Body -->
+                <div style="padding:1.5rem; text-align:left;">
+                    <span class="product-brand" th:text="${p.marca}">Marca</span>
+                    <h3 class="product-name" th:text="${p.nombre}" style="font-size:1.35rem; margin-top:5px; margin-bottom:10px;">Nombre</h3>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="product-price" th:text="'$' + ${#numbers.formatDecimal(p.precio, 0, 'POINT', 0, 'POINT')} + ' COP'">$0 COP</span>
+                        <form th:action="@{/carrito/agregar/{id}(id=${p.id})}" method="post" class="ajax-cart-form">
+                            <button type="submit" class="btn btn-primary" style="padding:0.5rem 1.2rem; font-size:0.7rem; border-radius:30px; letter-spacing:1px;"><i class="fa-solid fa-shopping-bag"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. LA CIENCIA DEL AROMA (Interactive Olfactory Pyramid) -->
+    <section class="pyramid-section" id="piramide" style="background:#0F0F0F;">
+        <div class="pyramid-grid">
+            <div class="pyramid-content reveal">
+                <span class="label">La Anatomía del Perfume</span>
+                <h2>El Arte de la<br>Evolución Olfativa</h2>
+                <p>Un perfume de nicho no huele igual a los 15 minutos que a las 8 horas. Es una composición viva, estructurada en tres fases que dialogan con tu pH y la temperatura ambiente de Cartagena.</p>
+                
+                <!-- Pyramid details show-box -->
+                <div class="pyramid-detail-overlay-info" id="pyramid-detail-overlay-info">
+                    <h3 id="detail-level-title">Notas de Salida</h3>
+                    <p id="detail-level-text">La primera impresión que captura atención. Cítricos volátiles, acordes verdes y toques frutales que se evaporan rápidamente bajo el sol caribeño, durando los primeros 15 minutos.</p>
+                </div>
+            </div>
+            
+            <div class="pyramid-visual reveal" style="display:flex; flex-direction:column; align-items:center;">
+                <!-- Interactive Pyramid Shape -->
+                <div class="interactive-pyramid-shape">
+                    <div class="pyramid-slice-level pyramid-top active" onclick="switchPyramidInfo('Salida', this)">
+                        <h4>Salida</h4>
+                        <span>0 - 15 min</span>
+                    </div>
+                    <div class="pyramid-slice-level pyramid-middle" onclick="switchPyramidInfo('Corazon', this)">
+                        <h4>Corazón</h4>
+                        <span>15 min - 4 hrs</span>
+                    </div>
+                    <div class="pyramid-slice-level pyramid-bottom" onclick="switchPyramidInfo('Fondo', this)">
+                        <h4>Fondo</h4>
+                        <span>4 - 12+ hrs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. SENSORIAL EXPERIENCE (Interactive Note Selectors) -->
+    <section id="sensorial" style="background:#FAF6F1; transition: background 1.5s ease-in-out; position:relative; overflow:hidden;">
+        <div class="section-header reveal">
+            <span class="label">Exploración Niche</span>
+            <h2>Experiencia Sensorial</h2>
+            <p style="color:var(--text-light); font-weight:300; margin-top:10px;">Pasa el cursor sobre un ingrediente y siente cómo cambia la atmósfera olfativa.</p>
+        </div>
+        
+        <div class="sensorial-grid">
+            <div class="sensorial-node reveal" data-color="#fdf5e6" data-title="Vainilla Bourbon" data-desc="Procedente de Madagascar. Aporta una textura dulce, cremosa y reconfortante. Fija las fragancias florales y aporta calidez duradera.">
+                <div class="sensorial-node-icon"><i class="fa-solid fa-leaf"></i></div>
+                <h4>Vainilla</h4>
+                <span>Dulce / Gourmand</span>
+            </div>
+            <div class="sensorial-node reveal" data-color="#fbeedd" data-title="Ámbar Gris" data-desc="Nota marina salada y cálida muy cotizada. Reacciona de forma única al pH de la piel y resiste perfectamente la humedad costera.">
+                <div class="sensorial-node-icon"><i class="fa-solid fa-gem"></i></div>
+                <h4>Ámbar</h4>
+                <span>Cálido / Marino</span>
+            </div>
+            <div class="sensorial-node reveal" data-color="#ede3d5" data-title="Oud Real" data-desc="Extraído del árbol de agar infectado. Considerado el 'oro líquido' de la perfumería árabe. Aroma ahumado, amaderado y sumamente misterioso.">
+                <div class="sensorial-node-icon"><i class="fa-solid fa-tree"></i></div>
+                <h4>Oud</h4>
+                <span>Amaderado / Ahumado</span>
+            </div>
+            <div class="sensorial-node reveal" data-color="#f5efff" data-title="Jazmín de Grasse" data-desc="Cosechado al amanecer en el sur de Francia. Flor voluptuosa, fresca e indólica que aporta una elegancia femenina clásica inconfundible.">
+                <div class="sensorial-node-icon"><i class="fa-solid fa-spa"></i></div>
+                <h4>Jazmín</h4>
+                <span>Floral Blanco</span>
+            </div>
+            <div class="sensorial-node reveal" data-color="#fff0f5" data-title="Rosa de Damasco" data-desc="Rica, profunda y especiada. El alma de las fragancias de autor más sensuales de Oriente. Aporta una sofisticación inigualable.">
+                <div class="sensorial-node-icon"><i class="fa-solid fa-sun-plant-wilt"></i></div>
+                <h4>Rosa</h4>
+                <span>Floral Opulento</span>
+            </div>
+            <div class="sensorial-node reveal" data-color="#e9e4de" data-title="Cuero Toscano" data-desc="Elegante y rústico. Evoca tapicería fina, tabaco rubio y maderas ahumadas. Aporta una longevidad majestuosa en la piel.">
+                <div class="sensorial-node-icon"><i class="fa-solid fa-shoe-prints"></i></div>
+                <h4>Cuero</h4>
+                <span>Ahumado / Niche</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. PROCESS TIMELINE: HOW WE IMPORT -->
+    <section id="proceso" style="background:#ffffff; border-top: 1px solid #f2edd5;">
+        <div class="section-header reveal">
+            <span class="label">Calidad Sin Concesiones</span>
+            <h2>¿Cómo Importamos Nuestros Perfumes?</h2>
+        </div>
+        
+        <div class="timeline-process-container">
+            <div class="timeline-process-line"></div>
+            <div class="timeline-process-line-active" id="timeline-active-bar"></div>
+            <div class="timeline-process-grid">
+                <div class="timeline-process-step reveal">
+                    <div class="timeline-process-icon"><i class="fa-solid fa-earth-europe"></i></div>
+                    <h4>Europa</h4>
+                    <p>Adquisición directa en casas matrices autorizadas en París, Milán y Londres.</p>
+                </div>
+                <div class="timeline-process-step reveal">
+                    <div class="timeline-process-icon"><i class="fa-solid fa-plane-import"></i></div>
+                    <h4>Importación</h4>
+                    <p>Transporte aéreo refrigerado para proteger las moléculas aromáticas.</p>
+                </div>
+                <div class="timeline-process-step reveal">
+                    <div class="timeline-process-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h4>Calidad</h4>
+                    <p>Pruebas físicas de pH y lotes de serialización para garantizar originalidad.</p>
+                </div>
+                <div class="timeline-process-step reveal">
+                    <div class="timeline-process-icon"><i class="fa-solid fa-anchor"></i></div>
+                    <h4>Cartagena</h4>
+                    <p>Almacenamiento climatizado a 18°C en nuestra boutique oficial de la costa.</p>
+                </div>
+                <div class="timeline-process-step reveal">
+                    <div class="timeline-process-icon"><i class="fa-solid fa-crown"></i></div>
+                    <h4>Cliente</h4>
+                    <p>Entrega express y premium (empaque blindado de alto gramaje y perfumado).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. CINEMATIC SLOW BACKGROUND VIDEO SECTION -->
+    <section class="cinematic-video-container">
+        <video class="cinematic-video-bg" autoplay loop muted playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-perfume-bottle-spraying-close-up-42031-large.mp4" type="video/mp4">
+        </video>
+        <div class="cinematic-content">
+            <span class="label" style="color:var(--gold-light);">Sensorial Inmersión</span>
+            <h2>El Arte de Embotellar Recuerdos</h2>
+            <p>Dejamos una huella imborrable a cada paso. Nuestros perfumes están hechos para contar tu historia sin necesidad de pronunciar una sola palabra.</p>
+        </div>
+    </section>
+
+    <!-- 10. DIAGNOSTIC AI & STATS COUNTER -->
+    <section class="ai-section" id="nova" style="background:#FAF6F1;">
+        <div class="ai-grid">
+            <div class="ai-visual reveal">
+                <img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=800" alt="Nova AI Technology">
+                <div class="ai-card glass-panel-light">
+                    <div class="ai-card-header">
+                        <i class="fas fa-robot"></i> Nova AI Engine
+                    </div>
+                    <p>"Tu preferencia por florales blancos y la humedad promedio del 78% en Cartagena de Indias sugieren notas cítricas volátiles con fijadores ambarinos."</p>
+                </div>
+            </div>
+            <div class="ai-content reveal">
+                <span class="label">Tecnología de Precisión</span>
+                <h2 style="color:var(--dark);">No Elijas un Perfume,<br>Encuentra tu <span style="color: var(--gold)">Identidad</span></h2>
+                <p>Nuestro algoritmo exclusivo analiza tu tipo de piel, clima local y gustos para sugerirte la firma aromática idónea científicamente validada.</p>
+
+                <!-- Animated statistics counters -->
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <h4 class="counter-number" data-target="500">+0</h4>
+                        <p>Perfumes Niche</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4 class="counter-number" data-target="2000">+0</h4>
+                        <p>Clientes Satisfechos</p>
+                    </div>
+                    <div class="stat-item">
+                        <h4 class="counter-number" data-target="98">0%</h4>
+                        <p>Fidelidad / Matching</p>
+                    </div>
+                </div>
+
+                <a th:href="@{/diagnostico}" class="btn btn-primary" style="border-radius: 30px;">
+                    <i class="fas fa-play-circle"></i> Iniciar Diagnóstico
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 11. PINTEREST STYLED LUXURY GALLERY -->
+    <section style="background:#ffffff;">
+        <div class="section-header reveal">
+            <span class="label">Curaduría Visual</span>
+            <h2 style="color:var(--dark);">Un Vistazo al Lujo de Profumi</h2>
+        </div>
+        <div class="pinterest-luxury-gallery">
+            <div class="pinterest-gallery-item reveal">
+                <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=500" alt="Botella premium">
+                <div class="pinterest-gallery-info"><span>Perfumes</span><h4>Cremas & Elixires</h4></div>
+            </div>
+            <div class="pinterest-gallery-item reveal">
+                <img src="https://images.unsplash.com/photo-1610461888750-10bfc601b874?q=80&w=500" alt="Esencias e ingredientes">
+                <div class="pinterest-gallery-info"><span>Ingredientes</span><h4>Rosas y Cítricos</h4></div>
+            </div>
+            <div class="pinterest-gallery-item reveal">
+                <img src="https://images.unsplash.com/photo-1541604193435-22287d32c2c2?q=80&w=500" alt="Catas privadas">
+                <div class="pinterest-gallery-info"><span>Eventos</span><h4>Catas Olfativas</h4></div>
+            </div>
+            <div class="pinterest-gallery-item reveal">
+                <img src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?q=80&w=500" alt="Boutique Cartagena">
+                <div class="pinterest-gallery-info"><span>Boutique</span><h4>Ciudad Amurallada</h4></div>
+            </div>
+            <div class="pinterest-gallery-item reveal">
+                <img src="https://images.unsplash.com/photo-1608528577891-eb05fce3674c?q=80&w=500" alt="Packaging de lujo">
+                <div class="pinterest-gallery-info"><span>Experiencia</span><h4>Empaque Firmado</h4></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 12. TESTIMONIALS SLIDER SECTION -->
+    <section style="background:#FAF6F1; border-top:1px solid #f2edd5;">
+        <div class="section-header reveal">
+            <span class="label">Opinión De Los Expertos</span>
+            <h2 style="color:var(--dark);">Testimonios del Club</h2>
+        </div>
+        
+        <div class="testimonial-carousel-container">
+            <div class="testimonial-carousel-track" id="testimonial-track">
+                <!-- Slide 1 -->
+                <div class="testimonial-slide">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300" alt="Sofia Restrepo">
+                    <h4>Sofía Restrepo</h4>
+                    <span class="testimonial-city">Medellín, Colombia</span>
+                    <span class="testimonial-perfume">Good Girl Tradicional - Carolina Herrera</span>
+                    <div class="testimonial-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p class="testimonial-text">"La fijación del perfume que compré es increíble. Llegó perfumado en una caja hermosa. El diagnóstico con Nova fue exacto para mi tipo de piel."</p>
+                </div>
+                <!-- Slide 2 -->
+                <div class="testimonial-slide">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300" alt="Andres Valenzuela">
+                    <h4>Andrés Valenzuela</h4>
+                    <span class="testimonial-city">Bogotá, Colombia</span>
+                    <span class="testimonial-perfume">Tobacco Vanille - Tom Ford</span>
+                    <div class="testimonial-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p class="testimonial-text">"Autenticidad al 100%. Comprobé el lote y el serial con la casa importadora. El envío a Bogotá fue rápido y el empaque muy premium."</p>
+                </div>
+                <!-- Slide 3 -->
+                <div class="testimonial-slide">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=300" alt="Isabella Santo">
+                    <h4>Isabella Santo Domingo</h4>
+                    <span class="testimonial-city">Cartagena, Colombia</span>
+                    <span class="testimonial-perfume">Baccarat Rouge 540 - MFK</span>
+                    <div class="testimonial-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <p class="testimonial-text">"Excelente asesoría privada en su local del centro. Me ayudaron a elegir el perfume ideal para la humedad de la costa y las noches caribeñas."</p>
+                </div>
+            </div>
+            
+            <div class="carousel-nav-dots" id="carousel-dots">
+                <span class="carousel-dot active" onclick="switchTestimonialSlide(0)"></span>
+                <span class="carousel-dot" onclick="switchTestimonialSlide(1)"></span>
+                <span class="carousel-dot" onclick="switchTestimonialSlide(2)"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 13. VIP MEMBERSHIP CLUB -->
+    <section class="vip-section" id="vip">
+        <div class="vip-content reveal">
+            <div class="vip-icon"><i class="fas fa-crown"></i></div>
+            <h2>The Profumi VIP Club</h2>
+            <p>Acceso prioritario a lotes limitados de autor, invitaciones a catas olfativas privadas en Cartagena y preventa de lanzamientos exclusivos de Grasse. Solo 100 miembros por año.</p>
+            <form class="vip-form" onsubmit="event.preventDefault(); showToast('¡Solicitud VIP registrada con éxito! Revisa tu correo.', 'success');">
+                <input type="email" placeholder="Tu correo electrónico" required style="border-radius: 40px; padding: 1.2rem 2.2rem;">
+                <button type="submit" class="btn btn-primary" style="border-radius: 40px;">Solicitar Acceso</button>
+            </form>
+            <p class="vip-note">Membresía premium sujeta a revisión de perfil • Cupos limitados</p>
+        </div>
+    </section>
+
+    <!-- 14. COMPROMISO & ESTÁNDARES -->
+    <section class="standards-section">
+        <div class="section-header reveal">
+            <span class="label">Nuestro Compromiso</span>
+            <h2 style="color:var(--dark);">El Estándar de Oro</h2>
+        </div>
+        <div class="standards-grid">
+            <div class="standard-item reveal">
+                <div class="standard-icon"><i class="fas fa-check-double"></i></div>
+                <h4>Autenticidad Absoluta</h4>
+                <p>Importación certificada de marcas de autor. Lotes numerados verificables con hologramas de importación.</p>
+            </div>
+            <div class="standard-item reveal">
+                <div class="standard-icon"><i class="fas fa-shipping-fast"></i></div>
+                <h4>Logística Climatizada</h4>
+                <p>Transporte refrigerado continuo a 18°C. Empaques de alta protección herméticos especiales para transporte.</p>
+            </div>
+            <div class="standard-item reveal">
+                <div class="standard-icon"><i class="fas fa-leaf"></i></div>
+                <h4>Sostenibilidad Niche</h4>
+                <p>Envases rellenables y empaques 100% reciclables biodegradables de origen orgánico certificado.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 15. HIGH-END FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>Profumi</h3>
+                <p>La perfumería de autor líder en Cartagena de Indias. Fusionamos la elegancia aromática tradicional europea con recomendación inteligente de aromas asistida por Inteligencia Artificial.</p>
+                <div class="social-links">
+                    <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://whatsapp.com" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Enlaces Rápidos</h4>
+                <ul>
+                    <li><a th:href="@{/catalogo}">Ver Catálogo</a></li>
+                    <li><a th:href="@{/diagnostico}">Diagnóstico IA</a></li>
+                    <li><a th:href="@{/kits}">Kits de Descubrimiento</a></li>
+                    <li><a th:href="@{/buscar}">Centro de Búsqueda</a></li>
+                    <li><a href="#">Catas Privadas</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Soporte & Legal</h4>
+                <ul>
+                    <li><a href="#">Métodos de Envío</a></li>
+                    <li><a href="#">Políticas de Devolución</a></li>
+                    <li><a href="#">Términos de Servicio</a></li>
+                    <li><a href="#">Garantía de Autenticidad</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contacto Boutique</h4>
+                <ul>
+                    <li>Calle del Curato #38-12, Centro Histórico</li>
+                    <li>Cartagena de Indias, Colombia</li>
+                    <li>WhatsApp: +57 300 572 2844</li>
+                    <li>hola@profumi.co</li>
+                    <li>Lun - Sáb: 10:00 AM - 8:00 PM</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Profumi Cartagena. Todos los derechos reservados.</p>
+            <div class="payment-icons">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/2560px-PayPal.svg.png" alt="PayPal">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/1200px-American_Express_logo_%282018%29.svg.png" alt="Amex">
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Bot Nova AI (Incluido desde fragmento) -->
+    <div th:replace="~{fragments/chatbot :: chatbot}"></div>
+
+    <!-- GSAP & ScrollTrigger Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script th:inline="javascript">
+        // 1. SCROLL REVEAL ANIMATIONS (GSAP ScrollTrigger)
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Register standard reveal classes
+            gsap.utils.toArray('.reveal').forEach((elem) => {
+                gsap.fromTo(elem, 
+                    { opacity: 0, y: 25, filter: 'blur(3px)' },
+                    { 
+                        opacity: 1, 
+                        y: 0, 
+                        filter: 'blur(0px)',
+                        duration: 0.5,
+                        ease: 'power2.out',
+                        scrollTrigger: {
+                            trigger: elem,
+                            start: 'top 92%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            });
+
+            // Parallax Scroll for Occasion Cards
+            gsap.utils.toArray('.occasion-card').forEach((card) => {
+                const bg = card.querySelector('.occasion-bg');
+                gsap.fromTo(bg,
+                    { yPercent: -15 },
+                    {
+                        yPercent: 15,
+                        ease: 'none',
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top bottom',
+                            end: 'bottom top',
+                            scrub: true
+                        }
+                    }
+                );
+            });
+
+            // 3D Parallax Tilt for Luxury Cards
+            document.querySelectorAll('.luxury-product-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const rotateX = ((y / rect.height) - 0.5) * 8; // Max 8 deg
+                    const rotateY = ((x / rect.width) - 0.5) * -8;
+                    card.style.transform = `perspective(1000px) translateY(-5px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+                card.addEventListener('mouseleave', (cardElem) => {
+                    card.style.transform = 'perspective(1000px) translateY(0) rotateX(0deg) rotateY(0deg)';
+                });
+            });
+
+            // Initialize other components
+            initHeroCanvasParticles();
+            init3DPerfumeParallax();
+            initCountersScrollTrigger();
+            initSensorialNodes();
+            initTimelineAnimation();
+        });
+
+        // 2. AMBER FLOATING PARTICLES (Canvas 2D)
+        function initHeroCanvasParticles() {
+            const canvas = document.getElementById('hero-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+            
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+            
+            const particles = [];
+            for (let i = 0; i < 40; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    r: Math.random() * 2 + 0.5,
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3 - 0.4,
+                    alpha: Math.random() * 0.5 + 0.1
+                });
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.y < 0) {
+                        p.y = height;
+                        p.x = Math.random() * width;
+                    }
+                    if (p.x < 0 || p.x > width) {
+                        p.vx = -p.vx;
+                    }
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(201, 169, 110, ${p.alpha})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // 3. 3D PERFUME BOTTLE PARALLAX ROTATION
+        function init3DPerfumeParallax() {
+            const scene = document.getElementById('hero-scene-3d');
+            const bottle = document.getElementById('perfume-bottle-3d');
+            if (!scene || !bottle) return;
+            
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX - window.innerWidth / 2) * 0.08;
+                const y = (e.clientY - window.innerHeight / 2) * 0.08;
+                // Move scene slightly, rotate bottle
+                scene.style.transform = `translateX(${x * 0.2}px) translateY(${y * 0.2}px)`;
+                bottle.style.transform = `rotateY(${15 + x}deg) rotateX(${y}deg)`;
+            });
+        }
+
+        // 4. ANIMATED COUNTERS ENGINE (ScrollTrigger trigger)
+        function initCountersScrollTrigger() {
+            const counters = document.querySelectorAll('.counter-number');
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const isSatisfy = target === 98;
+                
+                ScrollTrigger.create({
+                    trigger: counter,
+                    start: 'top 90%',
+                    onEnter: () => {
+                        let count = 0;
+                        const duration = 2000; // 2 seconds
+                        const step = Math.ceil(target / (duration / 30));
+                        const timer = setInterval(() => {
+                            count += step;
+                            if (count >= target) {
+                                count = target;
+                                clearInterval(timer);
+                            }
+                            counter.textContent = isSatisfy ? `${count}%` : `+${count.toLocaleString('es-CO')}`;
+                        }, 30);
+                    }
+                });
+            });
+        }
+
+        // 5. INTERACTIVE OLFACTORY PYRAMID INFORMATION MODULE
+        const pyramidInfoData = {
+            Salida: {
+                title: "Notas de Salida",
+                text: "La primera impresión que captura la atención. Compuesta de acordes cítricos ligeros (bergamota, limón), notas herbales y frutas frescas que se disipan sutilmente durante los primeros 15 minutos en el ambiente caribeño."
+            },
+            Corazon: {
+                title: "Notas de Corazón (El Alma)",
+                text: "El verdadero núcleo de la fragancia. Aparece tras 15 minutos y perdura hasta 4 horas. Dominada por flores finas (jazmín, rosa, neroli) y especias ligeras, definiendo la estela principal que dejas a tu paso."
+            },
+            Fondo: {
+                title: "Notas de Fondo (Fijadores)",
+                text: "La memoria olfativa que te acompaña todo el día (de 4 a 12+ horas). Compuesta por aceites densos y pesados como el Oud real, vainilla Bourbon, sándalo y almizcles que se anclan con firmeza a tu pH."
+            }
+        };
+
+        function switchPyramidInfo(level, element) {
+            document.querySelectorAll('.pyramid-slice-level').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            
+            const data = pyramidInfoData[level];
+            const titleEl = document.getElementById('detail-level-title');
+            const textEl = document.getElementById('detail-level-text');
+            const overlay = document.getElementById('pyramid-detail-overlay-info');
+            
+            // Fade transitions
+            overlay.style.opacity = '0';
+            overlay.style.transform = 'translateY(10px)';
+            
+            setTimeout(() => {
+                titleEl.textContent = data.title;
+                textEl.textContent = data.text;
+                overlay.style.opacity = '1';
+                overlay.style.transform = 'translateY(0)';
+            }, 300);
+        }
+
+        // 6. SENSORIAL NODES EXPERIENCE BACKGROUND GRADIENTS
+        function initSensorialNodes() {
+            const section = document.getElementById('sensorial');
+            const nodes = document.querySelectorAll('.sensorial-node');
+            if (!section) return;
+            
+            nodes.forEach(node => {
+                node.addEventListener('mouseenter', () => {
+                    const color = node.getAttribute('data-color');
+                    section.style.background = `radial-gradient(circle at center, ${color} 0%, #FAF6F1 100%)`;
+                });
+                node.addEventListener('mouseleave', () => {
+                    section.style.background = '#FAF6F1';
+                });
+            });
+        }
+
+        // 7. IMPORT TIMELINE ACTIVE PROGRESSION
+        function initTimelineAnimation() {
+            const bar = document.getElementById('timeline-active-bar');
+            if (!bar) return;
+            
+            ScrollTrigger.create({
+                trigger: '.timeline-process-container',
+                start: 'top 70%',
+                onEnter: () => {
+                    bar.style.width = '100%';
+                }
+            });
+        }
+
+        // 8. TESTIMONIAL CAROUSEL AUTOPLAY MODULE
+        let activeTestimonialIndex = 0;
+        const totalTestimonials = 3;
+        let testimonialTimer = setInterval(autoAdvanceTestimonials, 6000);
+
+        function switchTestimonialSlide(index) {
+            clearInterval(testimonialTimer);
+            activeTestimonialIndex = index;
+            const track = document.getElementById('testimonial-track');
+            const dots = document.getElementById('carousel-dots').children;
+            
+            track.style.transform = `translateX(-${index * 100}%)`;
+            
+            Array.from(dots).forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+            
+            testimonialTimer = setInterval(autoAdvanceTestimonials, 6000);
+        }
+
+        function autoAdvanceTestimonials() {
+            activeTestimonialIndex = (activeTestimonialIndex + 1) % totalTestimonials;
+            switchTestimonialSlide(activeTestimonialIndex);
+        }
+
+        // 9. SHARED NAVBAR & SCROLL BEHAVIOR
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // AJAX Cart for Featured Products
+        document.querySelectorAll('.ajax-cart-form').forEach(form => {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const url = form.action;
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        if (typeof updateCartCount === 'function') {
+                            updateCartCount(data.cartCount);
+                        } else {
+                            const badge = document.querySelector('.cart-count');
+                            if (badge) {
+                                badge.textContent = data.cartCount;
+                                badge.style.display = 'flex';
+                            }
+                        }
+                        if (typeof showToast === 'function') {
+                            showToast('¡Añadido al carrito con éxito! 🛍️', 'success');
+                        }
+                    }
+                } catch (error) {
+                    if (typeof showToast === 'function') {
+                        showToast('Error al añadir al carrito', 'error');
+                    }
+                }
+            });
+        });
+
+        window.toggleHomeMobileMenu = () => {
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks) {
+                navLinks.classList.toggle('mobile-active');
+            }
+        };
+    </script>
+</body>
+</html>

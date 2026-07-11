@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Centro de Búsqueda Inteligente | Profumi</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-primary: #e8913a;
+            --color-primary-light: #f4a261;
+            --color-primary-dark: #d4802f;
+            --color-bg-warm: #faf6f1;
+            --color-text: #1a1a1a;
+            --color-text-light: #555;
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--color-bg-warm);
+            font-family: var(--font-sans);
+            color: var(--color-text);
+            overflow-x: hidden;
+        }
+
+        /* Hero */
+        .search-hero {
+            padding: 160px 2rem 80px;
+            background: linear-gradient(180deg, #fff 0%, #fffbf6 50%, var(--color-bg-warm) 100%);
+            text-align: center;
+            position: relative;
+        }
+
+        .search-hero-decor {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 300px;
+            background: radial-gradient(circle, rgba(232, 145, 58, 0.05) 0%, transparent 80%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Buscador principal */
+        .search-bar-wrapper {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            z-index: 10;
+        }
+
+        .search-input-main {
+            width: 100%;
+            padding: 1.2rem 3.5rem 1.2rem 2rem;
+            border-radius: 50px;
+            border: 2px solid #ebdcd0;
+            background: #fff;
+            font-size: 1.1rem;
+            font-family: var(--font-sans);
+            outline: none;
+            box-shadow: 0 10px 30px rgba(232, 145, 58, 0.05);
+            transition: all 0.3s;
+        }
+
+        .search-input-main:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 15px 45px rgba(232, 145, 58, 0.12);
+        }
+
+        .search-icon-btn {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--color-primary);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        /* Autocomplete results dropdown */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-radius: 24px;
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            margin-top: 0.5rem;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+            text-align: left;
+        }
+
+        .autocomplete-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #f5f5f5;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .autocomplete-item:hover {
+            background: #faf6f1;
+        }
+
+        .autocomplete-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* Chips */
+        .chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .chip-btn {
+            background: #fff;
+            border: 1px solid #ebdcd0;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .chip-btn:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            background: #fffcf8;
+        }
+
+        .chip-btn.active {
+            background: var(--color-primary);
+            color: #fff;
+            border-color: var(--color-primary);
+        }
+
+        /* Sections common spacing */
+        .search-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-header-title {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            color: #1a1a1a;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        /* Products Grid */
+        .search-results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Product Card */
+        .perfume-card {
+            background: #fff;
+            border-radius: 24px;
+            border: 1px solid rgba(0,0,0,0.03);
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.01);
+            transition: all 0.4s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .perfume-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(232,145,58,0.06);
+            border-color: rgba(232,145,58,0.1);
+        }
+
+        .perfume-img-box {
+            height: 220px;
+            overflow: hidden;
+            background: #fdfbf7;
+            position: relative;
+        }
+
+        .perfume-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .perfume-body {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .perfume-brand {
+            color: var(--color-primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.3rem;
+        }
+
+        .perfume-title {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+
+        .perfume-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.2rem;
+        }
+
+        .card-btn-view {
+            padding: 0.8rem;
+            border-radius: 12px;
+            border: 1.5px solid #eee;
+            color: #555;
+            text-align: center;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-btn-view:hover {
+            border-color: #333;
+            color: #1a1a1a;
+        }
+
+        .card-btn-cart {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 12px;
+            border: none;
+            background: #1a1a1a;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .card-btn-cart:hover {
+            background: var(--color-primary);
+        }
+
+        /* Large Categories Cards */
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .cat-card {
+            background: #fff;
+            padding: 2rem 1rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0,0,0,0.03);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.01);
+        }
+
+        .cat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--color-primary);
+            box-shadow: 0 10px 25px rgba(232,145,58,0.05);
+        }
+
+        .cat-icon {
+            font-size: 2.2rem;
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        .cat-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        /* Families Grid */
+        .families-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .family-item {
+            background: #fff;
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+            border: 1px solid rgba(0,0,0,0.03);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .family-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--color-primary);
+        }
+
+        .family-item.active {
+            background: var(--color-primary);
+            color: #fff;
+            border-color: var(--color-primary);
+        }
+
+        /* Table Spec Comparer */
+        .comp-table th, .comp-table td {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .comp-table th {
+            background: #faf6f1;
+            font-weight: 700;
+        }
+
+        /* Double slider styling */
+        .slider-box {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 24px;
+            border: 1px solid rgba(0,0,0,0.03);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .search-results-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .cat-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            .search-hero {
+                padding: 140px 1rem 60px;
+            }
+        }
+    </style>
+</head>
+
+<body style="background: #faf8f5;">
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <!-- HERO SECTION -->
+    <section class="search-hero">
+        <div class="search-hero-decor"></div>
+        <div style="max-width: 800px; margin: 0 auto; position: relative; z-index: 10;">
+            <div
+                style="display: inline-flex; align-items: center; gap: 0.8rem; background: linear-gradient(135deg, #fff9f2 0%, #fff5e8 100%); padding: 0.5rem 1.4rem; border-radius: 50px; margin-bottom: 2rem; border: 1px solid rgba(232,145,58,0.15);">
+                <span style="width: 6px; height: 6px; background: var(--color-primary); border-radius: 50%; display: inline-block;"></span>
+                <span style="font-size: 0.8rem; color: var(--color-primary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Descubre tu Aroma</span>
+            </div>
+
+            <h1 style="font-family: var(--font-serif); font-size: clamp(2rem, 5vw, 3.8rem); color: #1a1a1a; margin-bottom: 1.2rem; font-weight: 700; line-height: 1.1;">
+                Búsqueda Inteligente de Perfumes
+            </h1>
+
+            <p style="color: #666; font-size: 1.1rem; max-width: 600px; margin: 0 auto 3rem; font-weight: 300;">
+                Explora el catálogo, selecciona tus preferencias o habla con nuestra concierge.
+            </p>
+
+            <!-- BUSCADOR -->
+            <div class="search-bar-wrapper">
+                <input type="text" id="search-input" class="search-input-main" placeholder="Buscar por marca, nombre, familia olfativa..." oninput="onSearchInput()">
+                <button class="search-icon-btn"><i class="fas fa-search"></i></button>
+
+                <!-- dropdown results -->
+                <div class="autocomplete-dropdown" id="dropdown-results"></div>
+            </div>
+
+            <!-- HISTORIAL DE BÚSQUEDA -->
+            <div id="history-box" style="display: none; justify-content: center; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-top: 1rem;">
+                <span style="font-size: 0.8rem; color: #888; font-weight: 600;">Historial:</span>
+                <div id="history-chips" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
+                <button onclick="clearSearchHistory()" style="background: none; border: none; color: #ef4444; font-size: 0.75rem; cursor: pointer; text-decoration: underline;">Limpiar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIVE SEARCH RESULTS OR TENDENCIAS -->
+    <section class="search-section" id="results-section" style="display: none;">
+        <h2 class="section-header-title" id="results-header-title">Resultados de tu búsqueda</h2>
+        <div class="search-results-grid" id="search-results-container"></div>
+
+        <!-- SIMILAR / ALSO MIGHT LIKE SECTION -->
+        <div id="similar-section" style="display: none; margin-top: 5rem;">
+            <h3 style="font-family: var(--font-serif); font-size: 1.5rem; color: #1a1a1a; margin-bottom: 1.5rem;">También te podrían gustar</h3>
+            <div class="search-results-grid" id="similar-results-container"></div>
+        </div>
+    </section>
+
+    <!-- LOS MÁS BUSCADOS / TENDENCIAS -->
+    <section class="search-section">
+        <h2 class="section-header-title">🔥 Tendencias de la Semana</h2>
+        <div class="search-results-grid" id="trending-container"></div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="search-section" style="background: #fff; border-top: 1px solid #f2e9e1; border-bottom: 1px solid #f2e9e1;">
+        <h2 class="section-header-title" style="justify-content: center;">Buscar por categoría</h2>
+        <div class="cat-grid">
+            <div class="cat-card" onclick="filterByField('genero', 'Hombre')">
+                <span class="cat-icon">👨</span>
+                <h3>Hombre</h3>
+            </div>
+            <div class="cat-card" onclick="filterByField('genero', 'Mujer')">
+                <span class="cat-icon">👩</span>
+                <h3>Mujer</h3>
+            </div>
+            <div class="cat-card" onclick="filterByField('genero', 'Uniséx')">
+                <span class="cat-icon">🎁</span>
+                <h3>Regalos / Unisex</h3>
+            </div>
+            <div class="cat-card" onclick="filterByField('tipo', 'Decant')">
+                <span class="cat-icon">🧪</span>
+                <h3>Decants</h3>
+            </div>
+            <div class="cat-card" onclick="filterByField('tipo', 'Kit')">
+                <span class="cat-icon">📦</span>
+                <h3>Kits</h3>
+            </div>
+            <div class="cat-card" onclick="filterByField('tipo', 'Novedad')">
+                <span class="cat-icon">🌟</span>
+                <h3>Novedades</h3>
+            </div>
+            <div class="cat-card" onclick="filterByField('tipo', 'Best')">
+                <span class="cat-icon">❤️</span>
+                <h3>Más vendidos</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAMILIA OLFATIVA -->
+    <section class="search-section">
+        <h2 class="section-header-title" style="justify-content: center;">Buscar por familia olfativa</h2>
+        <div class="families-grid">
+            <div class="family-item" onclick="filterByAroma('Floral')">🌸 Floral</div>
+            <div class="family-item" onclick="filterByAroma('Citrico')">🍊 Cítrico</div>
+            <div class="family-item" onclick="filterByAroma('Amaderado')">🌳 Amaderado</div>
+            <div class="family-item" onclick="filterByAroma('Vainilla')">🍦 Vainilla</div>
+            <div class="family-item" onclick="filterByAroma('Fresco')">🌊 Fresco</div>
+            <div class="family-item" onclick="filterByAroma('Dulce')">🍬 Dulce</div>
+            <div class="family-item" onclick="filterByAroma('Oriental')">🔥 Oriental</div>
+            <div class="family-item" onclick="filterByAroma('Aromatico')">🌿 Aromático</div>
+        </div>
+    </section>
+
+    <!-- FILTRAR POR OCASIÓN -->
+    <section class="search-section" style="background: #fff; border-top: 1px solid #f2e9e1; border-bottom: 1px solid #f2e9e1;">
+        <h2 class="section-header-title" style="justify-content: center;">Buscar por ocasión</h2>
+        <div class="chip-container">
+            <button class="chip-btn" onclick="filterByOccasion('diario')">☀️ Uso diario</button>
+            <button class="chip-btn" onclick="filterByOccasion('trabajo')">💼 Trabajo</button>
+            <button class="chip-btn" onclick="filterByOccasion('universidad')">🏫 Universidad</button>
+            <button class="chip-btn" onclick="filterByOccasion('fiesta')">🎉 Fiestas</button>
+            <button class="chip-btn" onclick="filterByOccasion('citas')">🥂 Citas</button>
+            <button class="chip-btn" onclick="filterByOccasion('elegante')">🎭 Eventos</button>
+            <button class="chip-btn" onclick="filterByOccasion('noche')">🌙 Noche</button>
+            <button class="chip-btn" onclick="filterByOccasion('calido')">🌴 Verano</button>
+            <button class="chip-btn" onclick="filterByOccasion('frio')">❄️ Invierno</button>
+        </div>
+    </section>
+
+    <!-- COMPARADOR RÁPIDO DE ESPECIFICACIONES -->
+    <section class="search-section">
+        <h2 class="section-header-title" style="justify-content: center;">Comparador Rápido (Hasta 3)</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 2rem;">Selecciona fragancias desde los resultados de búsqueda para compararlas en tiempo real.</p>
+        <div style="background: #fff; padding: 2rem; border-radius: 28px; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 8px 30px rgba(0,0,0,0.01); overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 600px;" class="comp-table" id="comparer-table">
+                <tr>
+                    <td colspan="4" style="text-align: center; color: #999; padding: 3rem;">Añade perfumes de la lista para comparar sus propiedades.</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- PRECIO SLIDER Y DURACIÓN -->
+    <section class="search-section" style="background: #fff; border-top: 1px solid #f2e9e1; border-bottom: 1px solid #f2e9e1;">
+        <h2 class="section-header-title" style="justify-content: center;">Filtrar por rango de precio</h2>
+        <div class="slider-box">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-weight: 700;">
+                <span>Hasta:</span>
+                <span id="price-val" style="color: var(--color-primary); font-size: 1.2rem;">$1.200.000 COP</span>
+            </div>
+            <input type="range" id="price-slider" min="100000" max="2500000" step="50000" value="2500000" style="width: 100%; accent-color: var(--color-primary);" oninput="onPriceSliderChange()">
+        </div>
+    </section>
+
+    <!-- PREMIUM NOVA AI CONCIERGE -->
+    <section class="search-section">
+        <div style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 32px; padding: 4rem; color: #fff; text-align: center; position: relative; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.3);">
+            <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(232, 145, 58, 0.15) 0%, transparent 70%); border-radius: 50%;"></div>
+            <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🤖</span>
+            <h2 style="font-family: var(--font-serif); font-size: 2.2rem; color: #fff; margin-bottom: 1rem;">Nova AI</h2>
+            <p style="color: var(--color-primary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; margin-bottom: 1.5rem;">Tu Asistente Experto en Perfumes</p>
+            <p style="color: #ccc; max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.8;">
+                Pregúntame lo que quieras. Puedo sugerirte combinaciones, explicarte familias aromáticas y encontrar tu perfume ideal según tu personalidad, edad, gusto y presupuesto.
+            </p>
+            <a href="/diagnostico" style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: #fff; padding: 1.1rem 2.8rem; border-radius: 14px; text-decoration: none; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; box-shadow: 0 10px 30px rgba(232,145,58,0.3); display: inline-block;">Hablar con Nova</a>
+        </div>
+    </section>
+
+    <!-- SCRIPTS -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const dbPerfumes = /*[[${perfumes}]]*/ [];
+        /*]]>*/
+
+        // Unified search engine state
+        let activeFilters = {
+            texto: '',
+            categoria: '',
+            aroma: '',
+            ocasion: '',
+            duracion: '',
+            maxPrecio: 2500000
+        };
+
+        let searchHistory = [];
+        let compareList = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load history
+            const stored = localStorage.getItem('profumi_search_history');
+            if (stored) {
+                searchHistory = JSON.parse(stored);
+                renderHistory();
+            }
+
+            // Render trending (Real database trending: destacado or topVentas)
+            renderTrending();
+
+            // Setup Enter key on search input
+            document.getElementById('search-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const text = e.target.value.trim();
+                    if (text) {
+                        triggerSearchText(text);
+                    }
+                }
+            });
+        });
+
+        function renderTrending() {
+            const container = document.getElementById('trending-container');
+            container.innerHTML = '';
+            // Display perfumes where destacado or topVentas is true, fallback to first 4
+            let trending = dbPerfumes.filter(p => p.destacado || p.topVentas);
+            if (trending.length === 0) trending = dbPerfumes.slice(0, 4);
+
+            trending.forEach(p => {
+                container.innerHTML += buildCardHtml(p);
+            });
+        }
+
+        function buildCardHtml(p) {
+            const imageSrc = (p.imagenUrl === 'Sin imagen' || !p.imagenUrl) ? 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop' : p.imagenUrl;
+            const isComparing = compareList.includes(p.id);
+
+            return `
+                <div class="perfume-card">
+                    <div class="perfume-img-box">
+                        <img src="${imageSrc}" alt="${p.nombre}">
+                        <button onclick="toggleCompare('${p.id}')" style="position: absolute; top: 15px; right: 15px; border: none; background: ${isComparing ? 'var(--color-primary)' : 'rgba(255,255,255,0.9)'}; color: ${isComparing ? '#fff' : '#333'}; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 0.8rem;" title="Comparar">
+                            <i class="fas fa-balance-scale"></i>
+                        </button>
+                    </div>
+                    <div class="perfume-body">
+                        <span class="perfume-brand">${p.marca}</span>
+                        <h3 class="perfume-title">${p.nombre}</h3>
+                        <p style="font-size: 0.8rem; color: #888; margin-bottom: 0.8rem;">🌸 ${p.familiaOlfativa || 'Esencia de lujo'}</p>
+                        <div class="perfume-price">$${(p.precio || 0).toLocaleString('es-CO')} COP</div>
+                        <a href="/producto/${p.id}" class="card-btn-view">Ver Producto</a>
+                        <button onclick="addToCart('${p.id}')" class="card-btn-cart"><i class="fas fa-shopping-bag"></i> Agregar</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Live autocomplete search dropdown
+        function onSearchInput() {
+            const query = document.getElementById('search-input').value.trim().toLowerCase();
+            const dropdown = document.getElementById('dropdown-results');
+
+            if (!query) {
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            // Filter
+            const matches = dbPerfumes.filter(p => {
+                const notesMatch = (p.notasOlfativas || []).some(n => n.toLowerCase().includes(query));
+                return p.nombre.toLowerCase().includes(query) ||
+                       p.marca.toLowerCase().includes(query) ||
+                       (p.familiaOlfativa || '').toLowerCase().includes(query) ||
+                       notesMatch;
+            });
+
+            dropdown.innerHTML = '';
+            if (matches.length === 0) {
+                dropdown.innerHTML = `<div style="padding: 1.5rem; color: #999; text-align: center;">No encontramos resultados.</div>`;
+            } else {
+                matches.slice(0, 5).forEach(p => {
+                    const imageSrc = (p.imagenUrl === 'Sin imagen' || !p.imagenUrl) ? 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop' : p.imagenUrl;
+                    dropdown.innerHTML += `
+                        <div class="autocomplete-item" onclick="triggerSearchText('${p.nombre}')">
+                            <img src="${imageSrc}">
+                            <div style="flex: 1;">
+                                <strong style="font-size: 0.95rem; color: #1a1a1a;">${p.nombre}</strong>
+                                <span style="display: block; font-size: 0.75rem; color: #888;">${p.marca} - ${p.familiaOlfativa}</span>
+                            </div>
+                            <strong style="color: var(--color-primary); font-size: 0.9rem;">$${(p.precio || 0).toLocaleString('es-CO')}</strong>
+                        </div>
+                    `;
+                });
+            }
+            dropdown.style.display = 'block';
+        }
+
+        function triggerSearchText(text) {
+            document.getElementById('search-input').value = text;
+            document.getElementById('dropdown-results').style.display = 'none';
+            saveHistory(text);
+            activeFilters.texto = text;
+            buscarPerfumes();
+        }
+
+        // Save and manage search history
+        function saveHistory(query) {
+            if (!query || searchHistory.includes(query)) return;
+            searchHistory.unshift(query);
+            if (searchHistory.length > 5) searchHistory.pop();
+            localStorage.setItem('profumi_search_history', JSON.stringify(searchHistory));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('history-chips');
+            const box = document.getElementById('history-box');
+            if (searchHistory.length === 0) {
+                box.style.display = 'none';
+                return;
+            }
+            box.style.display = 'flex';
+            container.innerHTML = '';
+            searchHistory.forEach(q => {
+                container.innerHTML += `
+                    <button class="chip-btn" onclick="triggerSearchText('${q}')">
+                        <i class="fas fa-history"></i> ${q}
+                    </button>
+                `;
+            });
+        }
+
+        function clearSearchHistory() {
+            searchHistory = [];
+            localStorage.removeItem('profumi_search_history');
+            renderHistory();
+        }
+
+        // UNIFIED SEARCH ENGINE
+        function buscarPerfumes() {
+            let results = dbPerfumes.filter(p => {
+                // 1. Text Search
+                if (activeFilters.texto) {
+                    const q = activeFilters.texto.toLowerCase();
+                    const notesMatch = (p.notasOlfativas || []).some(n => n.toLowerCase().includes(q));
+                    const textMatch = p.nombre.toLowerCase().includes(q) ||
+                                      p.marca.toLowerCase().includes(q) ||
+                                      (p.familiaOlfativa || '').toLowerCase().includes(q) ||
+                                      (p.descripcion || '').toLowerCase().includes(q) ||
+                                      notesMatch;
+                    if (!textMatch) return false;
+                }
+
+                // 2. Categoria
+                if (activeFilters.categoria) {
+                    const cat = activeFilters.categoria;
+                    if (cat === 'Hombre' || cat === 'Mujer' || cat === 'Uniséx') {
+                        if (p.genero !== cat) return false;
+                    } else if (cat === 'Decant') {
+                        if (p.sku && p.sku.startsWith("KIT-")) return false; // Kits are not decants
+                    } else if (cat === 'Kit') {
+                        if (!p.sku || !p.sku.startsWith("KIT-")) return false;
+                    } else if (cat === 'Novedad') {
+                        if (!p.nuevo) return false;
+                    } else if (cat === 'Best') {
+                        if (!p.topVentas) return false;
+                    }
+                }
+
+                // 3. Aroma
+                if (activeFilters.aroma) {
+                    const ar = activeFilters.aroma.toLowerCase();
+                    const family = (p.familiaOlfativa || '').toLowerCase();
+                    const notes = (p.notasOlfativas || []).map(n => n.toLowerCase());
+                    const aromaMatch = family.includes(ar) || notes.some(n => n.includes(ar));
+                    if (!aromaMatch) return false;
+                }
+
+                // 4. Occasion
+                if (activeFilters.ocasion) {
+                    const oc = activeFilters.ocasion.toLowerCase();
+                    const ideal = (p.idealPara || '').toLowerCase();
+                    const ocMatch = ideal.includes(oc);
+                    if (!ocMatch) return false;
+                }
+
+                // 5. Price
+                if ((p.precio || 0) > activeFilters.maxPrecio) return false;
+
+                return true;
+            });
+
+            const resultsSection = document.getElementById('results-section');
+            const container = document.getElementById('search-results-container');
+            const similarSection = document.getElementById('similar-section');
+            const similarContainer = document.getElementById('similar-results-container');
+
+            container.innerHTML = '';
+            resultsSection.style.display = 'block';
+
+            if (results.length === 0) {
+                document.getElementById('results-header-title').innerHTML = `💔 No encontramos coincidencias exactas para tu selección`;
+                // Fallback: show highly-rated or best sellers
+                let fallbackList = dbPerfumes.filter(p => p.topVentas || p.destacado);
+                if (fallbackList.length === 0) fallbackList = dbPerfumes.slice(0, 4);
+
+                fallbackList.forEach(p => {
+                    container.innerHTML += buildCardHtml(p);
+                });
+                similarSection.style.display = 'none';
+            } else {
+                let filterLabel = "Resultados";
+                if (activeFilters.texto) filterLabel += ` para "${activeFilters.texto}"`;
+                if (activeFilters.categoria) filterLabel += ` en [${activeFilters.categoria}]`;
+                if (activeFilters.aroma) filterLabel += ` [Familia: ${activeFilters.aroma}]`;
+
+                document.getElementById('results-header-title').textContent = `${filterLabel} (${results.length})`;
+                results.forEach(p => {
+                    container.innerHTML += buildCardHtml(p);
+                });
+
+                // Calculate similar products based on the first result
+                const pivot = results[0];
+                let similarList = dbPerfumes.filter(p => p.id !== pivot.id).map(p => {
+                    let score = 0;
+                    if (p.marca === pivot.marca) score += 3;
+                    if (p.genero === pivot.genero) score += 2;
+                    if (p.familiaOlfativa === pivot.familiaOlfativa) score += 3;
+                    // Check overlapping notes
+                    const pivotNotes = pivot.notasOlfativas || [];
+                    const pNotes = p.notasOlfativas || [];
+                    pivotNotes.forEach(n => {
+                        if (pNotes.includes(n)) score += 1;
+                    });
+                    return { perfume: p, score: score };
+                }).filter(item => item.score > 0)
+                  .sort((a, b) => b.score - a.score)
+                  .map(item => item.perfume)
+                  .slice(0, 4);
+
+                if (similarList.length > 0) {
+                    similarSection.style.display = 'block';
+                    similarContainer.innerHTML = '';
+                    similarList.forEach(p => {
+                        similarContainer.innerHTML += buildCardHtml(p);
+                    });
+                } else {
+                    similarSection.style.display = 'none';
+                }
+            }
+
+            document.querySelector('#results-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function filterByField(field, value) {
+            // Reset filters to avoid overlap unless desired
+            activeFilters = {
+                texto: '',
+                categoria: '',
+                aroma: '',
+                ocasion: '',
+                duracion: '',
+                maxPrecio: 2500000
+            };
+            activeFilters.categoria = value;
+            buscarPerfumes();
+        }
+
+        function filterByAroma(aroma) {
+            activeFilters = {
+                texto: '',
+                categoria: '',
+                aroma: '',
+                ocasion: '',
+                duracion: '',
+                maxPrecio: 2500000
+            };
+            activeFilters.aroma = aroma;
+            buscarPerfumes();
+        }
+
+        function filterByOccasion(occasion) {
+            activeFilters = {
+                texto: '',
+                categoria: '',
+                aroma: '',
+                ocasion: '',
+                duracion: '',
+                maxPrecio: 2500000
+            };
+            activeFilters.ocasion = occasion;
+            buscarPerfumes();
+        }
+
+        // Price slider filter
+        function onPriceSliderChange() {
+            const maxVal = parseInt(document.getElementById('price-slider').value);
+            document.getElementById('price-val').textContent = `$${maxVal.toLocaleString('es-CO')} COP`;
+            activeFilters.maxPrecio = maxVal;
+            buscarPerfumes();
+        }
+
+        // Compare logic
+        function toggleCompare(id) {
+            if (compareList.includes(id)) {
+                compareList = compareList.filter(item => item !== id);
+                if (typeof showToast === 'function') showToast('Perfume removido del comparador', 'info');
+            } else {
+                if (compareList.length >= 3) {
+                    if (typeof showToast === 'function') showToast('Solo puedes comparar hasta 3 perfumes', 'warning');
+                    return;
+                }
+                compareList.push(id);
+                if (typeof showToast === 'function') showToast('Perfume agregado al comparador', 'success');
+            }
+
+            renderComparer();
+            buscarPerfumes(); // Refresh results to update check states
+        }
+
+        function renderComparer() {
+            const table = document.getElementById('comparer-table');
+            if (compareList.length === 0) {
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #999; padding: 3rem;">Añade perfumes de la lista para comparar sus propiedades.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const perfumesToCompare = dbPerfumes.filter(p => compareList.includes(p.id));
+
+            let header = `<tr><th>Propiedad</th>`;
+            perfumesToCompare.forEach(p => {
+                header += `<th>${p.nombre}</th>`;
+            });
+            header += `</tr>`;
+
+            let rowBrand = `<tr><td><strong>Marca</strong></td>`;
+            let rowPrice = `<tr><td><strong>Precio</strong></td>`;
+            let rowFamily = `<tr><td><strong>Familia Olfativa</strong></td>`;
+            let rowNotes = `<tr><td><strong>Notas principales</strong></td>`;
+            let rowConcentration = `<tr><td><strong>Concentración</strong></td>`;
+            let rowOccasion = `<tr><td><strong>Ideal Para</strong></td>`;
+
+            perfumesToCompare.forEach(p => {
+                rowBrand += `<td>${p.marca}</td>`;
+                rowPrice += `<td>$${(p.precio || 0).toLocaleString('es-CO')} COP</td>`;
+                rowFamily += `<td>${p.familiaOlfativa || 'Esencia de lujo'}</td>`;
+                rowNotes += `<td>${(p.notasOlfativas || []).join(', ') || 'N/A'}</td>`;
+                rowConcentration += `<td>${p.concentracion || 'EDP'}</td>`;
+                rowOccasion += `<td>${p.idealPara || 'Uso diario'}</td>`;
+            });
+
+            rowBrand += '</tr>';
+            rowPrice += '</tr>';
+            rowFamily += '</tr>';
+            rowNotes += '</tr>';
+            rowConcentration += '</tr>';
+            rowOccasion += '</tr>';
+
+            table.innerHTML = header + rowBrand + rowPrice + rowFamily + rowNotes + rowConcentration + rowOccasion;
+        }
+
+        async function addToCart(id) {
+            try {
+                const response = await fetch(`/carrito/agregar/${id}`, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    if (typeof updateCartCount === 'function') updateCartCount(data.cartCount);
+                    if (typeof showToast === 'function') showToast('¡Fragancia añadida con éxito! 🎉', 'success');
+                }
+            } catch (error) {
+                if (typeof showToast === 'function') showToast('Error al agregar al carrito', 'error');
+            }
+        }
+    </script>
+</body>
+
+</html>

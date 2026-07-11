@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Carrito | Profumi</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body style="background: #faf8f5; font-family: 'Outfit', sans-serif; overflow-x: hidden;">
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <!-- BREADCRUMB -->
+    <nav class="breadcrumb-container"
+        style="padding-top: 130px; padding-bottom: 0.5rem; max-width: 1400px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem;">
+        <div style="display: flex; align-items: center; gap: 0.8rem; font-size: 0.85rem; color: #999; flex-wrap: wrap;">
+            <a th:href="@{/}" style="color: #999; text-decoration: none; transition: color 0.3s;">Inicio</a>
+            <i class="fas fa-chevron-right" style="font-size: 0.6rem;"></i>
+            <a th:href="@{/catalogo}" style="color: #999; text-decoration: none; transition: color 0.3s;">Catálogo</a>
+            <i class="fas fa-chevron-right" style="font-size: 0.6rem;"></i>
+            <span style="color: #333; font-weight: 700;">Mi Bolsa</span>
+        </div>
+    </nav>
+
+    <!-- PROGRESS INDICATOR MEJORADO -->
+    <div class="progress-indicator-container" style="background: #fff; border-bottom: 1px solid #f0f0f0;">
+        <div class="progress-indicator-inner" style="max-width: 800px; margin: 0 auto; padding: 2rem 2rem 1.5rem;">
+            <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; position: relative;">
+                <!-- Línea de progreso -->
+                <div
+                    style="position: absolute; top: 15px; left: 20%; right: 20%; height: 3px; background: #f0f0f0; border-radius: 3px; z-index: 0;">
+                </div>
+                <div
+                    style="position: absolute; top: 15px; left: 20%; width: 30%; height: 3px; background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary)); border-radius: 3px; z-index: 1;">
+                </div>
+
+                <!-- Step 1 (Active) -->
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; position: relative; z-index: 2;">
+                    <div
+                        style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; box-shadow: 0 5px 15px rgba(244,154,31,0.3);">
+                        <i class="fas fa-check" style="font-size: 0.7rem;"></i>
+                    </div>
+                    <span
+                        style="font-weight: 700; font-size: 0.8rem; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 1px;">Tu
+                        Bolsa</span>
+                </div>
+
+                <!-- Step 2 -->
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; position: relative; z-index: 2;">
+                    <div
+                        style="width: 36px; height: 36px; border-radius: 50%; background: #fff; border: 2px solid #eee; color: #ccc; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; transition: all 0.3s;">
+                        2
+                    </div>
+                    <span
+                        style="font-weight: 600; font-size: 0.8rem; color: #ccc; text-transform: uppercase; letter-spacing: 1px;">Finalizar</span>
+                </div>
+
+                <!-- Step 3 -->
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; position: relative; z-index: 2;">
+                    <div
+                        style="width: 36px; height: 36px; border-radius: 50%; background: #fff; border: 2px solid #eee; color: #ccc; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; transition: all 0.3s;">
+                        3
+                    </div>
+                    <span
+                        style="font-weight: 600; font-size: 0.8rem; color: #ccc; text-transform: uppercase; letter-spacing: 1px;">Confirmado</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <section class="main-cart-section" style="max-width: 1400px; margin: 0 auto; padding: 3rem 2rem 6rem;">
+        <div class="cart-layout-grid" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 4rem; align-items: start;">
+
+            <!-- LEFT: ITEMS -->
+            <div>
+                <!-- Header -->
+                <div style="margin-bottom: 3rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                        <div
+                            style="width: 50px; height: 50px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-shopping-bag" style="color: var(--accent-primary); font-size: 1.2rem;"></i>
+                        </div>
+                        <div>
+                            <h1
+                                style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); color: #1a1a1a; margin: 0; line-height: 1.1;">
+                                Mi Bolsa</h1>
+                        </div>
+                    </div>
+                    <p style="color: #888; font-size: 1rem; margin: 0.5rem 0 0 0;" th:if="${!items.empty}">
+                        Tienes <span style="color: var(--accent-primary); font-weight: 700;" id="items-count-text"
+                            th:text="${items.size()}">0</span>
+                        <span style="color: #333; font-weight: 600;">fragancias</span> en tu selección
+                    </p>
+                </div>
+
+                <!-- EMPTY STATE MEJORADO -->
+                <div th:if="${items.empty}"
+                    style="text-align: center; padding: 6rem 2rem; background: linear-gradient(135deg, #fff 0%, #fafafa 100%); border-radius: 40px; border: 2px dashed #eee;">
+                    <div
+                        style="width: 120px; height: 120px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; box-shadow: 0 10px 40px rgba(244,154,31,0.1);">
+                        <i class="fas fa-shopping-bag"
+                            style="font-size: 2.5rem; color: var(--accent-primary); opacity: 0.6;"></i>
+                    </div>
+                    <h2
+                        style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 1rem; color: #1a1a1a;">
+                        Tu bolsa está esperando un aroma especial</h2>
+                    <p
+                        style="color: #999; margin-bottom: 2.5rem; max-width: 400px; margin-left: auto; margin-right: auto; line-height: 1.7; font-size: 1rem;">
+                        Explora nuestra colección curada y encuentra la esencia que definirá tu presencia hoy.</p>
+                    <a th:href="@{/catalogo}"
+                        style="display: inline-flex; align-items: center; gap: 0.8rem; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); color: #fff; padding: 1.2rem 2.5rem; border-radius: 16px; text-decoration: none; font-weight: 700; font-size: 0.95rem; transition: all 0.3s; box-shadow: 0 10px 30px rgba(244,154,31,0.3); text-transform: uppercase; letter-spacing: 1px;">
+                        <i class="fas fa-compass"></i>
+                        Descubrir Fragancias
+                    </a>
+                </div>
+
+                <!-- CART ITEMS -->
+                <div th:if="${!items.empty}" style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+                    <div th:each="entry, iterStat : ${items}" class="cart-item" th:id="${'item-' + entry.key.id}"
+                        style="display: grid; grid-template-columns: 160px 1fr auto; gap: 2rem; background: #fff; padding: 1.8rem; border-radius: 28px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 20px rgba(0,0,0,0.02); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; align-items: center; overflow: hidden;">
+
+                        <!-- Decorative line on hover -->
+                        <div
+                            style="position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary)); transform: scaleY(0); transition: transform 0.3s; border-radius: 0 4px 4px 0;">
+                        </div>
+
+                        <!-- Image -->
+                        <div class="item-img-wrapper" th:data-url="@{/producto/{id}(id=${entry.key.id})}"
+                            onclick="location.href=this.getAttribute('data-url')"
+                            style="cursor: pointer; border-radius: 20px; overflow: hidden; background: #f8f8f8; position: relative; height: 160px;">
+                            <img th:src="${entry.key.imagenUrl}" alt="Perfume"
+                                style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;">
+                        </div>
+
+                        <!-- Details -->
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
+                                <span
+                                    style="font-size: 0.75rem; letter-spacing: 2px; color: var(--accent-primary); font-weight: 700; text-transform: uppercase;"
+                                    th:text="${entry.key.marca}">Marca</span>
+                                <div th:if="${entry.key.genero != null}"
+                                    style="display: inline-flex; align-items: center; gap: 0.3rem; background: #f8f8f8; padding: 0.25rem 0.7rem; border-radius: 50px; font-size: 0.7rem; font-weight: 600; color: #666;">
+                                    <i th:class="${entry.key.genero == 'Hombre' ? 'fas fa-mars' : (entry.key.genero == 'Mujer' ? 'fas fa-venus' : 'fas fa-venus-mars')}"
+                                        style="color: var(--accent-primary); font-size: 0.6rem;"></i>
+                                    <span th:text="${entry.key.genero}">Género</span>
+                                </div>
+                            </div>
+
+                            <h3 th:text="${entry.key.nombre}" th:data-url="@{/producto/{id}(id=${entry.key.id})}"
+                                onclick="location.href=this.getAttribute('data-url')"
+                                style="font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #1a1a1a; margin: 0; cursor: pointer; transition: color 0.3s; line-height: 1.3; font-weight: 700;">
+                                Nombre
+                            </h3>
+
+                            <!-- Notas olfativas mini -->
+                            <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.3rem;">
+                                <span th:each="nota : ${entry.key.notasOlfativas}" th:if="${notaStat.index < 3}"
+                                    th:text="${nota}"
+                                    style="font-size: 0.7rem; background: #f8f8f8; padding: 0.25rem 0.7rem; border-radius: 50px; color: #888; border: 1px solid #f0f0f0;"></span>
+                            </div>
+
+                            <!-- Quantity & Unit Price -->
+                            <div
+                                style="display: flex; align-items: center; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap;">
+                                <div
+                                    style="display: flex; align-items: center; background: #fafafa; border: 2px solid #f0f0f0; border-radius: 14px; overflow: hidden;">
+                                    <button th:data-id="${entry.key.id}"
+                                        onclick="updateQty(this.getAttribute('data-id'), -1)"
+                                        style="background: none; border: none; width: 40px; height: 44px; cursor: pointer; color: #999; transition: all 0.3s; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <span th:id="${'qty-' + entry.key.id}"
+                                        style="width: 50px; text-align: center; font-weight: 700; font-size: 1.1rem; color: #333; font-family: 'Outfit', sans-serif;"
+                                        th:text="${entry.value}">1</span>
+                                    <button th:data-id="${entry.key.id}"
+                                        onclick="updateQty(this.getAttribute('data-id'), 1)"
+                                        style="background: none; border: none; width: 40px; height: 44px; cursor: pointer; color: #999; transition: all 0.3s; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <span style="font-size: 0.85rem; color: #aaa;">
+                                    $<span
+                                        th:text="${entry.key.precio != null ? #numbers.formatDecimal(entry.key.precio, 0, 'POINT', 0, 'POINT') : '0'}"></span>
+                                    / ud
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Price & Remove -->
+                        <div
+                            style="text-align: right; display: flex; flex-direction: column; justify-content: space-between; height: 100%; align-items: flex-end;">
+                            <button th:data-id="${entry.key.id}" onclick="removeItem(this.getAttribute('data-id'))"
+                                class="remove-btn"
+                                style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1rem; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; opacity: 0.4;">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <div style="margin-top: auto;">
+                                <p style="font-size: 1.6rem; font-weight: 700; color: #1a1a1a; margin: 0; line-height: 1;"
+                                    th:id="${'subtotal-' + entry.key.id}"
+                                    th:text="'$' + ${entry.key.precio != null ? #numbers.formatDecimal(entry.key.precio * entry.value, 0, 'POINT', 0, 'POINT') : '0'}">
+                                    $0
+                                </p>
+                                <p style="font-size: 0.75rem; color: #aaa; margin: 0.3rem 0 0 0;">Subtotal</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart Actions -->
+                <div th:if="${!items.empty}" class="cart-actions-row"
+                    style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <a th:href="@{/catalogo}" class="continue-shopping-btn"
+                        style="display: inline-flex; align-items: center; gap: 0.8rem; color: #666; font-weight: 600; font-size: 0.9rem; text-decoration: none; padding: 0.8rem 1.5rem; border-radius: 14px; border: 2px solid #eee; transition: all 0.3s;">
+                        <i class="fas fa-arrow-left" style="font-size: 0.7rem;"></i>
+                        Continuar comprando
+                    </a>
+                    <button onclick="if(confirm('¿Estás seguro de vaciar tu bolsa?')) location.href='/carrito/limpiar'"
+                        style="background: none; border: none; color: #999; font-size: 0.85rem; cursor: pointer; padding: 0.8rem 1.5rem; border-radius: 14px; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-trash" style="font-size: 0.8rem;"></i>
+                        Vaciar bolsa
+                    </button>
+                </div>
+
+                <!-- Recently Viewed / You might also like -->
+                <div th:if="${!items.empty}" style="margin-top: 4rem;">
+                    <h3
+                        style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #1a1a1a; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                        <i class="fas fa-sparkles" style="color: var(--accent-primary); font-size: 1rem;"></i>
+                        Completa tu experiencia
+                    </h3>
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem;">
+                        <div style="background: #fff; border-radius: 20px; overflow: hidden; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s; cursor: pointer;"
+                            onclick="location.href='/catalogo'">
+                            <div
+                                style="height: 150px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-box-open"
+                                    style="font-size: 2.5rem; color: var(--accent-primary); opacity: 0.3;"></i>
+                            </div>
+                            <div style="padding: 1.2rem;">
+                                <p style="font-size: 0.85rem; font-weight: 700; color: #1a1a1a; margin: 0;">Kits de
+                                    Descubrimiento</p>
+                                <p style="font-size: 0.8rem; color: #999; margin: 0.3rem 0 0 0;">Prueba antes de comprar
+                                </p>
+                            </div>
+                        </div>
+                        <div style="background: #fff; border-radius: 20px; overflow: hidden; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s; cursor: pointer;"
+                            onclick="location.href='/catalogo'">
+                            <div
+                                style="height: 150px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-leaf" style="font-size: 2.5rem; color: #22c55e; opacity: 0.3;"></i>
+                            </div>
+                            <div style="padding: 1.2rem;">
+                                <p style="font-size: 0.85rem; font-weight: 700; color: #1a1a1a; margin: 0;">Nuevos
+                                    Lanzamientos</p>
+                                <p style="font-size: 0.8rem; color: #999; margin: 0.3rem 0 0 0;">Lo último en fragancias
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: SUMMARY -->
+            <div class="cart-summary-sidebar" th:if="${!items.empty}" style="position: sticky; top: 100px;">
+
+                <!-- Summary Card -->
+                <div
+                    style="background: #fff; padding: 2.5rem; border-radius: 32px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 20px 60px rgba(0,0,0,0.06); margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 2rem;">
+                        <div
+                            style="width: 40px; height: 40px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-receipt" style="color: var(--accent-primary); font-size: 1rem;"></i>
+                        </div>
+                        <h3
+                            style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #1a1a1a; margin: 0;">
+                            Resumen</h3>
+                    </div>
+
+                    <!-- Items List -->
+                    <div
+                        style="display: flex; flex-direction: column; gap: 1.2rem; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #f5f5f5;">
+                        <div th:each="entry : ${items}"
+                            style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                <div
+                                    style="width: 32px; height: 32px; border-radius: 8px; overflow: hidden; background: #f8f8f8;">
+                                    <img th:src="${entry.key.imagenUrl}"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div>
+                                    <p style="font-size: 0.85rem; color: #333; font-weight: 600; margin: 0; line-height: 1.3;"
+                                        th:text="${entry.key.nombre}">Nombre</p>
+                                    <p style="font-size: 0.75rem; color: #aaa; margin: 0;"
+                                        th:text="'Cant: ' + ${entry.value}">Cant: 1</p>
+                                </div>
+                            </div>
+                            <p style="font-size: 0.9rem; font-weight: 700; color: #333; margin: 0;"
+                                th:text="'$' + ${entry.key.precio != null ? #numbers.formatDecimal(entry.key.precio * entry.value, 0, 'POINT', 0, 'POINT') : '0'}">
+                                $0</p>
+                        </div>
+                    </div>
+
+                    <!-- Calculations -->
+                    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+                        <div style="display: flex; justify-content: space-between; color: #888; font-size: 0.95rem;">
+                            <span>Subtotal</span>
+                            <span id="summary-subtotal"
+                                th:text="'$' + ${#numbers.formatDecimal(total, 0, 'POINT', 0, 'POINT')}">$0</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; color: #888; font-size: 0.95rem;">
+                            <span>Impuestos (incluidos)</span>
+                            <span style="color: #22c55e; font-weight: 600;">Incluidos</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="color: #888; font-size: 0.95rem;">Envío</span>
+                                <span
+                                    style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); color: #16a34a; padding: 0.2rem 0.6rem; border-radius: 50px; font-size: 0.7rem; font-weight: 700;">GRATIS</span>
+                            </div>
+                            <span style="color: #22c55e; font-weight: 700; font-size: 0.95rem;">$0</span>
+                        </div>
+                    </div>
+
+                    <!-- Discount Code -->
+                    <div class="coupon-container" style="margin-bottom: 2rem;">
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" placeholder="Código de descuento"
+                                style="flex: 1; padding: 0.9rem 1.2rem; border-radius: 14px; border: 2px solid #f0f0f0; background: #fafafa; outline: none; font-family: 'Outfit', sans-serif; font-size: 0.9rem; transition: all 0.3s;">
+                            <button
+                                style="padding: 0.9rem 1.5rem; background: #333; color: #fff; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s; font-family: 'Outfit', sans-serif; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">
+                                Aplicar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div style="padding-top: 1.5rem; border-top: 2px solid #f5f5f5; margin-bottom: 2rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                            <span style="font-weight: 700; font-size: 1.1rem; color: #1a1a1a;">Total</span>
+                            <div style="text-align: right;">
+                                <span id="summary-total"
+                                    style="font-size: 2.5rem; font-weight: 700; color: #1a1a1a; line-height: 1;"
+                                    th:text="'$' + ${#numbers.formatDecimal(total, 0, 'POINT', 0, 'POINT')}">$0</span>
+                                <p style="font-size: 0.75rem; color: #aaa; margin: 0.3rem 0 0 0;">COP</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Checkout Button -->
+                    <form th:action="@{/carrito/checkout}" method="post">
+                        <button type="submit"
+                            style="width: 100%; padding: 1.3rem; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; border: none; border-radius: 16px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; font-family: 'Outfit', sans-serif; box-shadow: 0 10px 30px rgba(34,197,94,0.3); position: relative; overflow: hidden;">
+                            <i class="fab fa-whatsapp" style="font-size: 1.3rem;"></i>
+                            Comprar por WhatsApp
+                        </button>
+                    </form>
+
+                    <!-- Trust Badges -->
+                    <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.8rem; color: #888; font-size: 0.85rem;">
+                            <div
+                                style="width: 28px; height: 28px; background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fas fa-shield-halved" style="color: #16a34a; font-size: 0.7rem;"></i>
+                            </div>
+                            <span>Pago coordinado de forma segura</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.8rem; color: #888; font-size: 0.85rem;">
+                            <div
+                                style="width: 28px; height: 28px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fas fa-truck-fast"
+                                    style="color: var(--accent-primary); font-size: 0.7rem;"></i>
+                            </div>
+                            <span>Entrega estimada: 24-48 horas</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.8rem; color: #888; font-size: 0.85rem;">
+                            <div
+                                style="width: 28px; height: 28px; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fas fa-rotate-left" style="color: #2563eb; font-size: 0.7rem;"></i>
+                            </div>
+                            <span>Devolución fácil en 30 días</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promo Card -->
+                <div
+                    style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 2rem; border-radius: 28px; color: #fff; position: relative; overflow: hidden;">
+                    <div
+                        style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(244,154,31,0.15) 0%, transparent 70%); border-radius: 50%;">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem;">
+                        <i class="fas fa-crown" style="color: var(--accent-primary); font-size: 1.2rem;"></i>
+                        <span
+                            style="font-size: 0.8rem; color: var(--accent-primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Socio
+                            Premium</span>
+                    </div>
+                    <p style="font-size: 0.95rem; color: #ccc; line-height: 1.6; margin: 0 0 1rem 0;">Al finalizar tu
+                        compra, recibirás un <span style="color: var(--accent-primary); font-weight: 700;">10% de
+                            descuento</span> en tu próxima adquisición.</p>
+                    <div
+                        style="background: rgba(255,255,255,0.05); padding: 0.8rem 1rem; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1); display: inline-block;">
+                        <span
+                            style="font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 2px;">Código:
+                            <span style="color: var(--accent-primary); font-weight: 700;">PREMIUM10</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STYLES -->
+    <style>
+        :root {
+            --accent-primary: #f49a1f;
+            --accent-secondary: #e8890c;
+            --text-dark: #1a1a1a;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(197, 160, 89, 0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Cart Item Hover */
+        .cart-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06) !important;
+            border-color: rgba(244, 154, 31, 0.1) !important;
+        }
+
+        .cart-item:hover [style*="position: absolute; left: 0; top: 0; bottom: 0; width: 4px"] {
+            transform: scaleY(1) !important;
+        }
+
+        .cart-item:hover .item-img-wrapper img {
+            transform: scale(1.08);
+        }
+
+        .cart-item:hover h3 {
+            color: var(--accent-primary) !important;
+        }
+
+        /* Remove Button */
+        .remove-btn:hover {
+            opacity: 1 !important;
+            background: #fef2f2 !important;
+        }
+
+        /* Quantity Buttons */
+        button[onclick^="updateQty"]:hover {
+            color: var(--accent-primary) !important;
+            background: rgba(244, 154, 31, 0.05) !important;
+        }
+
+        /* Continue Shopping */
+        .continue-shopping-btn:hover {
+            border-color: var(--accent-primary) !important;
+            color: var(--accent-primary) !important;
+        }
+
+        /* Discount Input */
+        input[type="text"]:focus {
+            border-color: var(--accent-primary) !important;
+            background: #fff !important;
+            box-shadow: 0 0 0 4px rgba(244, 154, 31, 0.1);
+        }
+
+        /* Checkout Button */
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(34, 197, 94, 0.4) !important;
+        }
+
+        button[type="submit"]:active {
+            transform: scale(0.98);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
+            border-radius: 4px;
+        }
+
+        @media (max-width: 1024px) {
+            .cart-layout-grid {
+                grid-template-columns: 1fr !important;
+                gap: 2rem !important;
+            }
+            .cart-summary-sidebar {
+                position: static !important;
+            }
+            .remove-btn {
+                opacity: 1 !important;
+                background: #fef2f2 !important;
+                color: #ef4444 !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .breadcrumb-container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                padding-top: 100px !important;
+            }
+            .progress-indicator-inner {
+                padding: 1.2rem 1rem !important;
+            }
+            .main-cart-section {
+                padding: 2rem 1rem 4rem !important;
+            }
+            .cart-item {
+                grid-template-columns: 100px 1fr !important;
+                gap: 1.2rem !important;
+                padding: 1.2rem !important;
+                border-radius: 20px !important;
+            }
+            .cart-item > div:last-child {
+                grid-column: span 2;
+                flex-direction: row-reverse !important;
+                justify-content: space-between !important;
+                height: auto !important;
+                align-items: center !important;
+                border-top: 1px solid #f5f5f5;
+                padding-top: 1rem;
+                margin-top: 0.5rem;
+                width: 100%;
+            }
+            .item-img-wrapper {
+                height: 100px !important;
+            }
+            button[onclick^="updateQty"] {
+                width: 44px !important;
+                height: 44px !important;
+                background-color: #f0f0f0 !important;
+                color: #333 !important;
+                border-radius: 8px !important;
+                margin: 2px !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .cart-actions-row {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 1rem !important;
+            }
+            .cart-actions-row > * {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cart-item {
+                grid-template-columns: 1fr !important;
+                text-align: center;
+            }
+            .cart-item .item-img-wrapper {
+                height: 160px !important;
+                width: 100% !important;
+                margin: 0 auto;
+            }
+            .cart-item > div:nth-child(3) {
+                align-items: center !important;
+            }
+            .cart-item > div:nth-child(3) div[style*="display: flex; align-items: center"] {
+                justify-content: center !important;
+            }
+            .cart-item > div:last-child {
+                grid-column: 1 !important;
+            }
+            .coupon-container > div {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .coupon-container input, .coupon-container button {
+                width: 100% !important;
+            }
+        }
+    </style>
+
+    <!-- SCRIPTS -->
+    <script th:inline="javascript">
+        // Update Quantity
+        async function updateQty(id, delta) {
+            const qtySpan = document.getElementById('qty-' + id);
+            let currentQty = parseInt(qtySpan.textContent);
+            let newQty = currentQty + delta;
+
+            if (newQty < 1) {
+                if (confirm('¿Deseas eliminar esta fragancia de tu bolsa?')) {
+                    removeItem(id);
+                }
+                return;
+            }
+
+            // Animación visual
+            qtySpan.style.transform = 'scale(1.2)';
+            qtySpan.style.color = 'var(--accent-primary)';
+            setTimeout(() => {
+                qtySpan.style.transform = 'scale(1)';
+                qtySpan.style.color = '#333';
+            }, 200);
+
+            try {
+                const response = await fetch('/carrito/actualizar/' + id + '?cantidad=' + newQty, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    qtySpan.textContent = newQty;
+                    updateTotals(data.totalPrecio);
+
+                    // Actualizar subtotal del item
+                    const itemRow = document.getElementById('item-' + id);
+                    const priceText = itemRow.querySelector('.item-details span:last-child span').textContent;
+                    const unitPrice = parseFloat(priceText.replace(/[.$]/g, '').trim());
+                    const newSubtotal = unitPrice * newQty;
+
+                    const subtotalEl = document.getElementById('subtotal-' + id);
+                    subtotalEl.style.transform = 'scale(1.05)';
+                    subtotalEl.style.color = 'var(--accent-primary)';
+                    subtotalEl.textContent = '$' + newSubtotal.toLocaleString('es-CO');
+
+                    setTimeout(() => {
+                        subtotalEl.style.transform = 'scale(1)';
+                        subtotalEl.style.color = '#1a1a1a';
+                    }, 300);
+
+                    if (typeof updateCartCount === 'function') {
+                        updateCartCount(data.cartCount);
+                    }
+                    if (typeof showToast === 'function') {
+                        showToast('Cantidad actualizada', 'success');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Error al actualizar', 'error');
+                }
+            }
+        }
+
+        // Remove Item
+        async function removeItem(id) {
+            const itemElement = document.getElementById('item-' + id);
+
+            // Animación de salida
+            itemElement.style.transform = 'translateX(-30px)';
+            itemElement.style.opacity = '0';
+            itemElement.style.height = itemElement.offsetHeight + 'px';
+
+            setTimeout(() => {
+                itemElement.style.height = '0';
+                itemElement.style.padding = '0';
+                itemElement.style.margin = '0';
+                itemElement.style.overflow = 'hidden';
+            }, 300);
+
+            try {
+                const response = await fetch('/carrito/actualizar/' + id + '?cantidad=0', {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    setTimeout(() => {
+                        itemElement.remove();
+                        updateTotals(data.totalPrecio);
+
+                        if (typeof updateCartCount === 'function') {
+                            updateCartCount(data.cartCount);
+                        }
+                        if (typeof showToast === 'function') {
+                            showToast('Fragancia eliminada de tu bolsa', 'success');
+                        }
+
+                        // Si el carrito queda vacío, recargar
+                        if (data.cartCount === 0) {
+                            location.reload();
+                        }
+                    }, 600);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                itemElement.style.transform = '';
+                itemElement.style.opacity = '1';
+                itemElement.style.height = '';
+                itemElement.style.padding = '';
+                itemElement.style.overflow = '';
+
+                if (typeof showToast === 'function') {
+                    showToast('Error al eliminar', 'error');
+                }
+            }
+        }
+
+        // Update Totals
+        function updateTotals(total) {
+            const formattedTotal = '$' + total.toLocaleString('es-CO');
+
+            // Animar cambio de total
+            const subtotalEl = document.getElementById('summary-subtotal');
+            const totalEl = document.getElementById('summary-total');
+
+            subtotalEl.style.transform = 'scale(1.05)';
+            totalEl.style.transform = 'scale(1.05)';
+            totalEl.style.color = 'var(--accent-primary)';
+
+            subtotalEl.textContent = formattedTotal;
+            totalEl.textContent = formattedTotal;
+
+            setTimeout(() => {
+                subtotalEl.style.transform = 'scale(1)';
+                totalEl.style.transform = 'scale(1)';
+                totalEl.style.color = '#1a1a1a';
+            }, 300);
+
+            // Actualizar contador
+            const items = document.querySelectorAll('.cart-item').length;
+            const textEl = document.getElementById('items-count-text');
+            if (textEl) textEl.textContent = items;
+        }
+
+        // Animaciones al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.cart-item').forEach((item, i) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = `all 0.5s ease ${i * 0.1}s`;
+
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 100 + (i * 100));
+            });
+        });
+    </script>
+</body>
+
+</html>

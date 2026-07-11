@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Iniciar Sesión | Profumi</title>
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Main Style and New Dedicated Luxury Login Style -->
+    <link rel="stylesheet" th:href="@{/css/style.css(v=5)}">
+    <link rel="stylesheet" th:href="@{/css/login.css(v=5)}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Header / Navbar fragment -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <!-- Toast container for notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <main class="login-split" style="margin-top: 70px;">
+        <!-- Left Side: Interactive Luxury Carousel Banner -->
+        <section class="login-carousel-container" aria-label="Galería de fragancias de lujo">
+            <div class="carousel-slide active" style="background-image: url('https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=1974&auto=format&fit=crop');"></div>
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=1974&auto=format&fit=crop');"></div>
+            <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=1974&auto=format&fit=crop');"></div>
+            
+            <div class="carousel-text-overlay">
+                <span class="carousel-brand-tag">Profumi Cartagena</span>
+                <h2 class="carousel-phrase-title" id="carousel-phrase">Descubre tu aroma ideal</h2>
+                <p class="carousel-phrase-desc">Accede a una colección exclusiva de fragancias de lujo diseñadas para capturar tu esencia única.</p>
+            </div>
+        </section>
+
+        <!-- Right Side: Luxury Glassmorphic Form Card -->
+        <section class="login-form-container">
+            <div class="login-card">
+                <div class="login-logo-box">
+                    <span class="login-logo-text">profumi</span>
+                    <p class="login-subtitle">Ingresa tus credenciales para acceder al lujo</p>
+                </div>
+
+                <!-- Hidden inputs/elements for Thymeleaf message triggers -->
+                <div th:if="${param.error}" id="thymeleaf-error-trigger" data-msg="Correo o contraseña incorrectos. Inténtalo de nuevo." style="display:none;"></div>
+                <div th:if="${param.logout}" id="thymeleaf-logout-trigger" data-msg="Sesión cerrada correctamente. ¡Esperamos verte pronto!" style="display:none;"></div>
+                <div th:if="${param.registered}" id="thymeleaf-registered-trigger" data-msg="¡Registro exitoso! Ya puedes iniciar sesión." style="display:none;"></div>
+
+                <!-- Main Form -->
+                <form th:action="@{/login}" method="post" id="login-form" novalidate>
+                    <!-- Email input group -->
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico</label>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-envelope prefix-icon"></i>
+                            <input type="email" id="email" name="email" class="form-input" 
+                                   placeholder="tu@correo.com" autocomplete="email" required autofocus>
+                        </div>
+                        <span class="error-message" id="email-error">Por favor ingresa un correo electrónico válido</span>
+                    </div>
+
+                    <!-- Password input group -->
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock prefix-icon"></i>
+                            <input type="password" id="password" name="password" class="form-input" 
+                                   placeholder="••••••••" autocomplete="current-password" required>
+                            <button type="button" class="password-toggle" id="password-toggle" aria-label="Mostrar contraseña">
+                                <i class="fa-regular fa-eye" id="eye-icon"></i>
+                            </button>
+                        </div>
+                        <span class="error-message" id="password-error">La contraseña debe tener al menos 6 caracteres</span>
+                    </div>
+
+                    <!-- Actions: Remember me & Password recovery -->
+                    <div class="form-actions-row">
+                        <label class="remember-me-label" for="remember-me">
+                            <input type="checkbox" name="remember-me" id="remember-me" class="remember-me-checkbox">
+                            <span>Recordarme</span>
+                        </label>
+                        <a href="/recuperar-password" class="forgot-password-link">¿Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-login" id="btn-submit">
+                        <span id="btn-text">Iniciar Sesión</span>
+                    </button>
+                </form>
+
+                <!-- Google OAuth -->
+                <div class="social-login">
+                    <p class="social-title">o ingresa con tu cuenta de Google</p>
+                    <a th:href="@{/oauth2/authorization/google}" class="google-btn" id="google-btn">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+                        <span>Continuar con Google</span>
+                    </a>
+                    <span class="security-note">
+                        <i class="fa-solid fa-shield-halved"></i> Conexión cifrada y segura
+                    </span>
+                </div>
+
+                <p style="text-align: center; margin-top: 2.5rem; color: #666; font-size: 0.9rem;">
+                    ¿No tienes una cuenta? <a th:href="@{/registro}" style="color: var(--text-dark); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--accent-primary);">Regístrate aquí</a>
+                </p>
+            </div>
+
+            <!-- Mini assurance cards -->
+            <div class="info-cards-container">
+                <div class="info-mini-card">
+                    <i class="fa-solid fa-credit-card"></i>
+                    <span>Compra segura</span>
+                </div>
+                <div class="info-mini-card">
+                    <i class="fa-solid fa-truck-fast"></i>
+                    <span>Envíos nacionales</span>
+                </div>
+                <div class="info-mini-card">
+                    <i class="fa-solid fa-certificate"></i>
+                    <span>100% original</span>
+                </div>
+            </div>
+
+            <!-- Account benefits card -->
+            <div class="benefits-container">
+                <h3 class="benefits-title"><i class="fa-solid fa-gift"></i> Beneficios de tu cuenta</h3>
+                <ul class="benefits-list">
+                    <li class="benefits-item"><i class="fa-solid fa-circle-check"></i> Guardar favoritos</li>
+                    <li class="benefits-item"><i class="fa-solid fa-circle-check"></i> Historial de compras</li>
+                    <li class="benefits-item"><i class="fa-solid fa-circle-check"></i> Rastrear pedidos</li>
+                    <li class="benefits-item"><i class="fa-solid fa-circle-check"></i> Ofertas exclusivas</li>
+                    <li class="benefits-item"><i class="fa-solid fa-circle-check"></i> Nova AI Diagnóstico</li>
+                    <li class="benefits-item"><i class="fa-solid fa-circle-check"></i> Muestras gratis</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Interactive script behaviors -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. CAROUSEL SLIDESHOW & ROTATING PHRASES
+            const slides = document.querySelectorAll('.carousel-slide');
+            const phraseTitle = document.getElementById('carousel-phrase');
+            const slogans = [
+                "Descubre tu aroma ideal",
+                "Más de 500 perfumes disponibles",
+                "Fragancias 100% originales",
+                "Envíos rápidos a toda Colombia",
+                "Recomendaciones personalizadas con IA"
+            ];
+            let currentSlideIndex = 0;
+            let currentSloganIndex = 0;
+
+            setInterval(() => {
+                // Fade slide
+                slides[currentSlideIndex].classList.remove('active');
+                currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+                slides[currentSlideIndex].classList.add('active');
+
+                // Fade and change phrase text
+                phraseTitle.style.opacity = '0';
+                phraseTitle.style.transform = 'translateY(-10px)';
+                phraseTitle.style.transition = 'opacity 0.6s, transform 0.6s';
+
+                setTimeout(() => {
+                    currentSloganIndex = (currentSloganIndex + 1) % slogans.length;
+                    phraseTitle.textContent = slogans[currentSloganIndex];
+                    phraseTitle.style.opacity = '1';
+                    phraseTitle.style.transform = 'translateY(0)';
+                }, 600);
+            }, 6000);
+
+            // 2. TOAST NOTIFICATION GENERATOR
+            const toastContainer = document.getElementById('toast-container');
+            function showToast(message, type = 'info') {
+                const toast = document.createElement('div');
+                toast.className = `luxury-toast toast-${type}`;
+                
+                let icon = '<i class="fa-solid fa-circle-info"></i>';
+                if (type === 'success') icon = '<i class="fa-solid fa-circle-check"></i>';
+                if (type === 'error') icon = '<i class="fa-solid fa-circle-exclamation"></i>';
+
+                toast.innerHTML = `${icon}<span>${message}</span>`;
+                toastContainer.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(-15px) scale(0.95)';
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 400);
+                }, 4000);
+            }
+
+            // Check Thymeleaf URL Param Triggers for Elegant Toast
+            const errorTrigger = document.getElementById('thymeleaf-error-trigger');
+            const logoutTrigger = document.getElementById('thymeleaf-logout-trigger');
+            const registeredTrigger = document.getElementById('thymeleaf-registered-trigger');
+
+            if (errorTrigger) showToast(errorTrigger.getAttribute('data-msg'), 'error');
+            if (logoutTrigger) showToast(logoutTrigger.getAttribute('data-msg'), 'success');
+            if (registeredTrigger) showToast(registeredTrigger.getAttribute('data-msg'), 'success');
+
+            // 3. SHOW / HIDE PASSWORD TOGGLE
+            const passwordToggle = document.getElementById('password-toggle');
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+
+            passwordToggle.addEventListener('click', () => {
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
+                eyeIcon.className = isPassword ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+                passwordInput.focus();
+            });
+
+            // 4. LIVE INPUT VALIDATION
+            const emailInput = document.getElementById('email');
+            const emailError = document.getElementById('email-error');
+            const passwordError = document.getElementById('password-error');
+
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(String(email).toLowerCase());
+            }
+
+            emailInput.addEventListener('input', () => {
+                if (emailInput.value.length === 0) {
+                    emailInput.classList.remove('is-valid', 'is-invalid');
+                    emailError.classList.remove('visible');
+                } else if (validateEmail(emailInput.value)) {
+                    emailInput.classList.add('is-valid');
+                    emailInput.classList.remove('is-invalid');
+                    emailError.classList.remove('visible');
+                } else {
+                    emailInput.classList.add('is-invalid');
+                    emailInput.classList.remove('is-valid');
+                }
+            });
+
+            passwordInput.addEventListener('input', () => {
+                if (passwordInput.value.length === 0) {
+                    passwordInput.classList.remove('is-valid', 'is-invalid');
+                    passwordError.classList.remove('visible');
+                } else if (passwordInput.value.length >= 6) {
+                    passwordInput.classList.add('is-valid');
+                    passwordInput.classList.remove('is-invalid');
+                    passwordError.classList.remove('visible');
+                } else {
+                    passwordInput.classList.add('is-invalid');
+                    passwordInput.classList.remove('is-valid');
+                }
+            });
+
+            // Keep email focused or restore from localStorage on page refresh if desired
+            // Restore email if it failed to submit (saving in localStorage momentarily)
+            const savedEmail = localStorage.getItem('perfumi_failed_email');
+            if (savedEmail) {
+                emailInput.value = savedEmail;
+                localStorage.removeItem('perfumi_failed_email');
+                emailInput.focus();
+            }
+
+            // 5. FORM SUBMISSION LOADING STATE
+            const form = document.getElementById('login-form');
+            const submitBtn = document.getElementById('btn-submit');
+            const btnText = document.getElementById('btn-text');
+
+            form.addEventListener('submit', (e) => {
+                let valid = true;
+
+                // Validate email
+                if (!validateEmail(emailInput.value)) {
+                    emailInput.classList.add('is-invalid');
+                    emailError.classList.add('visible');
+                    valid = false;
+                }
+
+                // Validate password
+                if (passwordInput.value.length < 6) {
+                    passwordInput.classList.add('is-invalid');
+                    passwordError.classList.add('visible');
+                    valid = false;
+                }
+
+                if (!valid) {
+                    e.preventDefault();
+                    // Shake login card
+                    const card = document.querySelector('.login-card');
+                    card.style.animation = 'none';
+                    setTimeout(() => {
+                        card.style.animation = 'shake 0.4s ease-in-out';
+                    }, 10);
+                    showToast('Por favor verifica los campos obligatorios.', 'error');
+                } else {
+                    // Temporarily persist email so if Spring Security redirects back with error=true, we don't lose it
+                    localStorage.setItem('perfumi_failed_email', emailInput.value);
+
+                    // Show loader state
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('loading');
+                    submitBtn.innerHTML = '<span class="spinner"></span> <span>Iniciando sesión...</span>';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

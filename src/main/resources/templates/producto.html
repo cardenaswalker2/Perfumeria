@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Producto | Profumi</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body style="background: #faf8f5; font-family: 'Outfit', sans-serif; overflow-x: hidden;">
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <!-- BREADCRUMB NAVIGATION -->
+    <nav class="breadcrumb-container"
+        style="padding-top: 130px; padding-bottom: 1rem; max-width: 1400px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem;">
+        <div style="display: flex; align-items: center; gap: 0.8rem; font-size: 0.85rem; color: #999; flex-wrap: wrap;">
+            <a th:href="@{/}" style="color: #999; text-decoration: none; transition: color 0.3s;">Inicio</a>
+            <i class="fas fa-chevron-right" style="font-size: 0.6rem;"></i>
+            <a th:href="@{/catalogo}" style="color: #999; text-decoration: none; transition: color 0.3s;">Catálogo</a>
+            <i class="fas fa-chevron-right" style="font-size: 0.6rem;"></i>
+            <span style="color: var(--accent-primary); font-weight: 600;" th:text="${perfume.marca}">Marca</span>
+            <i class="fas fa-chevron-right" style="font-size: 0.6rem;"></i>
+            <span style="color: #333; font-weight: 700;" th:text="${perfume.nombre}">Nombre</span>
+        </div>
+    </nav>
+
+    <!-- MAIN PRODUCT SECTION -->
+    <section class="main-product-section" style="max-width: 1400px; margin: 0 auto; padding: 2rem 2rem 6rem;">
+        <div class="product-columns-wrapper" style="display: flex; gap: 5rem; flex-wrap: wrap; align-items: flex-start;">
+
+            <!-- IMAGE COLUMN MEJORADA -->
+            <div style="flex: 1; min-width: 400px; max-width: 600px;">
+                <div style="position: sticky; top: 100px;">
+
+                    <!-- Main Image Container -->
+                    <div class="product-image-main"
+                        style="position: relative; border-radius: 32px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05); background: #fff;">
+                        <img th:src="${perfume.imagenUrl}" alt="Perfume"
+                            style="width: 100%; display: block; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);"
+                            class="main-product-img">
+
+                        <!-- Zoom Lens Overlay (aparece en hover) -->
+                        <div class="zoom-lens"
+                            style="position: absolute; inset: 0; background: rgba(0,0,0,0.02); opacity: 0; transition: opacity 0.3s; cursor: crosshair; display: flex; align-items: center; justify-content: center;">
+                            <span
+                                style="background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 0.8rem 1.5rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                                <i class="fas fa-search-plus" style="margin-right: 0.5rem;"></i>
+                                Pasa el mouse para zoom
+                            </span>
+                        </div>
+
+                        <!-- Badges flotantes -->
+                        <div
+                            style="position: absolute; top: 25px; left: 25px; display: flex; flex-direction: column; gap: 10px;">
+                            <div th:if="${false}"
+                                style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 20px rgba(34,197,94,0.3); display: flex; align-items: center; gap: 0.4rem;">
+                                <i class="fas fa-sparkles" style="font-size: 0.7rem;"></i>
+                                Nuevo
+                            </div>
+                            <div th:if="${false}"
+                                style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #fff; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 20px rgba(239,68,68,0.3);">
+                                -<span th:text="${false}">20</span>% OFF
+                            </div>
+                        </div>
+
+                        <!-- Wishlist Button -->
+                        <button onclick="toggleWishlist()" class="wishlist-btn"
+                            style="position: absolute; top: 25px; right: 25px; width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.05); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #ccc; transition: all 0.3s; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+
+                    <!-- Thumbnail Gallery -->
+                    <div
+                        style="margin-top: 1.5rem; display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem;">
+                        <div class="thumb active"
+                            style="min-width: 80px; height: 80px; border-radius: 16px; overflow: hidden; border: 2px solid var(--accent-primary); cursor: pointer; transition: all 0.3s; position: relative;">
+                            <img th:src="${perfume.imagenUrl}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="thumb" th:if="${false}"
+                            style="min-width: 80px; height: 80px; border-radius: 16px; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: all 0.3s; opacity: 0.6;">
+                            <img th:src="${false}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="thumb" th:if="${false}"
+                            style="min-width: 80px; height: 80px; border-radius: 16px; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: all 0.3s; opacity: 0.6;">
+                            <img th:src="${false}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="thumb"
+                            style="min-width: 80px; height: 80px; border-radius: 16px; background: linear-gradient(135deg, #f5f5f5 0%, #eee 100%); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; border: 2px dashed #ddd;">
+                            <i class="fas fa-video" style="color: #aaa; font-size: 1.2rem;"></i>
+                        </div>
+                    </div>
+
+                    <!-- Trust Badges Grid -->
+                    <div class="trust-badges-grid" style="margin-top: 2.5rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                        <div class="trust-badge"
+                            style="text-align: center; padding: 1.5rem 1rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s;">
+                            <div
+                                style="width: 50px; height: 50px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.8rem;">
+                                <i class="fas fa-certificate"
+                                    style="color: var(--accent-primary); font-size: 1.2rem;"></i>
+                            </div>
+                            <p
+                                style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #333; letter-spacing: 1px; margin: 0;">
+                                Original</p>
+                            <p style="font-size: 0.7rem; color: #999; margin-top: 0.3rem;">100% Auténtico</p>
+                        </div>
+                        <div class="trust-badge"
+                            style="text-align: center; padding: 1.5rem 1rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s;">
+                            <div
+                                style="width: 50px; height: 50px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.8rem;">
+                                <i class="fas fa-flask" style="color: var(--accent-primary); font-size: 1.2rem;"></i>
+                            </div>
+                            <p
+                                style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #333; letter-spacing: 1px; margin: 0;">
+                                Extracto</p>
+                            <p style="font-size: 0.7rem; color: #999; margin-top: 0.3rem;">Alta Concentración</p>
+                        </div>
+                        <div class="trust-badge"
+                            style="text-align: center; padding: 1.5rem 1rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s;">
+                            <div
+                                style="width: 50px; height: 50px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.8rem;">
+                                <i class="fas fa-truck-fast"
+                                    style="color: var(--accent-primary); font-size: 1.2rem;"></i>
+                            </div>
+                            <p
+                                style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #333; letter-spacing: 1px; margin: 0;">
+                                Express</p>
+                            <p style="font-size: 0.7rem; color: #999; margin-top: 0.3rem;">24-48 Horas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INFO COLUMN MEJORADA -->
+            <div style="flex: 1; min-width: 400px; max-width: 650px;">
+
+                <!-- Brand & Title -->
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                        <p style="font-size: 0.9rem; letter-spacing: 3px; color: var(--accent-primary); font-weight: 700; text-transform: uppercase; margin: 0;"
+                            th:text="${perfume.marca}">Marca</p>
+                        <div
+                            style="display: flex; align-items: center; gap: 0.3rem; background: #f8f8f8; padding: 0.3rem 0.8rem; border-radius: 50px;">
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.75rem;"></i>
+                            <span style="font-size: 0.8rem; font-weight: 700; color: #333;">4.9</span>
+                            <span style="font-size: 0.75rem; color: #999;">(128 reseñas)</span>
+                        </div>
+                    </div>
+
+                    <h1 style="font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: 1rem; line-height: 1.1; color: #1a1a1a; font-weight: 700;"
+                        th:text="${perfume.nombre}">Nombre del Perfume</h1>
+
+                    <!-- Género Badge -->
+                    <div th:if="${perfume.genero != null}"
+                        style="display: inline-flex; align-items: center; gap: 0.5rem; background: #f8f8f8; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 1.5rem;">
+                        <i th:class="${perfume.genero == 'Hombre' ? 'fas fa-mars' : (perfume.genero == 'Mujer' ? 'fas fa-venus' : 'fas fa-venus-mars')}"
+                            style="color: var(--accent-primary);"></i>
+                        <span th:text="${perfume.genero}">Género</span>
+                    </div>
+                </div>
+
+                <!-- Price Section -->
+                <div style="margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid #eee;">
+                    <div style="display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap;">
+                        <p style="font-size: 2.8rem; font-weight: 700; color: #1a1a1a; margin: 0; line-height: 1;"
+                            th:text="'$' + ${perfume.precio != null ? #numbers.formatDecimal(perfume.precio, 0, 'POINT', 0, 'POINT') : '0'} + ' COP'">
+                            $0</p>
+                        <p th:if="${false}"
+                            style="font-size: 1.5rem; color: #aaa; text-decoration: line-through; margin: 0; font-weight: 500;"
+                            th:text="'$0 COP'">
+                            $0</p>
+                        <div th:if="${false}"
+                            style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #fff; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 700;">
+                            Ahorras <span>$0</span>
+                        </div>
+                    </div>
+                    <p
+                        style="color: #22c55e; font-size: 0.9rem; margin-top: 0.8rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
+                        <i class="fas fa-check-circle"></i>
+                        Disponible en stock — Envío inmediato
+                    </p>
+                </div>
+
+                <!-- Descripción Comercial -->
+                <div style="margin-bottom: 2.5rem;">
+                    <p style="color: #444; font-size: 1.1rem; line-height: 1.9; margin: 0; font-weight: 300;"
+                        th:text="${perfume.descripcion}">Descripción completa del perfume...</p>
+                </div>
+
+                <!-- Pirámide Olfativa Detallada -->
+                <div class="olfactory-pyramid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem; background: #fff; padding: 2rem; border-radius: 24px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 10px 40px rgba(0,0,0,0.02);">
+                    <div>
+                        <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-primary); font-weight: 700; margin-bottom: 1rem;"><i class="fas fa-leaf"></i> Notas de Salida</h4>
+                        <ul style="padding-left: 1.2rem; color: #555; font-size: 0.95rem; line-height: 1.8; margin: 0;" th:if="${perfume.notasSalida != null}">
+                            <li th:each="nota : ${#strings.arraySplit(perfume.notasSalida, ',')}" th:text="${#strings.trim(nota)}">Almendra</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-primary); font-weight: 700; margin-bottom: 1rem;"><i class="fas fa-heart"></i> Notas de Corazón</h4>
+                        <ul style="padding-left: 1.2rem; color: #555; font-size: 0.95rem; line-height: 1.8; margin: 0;" th:if="${perfume.notasCorazon != null}">
+                            <li th:each="nota : ${#strings.arraySplit(perfume.notasCorazon, ',')}" th:text="${#strings.trim(nota)}">Jazmín Sambac</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-primary); font-weight: 700; margin-bottom: 1rem;"><i class="fas fa-wind"></i> Notas de Fondo</h4>
+                        <ul style="padding-left: 1.2rem; color: #555; font-size: 0.95rem; line-height: 1.8; margin: 0;" th:if="${perfume.notasFondo != null}">
+                            <li th:each="nota : ${#strings.arraySplit(perfume.notasFondo, ',')}" th:text="${#strings.trim(nota)}">Haba Tonka</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Perfil Olfativo & Ideal Para Narratives -->
+                <div style="margin-bottom: 3rem; display: flex; flex-direction: column; gap: 1.5rem;" th:if="${perfume.perfilOlfativo != null or perfume.idealPara != null}">
+                    <div th:if="${perfume.perfilOlfativo != null}" style="border-left: 3px solid var(--accent-primary); padding-left: 1.5rem;">
+                        <h4 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: #1a1a1a; font-weight: 700; margin-bottom: 0.5rem;">Perfil Olfativo</h4>
+                        <p style="color: #666; font-size: 0.95rem; line-height: 1.7; margin: 0;" th:text="${perfume.perfilOlfativo}">Resumen sensorial...</p>
+                    </div>
+                    <div th:if="${perfume.idealPara != null}" style="border-left: 3px solid #333; padding-left: 1.5rem;">
+                        <h4 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: #1a1a1a; font-weight: 700; margin-bottom: 0.5rem;">Ideal para</h4>
+                        <p style="color: #666; font-size: 0.95rem; line-height: 1.7; margin: 0;" th:text="${perfume.idealPara}">Recomendado para...</p>
+                    </div>
+                </div>
+
+                <!-- Information quick cards (9 Cards Grid) -->
+                <div class="info-quick-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
+                    <!-- 1. Familia Olfativa -->
+                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
+                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">🌸</span>
+                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Familia Olfativa</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.familiaOlfativa != null ? perfume.familiaOlfativa : 'Floral'}">Familia</span>
+                    </div>
+
+                    <!-- 2. Duración -->
+                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
+                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">⏳</span>
+                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Duración</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.duracion != null ? perfume.duracion : 'Moderada'}">Duración</span>
+                    </div>
+
+                    <!-- 3. Uso de Día -->
+                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
+                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">☀️</span>
+                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Uso de Día</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.usoRecomendado == 'Día' or perfume.usoRecomendado == 'Ambos' ? 'Recomendado' : 'No recomendado'}">Sí</span>
+                    </div>
+
+                    <!-- 4. Uso Nocturno -->
+                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
+                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">🌙</span>
+                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Uso Nocturno</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.usoRecomendado == 'Noche' or perfume.usoRecomendado == 'Ambos' ? 'Recomendado' : 'No recomendado'}">Sí</span>
+                    </div>
+
+                    <!-- 5. Clima Recomendado -->
+                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
+                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">❄️</span>
+                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Clima</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.climaRecomendado != null ? perfume.climaRecomendado : 'Todos'}">Clima</span>
+                    </div>
+
+                    <!-- 6. Intensidad -->
+                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
+                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">🌿</span>
+                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Intensidad</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.intensidad != null ? perfume.intensidad : 'Moderada'}">Intensidad</span>
+                    </div>
+
+                    <!-- 7. Concentración -->
+                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
+                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">💎</span>
+                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Concentración</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.concentracion != null ? perfume.concentracion : 'EDP'}">EDP</span>
+                    </div>
+
+                    <!-- 8. Envío Gratis -->
+                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
+                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">🚚</span>
+                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Envío</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.envioGratis != null && perfume.envioGratis ? 'Gratuito' : 'A cargo de cliente'}">Envío</span>
+                    </div>
+
+                    <!-- 9. Producto Original -->
+                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
+                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">✔️</span>
+                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Garantía</span>
+                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.autenticidad != null ? perfume.autenticidad : '100% Original'}">Original</span>
+                    </div>
+                </div>
+
+                <!-- Add to Cart Form -->
+                <form th:action="@{/carrito/agregar/{id}(id=${perfume.id})}" method="post" class="product-cart-form"
+                    style="margin-bottom: 3rem;">
+                    <div class="cart-buttons-container" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <!-- Quantity Selector -->
+                        <div
+                            style="display: flex; align-items: center; background: #f8f8f8; border-radius: 16px; border: 2px solid #eee; overflow: hidden;">
+                            <button type="button" onclick="updateQty(-1)"
+                                style="width: 50px; height: 56px; background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #999; transition: all 0.3s; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-minus" style="font-size: 0.7rem;"></i>
+                            </button>
+                            <input type="number" name="cantidad" id="qty-input" value="1" min="1" max="10"
+                                style="width: 60px; height: 56px; border: none; background: none; text-align: center; font-weight: 700; font-size: 1.1rem; color: #333; outline: none; -moz-appearance: textfield; font-family: 'Outfit', sans-serif;">
+                            <button type="button" onclick="updateQty(1)"
+                                style="width: 50px; height: 56px; background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #999; transition: all 0.3s; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-plus" style="font-size: 0.7rem;"></i>
+                            </button>
+                        </div>
+
+                        <!-- Add Button -->
+                        <button type="submit" class="add-to-cart-main"
+                            style="flex: 1; min-width: 250px; padding: 1rem 2rem; background: linear-gradient(135deg, var(--accent-primary) 0%, #e8890c 100%); color: #fff; border: none; border-radius: 16px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-family: 'Outfit', sans-serif; box-shadow: 0 10px 30px rgba(244,154,31,0.3); position: relative; overflow: hidden;">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span>Añadir a mi bolsa</span>
+                        </button>
+                    </div>
+
+                    <!-- Shipping Info -->
+                    <div
+                        style="margin-top: 1rem; display: flex; align-items: center; gap: 0.8rem; color: #888; font-size: 0.85rem;">
+                        <i class="fas fa-truck" style="color: var(--accent-primary);"></i>
+                        <span>Envío gratis en compras superiores a $300.000 COP</span>
+                    </div>
+                </form>
+
+                <!-- Payment Methods -->
+                <div
+                    style="margin-bottom: 3rem; padding: 1.5rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04);">
+                    <p
+                        style="font-size: 0.8rem; color: #999; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 1rem;">
+                        Métodos de pago aceptados</p>
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <div
+                            style="padding: 0.5rem 1rem; background: #f8f8f8; border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: #666;">
+                            <i class="fas fa-credit-card"
+                                style="margin-right: 0.3rem; color: var(--accent-primary);"></i> Visa</div>
+                        <div
+                            style="padding: 0.5rem 1rem; background: #f8f8f8; border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: #666;">
+                            <i class="fas fa-credit-card"
+                                style="margin-right: 0.3rem; color: var(--accent-primary);"></i> Mastercard</div>
+                        <div
+                            style="padding: 0.5rem 1rem; background: #f8f8f8; border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: #666;">
+                            <i class="fas fa-money-bill-wave"
+                                style="margin-right: 0.3rem; color: var(--accent-primary);"></i> Efecty</div>
+                        <div
+                            style="padding: 0.5rem 1rem; background: #f8f8f8; border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: #666;">
+                            <i class="fas fa-university"
+                                style="margin-right: 0.3rem; color: var(--accent-primary);"></i> PSE</div>
+                    </div>
+                </div>
+
+                <!-- The Ritual Section -->
+                <div
+                    style="margin-bottom: 3rem; padding: 2.5rem; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 28px; color: #fff; position: relative; overflow: hidden;">
+                    <div
+                        style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(244,154,31,0.15) 0%, transparent 70%); border-radius: 50%;">
+                    </div>
+
+                    <h3
+                        style="font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
+                        <i class="fas fa-magic" style="color: var(--accent-primary);"></i>
+                        El Ritual
+                    </h3>
+                    <p style="color: #aaa; line-height: 1.8; margin-bottom: 2rem; font-size: 0.95rem;">Para una
+                        experiencia óptima en Cartagena, aplica sobre la piel hidratada en los puntos de pulso. Evita
+                        frotar las muñecas para mantener la integridad de las notas de salida.</p>
+
+                    <div class="ritual-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s;"
+                            class="ritual-card">
+                            <div
+                                style="width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.8rem;">
+                                <i class="fas fa-wind" style="color: #fff; font-size: 0.8rem;"></i>
+                            </div>
+                            <h5
+                                style="color: var(--accent-primary); margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px;">
+                                Salida</h5>
+                            <p style="font-size: 0.85rem; margin: 0; color: #ccc; line-height: 1.5;">Lo que sientes al
+                                primer contacto. Notas frescas y vibrantes.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s;"
+                            class="ritual-card">
+                            <div
+                                style="width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.8rem;">
+                                <i class="fas fa-heart" style="color: #fff; font-size: 0.8rem;"></i>
+                            </div>
+                            <h5
+                                style="color: var(--accent-primary); margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px;">
+                                Corazón</h5>
+                            <p style="font-size: 0.85rem; margin: 0; color: #ccc; line-height: 1.5;">El alma de la
+                                fragancia que perdura en tu piel.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guarantee Section -->
+                <div class="guarantee-section" style="display: flex; gap: 2rem; padding-top: 2rem; border-top: 1px solid #eee; flex-wrap: wrap;">
+                    <div style="text-align: center; flex: 1; min-width: 120px; padding: 1.5rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); transition: all 0.3s;"
+                        class="guarantee-item">
+                        <div
+                            style="width: 50px; height: 50px; background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                            <i class="fas fa-shield-halved" style="color: #16a34a; font-size: 1.2rem;"></i>
+                        </div>
+                        <p
+                            style="font-size: 0.8rem; color: #333; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin: 0;">
+                            Garantía</p>
+                        <p style="font-size: 0.75rem; color: #999; margin-top: 0.3rem;">30 días</p>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 120px; padding: 1.5rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); transition: all 0.3s;"
+                        class="guarantee-item">
+                        <div
+                            style="width: 50px; height: 50px; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                            <i class="fas fa-rotate-left" style="color: #2563eb; font-size: 1.2rem;"></i>
+                        </div>
+                        <p
+                            style="font-size: 0.8rem; color: #333; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin: 0;">
+                            Devolución</p>
+                        <p style="font-size: 0.75rem; color: #999; margin-top: 0.3rem;">Fácil y rápida</p>
+                    </div>
+                    <div style="text-align: center; flex: 1; min-width: 120px; padding: 1.5rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); transition: all 0.3s;"
+                        class="guarantee-item">
+                        <div
+                            style="width: 50px; height: 50px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                            <i class="fab fa-whatsapp" style="color: #22c55e; font-size: 1.2rem;"></i>
+                        </div>
+                        <p
+                            style="font-size: 0.8rem; color: #333; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin: 0;">
+                            Soporte</p>
+                        <p style="font-size: 0.75rem; color: #999; margin-top: 0.3rem;">WhatsApp 24/7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FRAGANCIA EN ACCIÓN / VIDEO SECTION -->
+    <section class="sensory-experience-section"
+        style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 6rem 2rem; position: relative; overflow: hidden;">
+        <div
+            style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(244,154,31,0.3), transparent);">
+        </div>
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+            <div
+                style="display: inline-flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.05); padding: 0.6rem 1.2rem; border-radius: 50px; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.1);">
+                <span
+                    style="width: 8px; height: 8px; background: var(--accent-primary); border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
+                <span
+                    style="font-size: 0.8rem; color: var(--accent-primary); font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Experiencia
+                    Sensorial</span>
+            </div>
+            <h2
+                style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); color: #fff; margin-bottom: 1.5rem;">
+                La Esencia de la Elegancia</h2>
+            <p style="color: #888; max-width: 600px; margin: 0 auto 3rem; line-height: 1.8; font-size: 1.05rem;">Cada
+                gota cuenta una historia. Descubre cómo esta fragancia transforma momentos ordinarios en recuerdos
+                inolvidables.</p>
+
+            <div
+                style="position: relative; max-width: 900px; margin: 0 auto; border-radius: 24px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.4);">
+                <div
+                    style="aspect-ratio: 16/9; background: linear-gradient(135deg, #333 0%, #1a1a1a 100%); display: flex; align-items: center; justify-content: center;">
+                    <button
+                        style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(244,154,31,0.4); transition: all 0.3s; color: #fff; font-size: 1.5rem;">
+                        <i class="fas fa-play" style="margin-left: 4px;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RECOMENDACIONES MEJORADAS -->
+    <section style="background: #fff; padding: 6rem 2rem; border-top: 1px solid #f0f0f0;">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <div
+                    style="display: inline-flex; align-items: center; gap: 0.8rem; background: #fff9f2; padding: 0.6rem 1.2rem; border-radius: 50px; margin-bottom: 1.5rem;">
+                    <i class="fas fa-sparkles" style="color: var(--accent-primary); font-size: 0.8rem;"></i>
+                    <span
+                        style="font-size: 0.8rem; color: var(--accent-primary); font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Descubre
+                        Más</span>
+                </div>
+                <h2
+                    style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 1rem; color: #1a1a1a;">
+                    Podría Interesarte</h2>
+                <p style="color: #888; max-width: 500px; margin: 0 auto; line-height: 1.7;">Fragancias con perfiles
+                    similares seleccionadas especialmente para ti.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2.5rem;">
+                <div th:each="p : ${recomendados}" class="recommendation-card"
+                    style="background: #fff; border-radius: 28px; overflow: hidden; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 10px 40px rgba(0,0,0,0.04); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; position: relative;"
+                    th:data-url="@{/producto/{id}(id=${p.id})}" onclick="location.href=this.getAttribute('data-url')">
+
+                    <div style="position: relative; height: 320px; overflow: hidden;">
+                        <div th:style="'background-image: url(\'' + ${p.imagenUrl} + '\'); width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);'"
+                            class="rec-image"></div>
+                        <div
+                            style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%); opacity: 0; transition: opacity 0.4s;">
+                        </div>
+
+                        <!-- Quick Add Button -->
+                        <div style="position: absolute; bottom: 20px; right: 20px; z-index: 10;">
+                            <form th:action="@{/carrito/agregar/{id}(id=${p.id})}" method="post"
+                                class="ajax-cart-form-rec" style="margin: 0;" onclick="event.stopPropagation();">
+                                <button type="submit"
+                                    style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(244,154,31,0.4); color: #fff; font-size: 1rem; transition: all 0.3s;">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div style="padding: 1.8rem;">
+                        <p style="color: var(--accent-primary); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 2px; margin-bottom: 0.5rem;"
+                            th:text="${p.marca}">Marca</p>
+                        <h4 style="font-size: 1.15rem; margin-bottom: 0.8rem; color: #1a1a1a; font-family: 'Playfair Display', serif; font-weight: 700;"
+                            th:text="${p.nombre}">Nombre</h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="font-weight: 700; color: #1a1a1a; font-size: 1.2rem; margin: 0;"
+                                th:text="'$' + ${#numbers.formatDecimal(p.precio, 0, 'POINT', 0, 'POINT')} + ' COP'">$0
+                            </p>
+                            <span
+                                style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Ver
+                                más <i class="fas fa-arrow-right"
+                                    style="font-size: 0.6rem; margin-left: 0.3rem;"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEWSLETTER STICKY BAR -->
+    <div style="position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 1rem 2rem; z-index: 100; transform: translateY(100%); transition: transform 0.4s ease;"
+        id="sticky-bar">
+        <div class="sticky-bar-content"
+            style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div
+                    style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-percent" style="color: #fff;"></i>
+                </div>
+                <div>
+                    <p style="color: #fff; font-weight: 700; margin: 0; font-size: 0.95rem;">¿Primera vez comprando?</p>
+                    <p style="color: #888; margin: 0; font-size: 0.8rem;">Obtén 15% de descuento con el código <span
+                            style="color: var(--accent-primary); font-weight: 700;">BIENVENIDO15</span></p>
+                </div>
+            </div>
+            <button onclick="document.getElementById('sticky-bar').style.transform='translateY(100%)'"
+                style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 0.6rem 1.2rem; border-radius: 12px; cursor: pointer; font-size: 0.85rem; transition: all 0.3s;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- STYLES -->
+    <style>
+        :root {
+            --accent-primary: #f49a1f;
+            --accent-secondary: #e8890c;
+            --text-dark: #1a1a1a;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(244, 154, 31, 0.4);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(244, 154, 31, 0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            70% {
+                transform: scale(0.98);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Product Image Hover Zoom */
+        .product-image-main:hover .main-product-img {
+            transform: scale(1.05);
+        }
+
+        .product-image-main:hover .zoom-lens {
+            opacity: 1;
+        }
+
+        /* Wishlist Button */
+        .wishlist-btn:hover {
+            color: #ef4444 !important;
+            transform: scale(1.1) !important;
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.2) !important;
+        }
+
+        .wishlist-btn.active {
+            color: #ef4444 !important;
+            background: #fef2f2 !important;
+        }
+
+        /* Thumbnails */
+        .thumb {
+            transition: all 0.3s;
+        }
+
+        .thumb:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .thumb.active {
+            box-shadow: 0 0 0 3px rgba(244, 154, 31, 0.2);
+        }
+
+        /* Trust Badges */
+        .trust-badge:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08) !important;
+            border-color: rgba(244, 154, 31, 0.1) !important;
+        }
+
+        /* Tech Items */
+        .tech-item:hover {
+            background: rgba(255, 255, 255, 0.9) !important;
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Add to Cart Main Button */
+        .add-to-cart-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(244, 154, 31, 0.4) !important;
+        }
+
+        .add-to-cart-main:active {
+            transform: scale(0.98);
+        }
+
+        /* Quantity Buttons */
+        button[onclick^="updateQty"]:hover {
+            color: var(--accent-primary) !important;
+            background: rgba(244, 154, 31, 0.05) !important;
+        }
+
+        /* Ritual Cards */
+        .ritual-card:hover {
+            background: rgba(255, 255, 255, 0.08) !important;
+            transform: translateY(-3px);
+        }
+
+        /* Guarantee Items */
+        .guarantee-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06) !important;
+        }
+
+        /* Recommendation Cards */
+        .recommendation-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .recommendation-card:hover .rec-image {
+            transform: scale(1.1);
+        }
+
+        .recommendation-card:hover [style*="position: absolute; inset: 0; background: linear-gradient"] {
+            opacity: 1 !important;
+        }
+
+        /* Sticky Bar Show */
+        .show-sticky {
+            transform: translateY(0) !important;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
+            border-radius: 4px;
+        }
+
+        /* Input number hide arrows */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .product-columns-wrapper {
+                gap: 2.5rem !important;
+            }
+            .product-columns-wrapper > div {
+                min-width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .breadcrumb-container {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+                padding-top: 100px !important;
+            }
+            .main-product-section {
+                padding: 1rem 1rem 3rem !important;
+            }
+            .product-image-main {
+                border-radius: 20px !important;
+            }
+            .sensory-experience-section {
+                padding: 3rem 1rem !important;
+            }
+            #sticky-bar {
+                padding: 1rem !important;
+            }
+            .sticky-bar-content {
+                flex-direction: column !important;
+                text-align: center !important;
+                align-items: center !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .info-quick-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.8rem !important;
+            }
+            .cart-buttons-container {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .cart-buttons-container > div {
+                justify-content: center !important;
+            }
+            .add-to-cart-main {
+                width: 100% !important;
+                min-width: unset !important;
+            }
+            .ritual-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            .guarantee-section {
+                gap: 1rem !important;
+            }
+            .guarantee-item {
+                min-width: 100% !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .trust-badges-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.8rem !important;
+            }
+            .olfactory-pyramid {
+                padding: 1.2rem !important;
+                gap: 1.5rem !important;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .info-quick-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Quantity Selector
+        function updateQty(change) {
+            const input = document.getElementById('qty-input');
+            let val = parseInt(input.value) + change;
+            if (val < 1) val = 1;
+            if (val > 10) val = 10;
+            input.value = val;
+
+            // Animación sutil
+            input.style.transform = 'scale(1.1)';
+            setTimeout(() => input.style.transform = 'scale(1)', 150);
+        }
+
+        // Wishlist Toggle
+        function toggleWishlist() {
+            const btn = document.querySelector('.wishlist-btn');
+            btn.classList.toggle('active');
+            const isActive = btn.classList.contains('active');
+            btn.innerHTML = isActive ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
+
+            // Toast
+            if (typeof showToast === 'function') {
+                showToast(isActive ? 'Añadido a favoritos ❤️' : 'Eliminado de favoritos', isActive ? 'success' : 'info');
+            }
+        }
+
+        // Thumbnail Switch
+        document.querySelectorAll('.thumb').forEach(thumb => {
+            thumb.addEventListener('click', function () {
+                document.querySelectorAll('.thumb').forEach(t => {
+                    t.classList.remove('active');
+                    t.style.opacity = '0.6';
+                    t.style.borderColor = 'transparent';
+                });
+                this.classList.add('active');
+                this.style.opacity = '1';
+                this.style.borderColor = 'var(--accent-primary)';
+
+                const img = this.querySelector('img');
+                if (img) {
+                    const mainImg = document.querySelector('.main-product-img');
+                    mainImg.style.opacity = '0';
+                    setTimeout(() => {
+                        mainImg.src = img.src;
+                        mainImg.style.opacity = '1';
+                    }, 200);
+                }
+            });
+        });
+
+        // Sticky Bar
+        setTimeout(() => {
+            document.getElementById('sticky-bar').style.transform = 'translateY(0)';
+        }, 3000);
+
+        // AJAX Add to Cart
+        const productForm = document.querySelector('.product-cart-form');
+        if (productForm) {
+            productForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(productForm);
+                const url = productForm.action;
+                const button = productForm.querySelector('.add-to-cart-main');
+                const originalContent = button.innerHTML;
+
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Agregando...</span>';
+                button.style.opacity = '0.8';
+
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        button.innerHTML = '<i class="fas fa-check"></i> <span>¡Añadido!</span>';
+                        button.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
+
+                        setTimeout(() => {
+                            button.innerHTML = originalContent;
+                            button.style.background = '';
+                            button.style.opacity = '1';
+                            button.disabled = false;
+                        }, 2000);
+
+                        if (typeof updateCartCount === 'function') {
+                            updateCartCount(data.cartCount);
+                        }
+                        if (typeof showToast === 'function') {
+                            showToast('¡Fragancia añadida con éxito! 🎉', 'success');
+                        }
+                    }
+                } catch (error) {
+                    button.innerHTML = '<i class="fas fa-exclamation"></i> <span>Error</span>';
+                    button.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+
+                    setTimeout(() => {
+                        button.innerHTML = originalContent;
+                        button.style.background = '';
+                        button.style.opacity = '1';
+                        button.disabled = false;
+                    }, 2000);
+
+                    if (typeof showToast === 'function') {
+                        showToast('Error al añadir al carrito', 'error');
+                    }
+                }
+            });
+        }
+
+        // AJAX para recomendaciones
+        document.querySelectorAll('.ajax-cart-form-rec').forEach(form => {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const button = form.querySelector('button');
+                const originalContent = button.innerHTML;
+
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        button.innerHTML = '<i class="fas fa-check"></i>';
+                        button.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
+
+                        setTimeout(() => {
+                            button.innerHTML = originalContent;
+                            button.style.background = '';
+                        }, 1500);
+
+                        if (typeof updateCartCount === 'function') {
+                            updateCartCount(data.cartCount);
+                        }
+                        if (typeof showToast === 'function') {
+                            showToast('Añadido desde recomendaciones', 'success');
+                        }
+                    }
+                } catch (error) {
+                    button.innerHTML = '<i class="fas fa-exclamation"></i>';
+                    setTimeout(() => {
+                        button.innerHTML = originalContent;
+                    }, 1500);
+                }
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Animar elementos al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animar secciones
+            document.querySelectorAll('.trust-badge, .tech-item, .guarantee-item, .ritual-card').forEach((el, i) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = `all 0.5s ease ${i * 0.1}s`;
+                observer.observe(el);
+            });
+
+            // Animar recommendation cards
+            document.querySelectorAll('.recommendation-card').forEach((card, i) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${i * 0.1}s`;
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+
+</html>

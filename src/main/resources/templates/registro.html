@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Registro | Profumi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { margin: 0; padding: 0; overflow-x: hidden; }
+        .register-split { display: grid; grid-template-columns: 1fr 1.2fr; min-height: 100vh; }
+        
+        .register-image { 
+            background: url('https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=1974&auto=format&fit=crop') center/cover no-repeat;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5rem;
+        }
+        .register-image::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3);
+        }
+        .image-content { position: relative; z-index: 2; color: #fff; text-align: center; }
+        .image-content h2 { font-family: var(--font-serif); font-size: 3.5rem; margin-bottom: 1.5rem; line-height: 1.1; }
+        
+        .register-form-container { 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            padding: 4rem;
+        }
+        .register-card { width: 100%; max-width: 450px; }
+        
+        .form-header { margin-bottom: 3rem; }
+        .form-header h1 { font-family: var(--font-serif); font-size: 2.8rem; margin-bottom: 0.5rem; color: var(--text-dark); }
+        .form-header p { color: #888; font-size: 1.1rem; }
+        
+        .form-group { margin-bottom: 1.5rem; position: relative; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #aaa; margin-bottom: 0.6rem; }
+        .form-input { 
+            width: 100%; 
+            padding: 1rem 1.5rem; 
+            border: 1px solid #eee; 
+            border-radius: 12px; 
+            background: #fafafa;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        .form-input:focus { border-color: var(--accent-primary); background: #fff; outline: none; box-shadow: 0 10px 30px rgba(224, 167, 94, 0.1); }
+        
+        .btn-register { 
+            width: 100%; 
+            padding: 1.2rem; 
+            background: var(--text-dark); 
+            color: #fff; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: 0.3s;
+            margin-top: 1.5rem;
+        }
+        .btn-register:hover { background: var(--accent-primary); transform: translateY(-3px); box-shadow: 0 15px 35px rgba(224, 167, 94, 0.2); }
+        
+        .alert { padding: 1rem; border-radius: 10px; margin-bottom: 2rem; font-size: 0.9rem; }
+        .alert-error { background: #fff5f5; color: #e53e3e; border-left: 4px solid #e53e3e; }
+
+        @media (max-width: 992px) {
+            .register-split { grid-template-columns: 1fr; }
+            .register-image { display: none; }
+        }
+        @media (max-width: 576px) {
+            .register-form-container { padding: 2rem 1.5rem; }
+            .form-header { margin-bottom: 2.5rem; }
+            .form-header h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="register-split">
+        <div class="register-image">
+            <div class="image-content">
+                <p style="text-transform: uppercase; letter-spacing: 3px; font-weight: 500; margin-bottom: 1rem;">Bienvenido a la Élite</p>
+                <h2>un mundo de aromas espera por ti</h2>
+                <p style="opacity: 0.9; line-height: 1.6; font-size: 1.1rem;">Únete a nuestra comunidad exclusiva y disfruta de beneficios únicos en Cartagena.</p>
+            </div>
+        </div>
+
+        <div class="register-form-container">
+            <div class="register-card">
+                <div class="form-header">
+                    <h1>crear cuenta</h1>
+                    <p>Completa tus datos para iniciar la experiencia.</p>
+                </div>
+
+                <div th:if="${errorMsg}" class="alert alert-error">
+                    <i class="fas fa-exclamation-circle" style="margin-right: 10px;"></i> 
+                    <span th:text="${errorMsg}">Error al registrar</span>
+                </div>
+
+                <form th:action="@{/registro}" method="post">
+                    <div class="form-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" name="nombre" class="form-input" placeholder="Ej: Juan Pérez" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Correo Electrónico</label>
+                        <input type="email" name="email" class="form-input" placeholder="tu@correo.com" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Contraseña</label>
+                            <input type="password" name="password" class="form-input" placeholder="••••••••" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirmar</label>
+                            <input type="password" name="confirmPassword" class="form-input" placeholder="••••••••" required minlength="6">
+                        </div>
+                    </div>
+
+                    <p style="font-size: 0.8rem; color: #888; margin: 1rem 0 2rem;">
+                        Al registrarte, aceptas nuestros <a href="#" style="color: var(--text-dark);">términos y condiciones</a> de privacidad.
+                    </p>
+
+                    <button type="submit" class="btn-register">Registrarme Ahora</button>
+                </form>
+
+                <p style="text-align: center; margin-top: 3rem; color: #888;">
+                    ¿Ya tienes una cuenta? <a th:href="@{/login}" style="color: var(--text-dark); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--accent-primary);">Inicia sesión aquí</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

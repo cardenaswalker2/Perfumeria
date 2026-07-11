@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="chatbot">
+        <!-- Chat Bot Nova AI Launcher -->
+        <div id="nova-bot-launcher" onclick="toggleNovaChat()">
+            <i class="fas fa-comment-dots"></i>
+            <span class="launcher-pulse"></span>
+        </div>
+
+        <!-- Main Glassmorphism Chat Container -->
+        <div id="nova-chat-container" class="nova-hidden">
+            <!-- Left Collapsible History Panel -->
+            <div id="nova-history-panel" class="nova-side-panel closed">
+                <div class="panel-header">
+                    <h3><i class="fas fa-history"></i> HISTORIAL</h3>
+                    <button class="close-panel-btn" onclick="togglePanel('nova-history-panel')">&times;</button>
+                </div>
+                <div class="panel-body" id="nova-history-list">
+                    <!-- Loaded dynamically from localStorage -->
+                </div>
+                <button class="clear-history-btn" onclick="clearConversations()"><i class="fas fa-trash-alt"></i> Limpiar Historial</button>
+            </div>
+
+            <!-- Central Chat Window -->
+            <div id="nova-chat-window">
+                <!-- Header -->
+                <div class="nova-header">
+                    <div class="bot-info">
+                        <button class="header-btn" onclick="togglePanel('nova-history-panel')" title="Historial">
+                            <i class="fas fa-history"></i>
+                        </button>
+                        <div class="bot-avatar-container">
+                            <div class="bot-avatar">N</div>
+                            <span class="avatar-status"></span>
+                        </div>
+                        <div>
+                            <h4 class="bot-title">NOVA AI</h4>
+                            <span class="bot-subtitle">Asesoría de Perfumería de Lujo</span>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="header-btn" onclick="togglePanel('nova-profile-panel')" title="Mi Perfil de Sabor">
+                            <i class="fas fa-user-circle"></i>
+                        </button>
+                        <button class="header-btn close-main-btn" onclick="toggleNovaChat()" title="Cerrar">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Body -->
+                <div class="nova-body" id="nova-chat-body">
+                    <!-- Welcome message -->
+                    <div class="nova-msg-wrapper bot">
+                        <div class="nova-avatar-msg">N</div>
+                        <div class="nova-msg">
+                            ¡Bienvenido a Profumi! Soy Nova, tu asesora de fragancias de lujo. ¿Qué notas aromáticas o marcas estás buscando hoy para contar tu historia?
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thinking indicator -->
+                <div id="nova-thinking" class="nova-msg-wrapper bot hidden">
+                    <div class="nova-avatar-msg pulse">N</div>
+                    <div class="nova-msg thinking-bubble">
+                        <div class="thinking-text" id="thinking-status">Analizando tu perfil...</div>
+                        <div class="thinking-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scrollable Quick Action Buttons Chips -->
+                <div class="quick-chips-wrapper">
+                    <div class="quick-chips-container">
+                        <button class="quick-chip" onclick="quickSearch('Perfumes Hombre')">Perfumes Hombre</button>
+                        <button class="quick-chip" onclick="quickSearch('Perfumes Mujer')">Perfumes Mujer</button>
+                        <button class="quick-chip" onclick="quickSearch('Unisex')">Unisex</button>
+                        <button class="quick-chip" onclick="quickSearch('Perfumes Árabes')">Árabes</button>
+                        <button class="quick-chip" onclick="quickSearch('Perfumes Franceses')">Franceses</button>
+                        <button class="quick-chip" onclick="quickSearch('Perfumes Nuevos')">Nuevos</button>
+                        <button class="quick-chip" onclick="quickSearch('Más vendidos')">Más vendidos</button>
+                        <button class="quick-chip" onclick="quickSearch('Regalos')">Regalos</button>
+                        <button class="quick-chip" onclick="quickSearch('Ofertas')">Ofertas</button>
+                        <button class="quick-chip" onclick="quickSearch('Diagnóstico IA')">Diagnóstico IA</button>
+                        <button class="quick-chip" onclick="window.open('https://wa.me/573000000000', '_blank')">Hablar con asesor</button>
+                        <button class="quick-chip" onclick="quickSearch('Seguimiento de mi pedido')">Seguimiento pedido</button>
+                        <button class="quick-chip" onclick="window.location.href='/carrito'">Mi carrito</button>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="nova-input-area">
+                    <input type="text" id="nova-chat-input" placeholder="Pregunta a Nova (ej: notas de vainilla, ocasión boda...)" onkeypress="handleNovaKey(event)">
+                    <button onclick="sendNovaMessage()" aria-label="Enviar"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+            <!-- Right Collapsible Client Profile Panel -->
+            <div id="nova-profile-panel" class="nova-side-panel closed">
+                <div class="panel-header">
+                    <h3><i class="fas fa-user-check"></i> MI PERFIL OLFATIVO</h3>
+                    <button class="close-panel-btn" onclick="togglePanel('nova-profile-panel')">&times;</button>
+                </div>
+                <div class="panel-body">
+                    <div class="profile-card">
+                        <div class="profile-field">
+                            <span class="field-label">Género Favorito</span>
+                            <span class="field-value" id="profile-gender">Sin definir</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="field-label">Rango de Edad</span>
+                            <span class="field-value" id="profile-age">Sin definir</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="field-label">Notas Preferidas</span>
+                            <span class="field-value" id="profile-notes">Sin definir</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="field-label">Marcas de Preferencia</span>
+                            <span class="field-value" id="profile-brands">Sin definir</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="field-label">Presupuesto Máximo</span>
+                            <span class="field-value" id="profile-budget">Sin definir</span>
+                        </div>
+                    </div>
+                    <div class="profile-helper-text">
+                        Nova analiza tus conversaciones y actualiza tu perfil de fragancias de forma automática.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Global Floating Product Details Modal -->
+        <div id="nova-details-modal" class="nova-modal-overlay hidden" onclick="closeNovaDetails()">
+            <div class="nova-modal-content" onclick="event.stopPropagation()">
+                <button class="nova-modal-close" onclick="closeNovaDetails()">&times;</button>
+                <div class="nova-modal-grid">
+                    <div class="nova-modal-left">
+                        <img id="modal-p-img" src="" alt="Perfume">
+                    </div>
+                    <div class="nova-modal-right">
+                        <span id="modal-p-brand" class="modal-p-brand">MARCA</span>
+                        <h2 id="modal-p-name" class="modal-p-name">Nombre del perfume</h2>
+                        <div id="modal-p-pricing" class="modal-p-pricing">
+                            <span id="modal-p-price" class="modal-p-price">$0 COP</span>
+                        </div>
+                        <p id="modal-p-desc" class="modal-p-desc">Descripción completa del perfume.</p>
+                        
+                        <h3 class="modal-sec-title">Estructura Olfativa</h3>
+                        <div class="modal-pyramid">
+                            <div class="pyramid-tier">
+                                <span class="tier-name">Salida</span>
+                                <span class="tier-val" id="modal-p-salida">Notas de salida</span>
+                            </div>
+                            <div class="pyramid-tier">
+                                <span class="tier-name">Corazón</span>
+                                <span class="tier-val" id="modal-p-corazon">Notas corazón</span>
+                            </div>
+                            <div class="pyramid-tier">
+                                <span class="tier-name">Fondo</span>
+                                <span class="tier-val" id="modal-p-fondo">Notas de fondo</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-meta-grid">
+                            <div><strong>Duración:</strong> <span id="modal-p-duracion">8 Horas</span></div>
+                            <div><strong>Proyección:</strong> <span id="modal-p-proyeccion">Moderada</span></div>
+                            <div><strong>Ideal para:</strong> <span id="modal-p-ocasion">Fiestas / Noche</span></div>
+                            <div><strong>Stock:</strong> <span id="modal-p-stock">10 unidades</span></div>
+                        </div>
+
+                        <div id="modal-p-video-container" style="margin-bottom: 20px;"></div>
+
+                        <button id="modal-p-add-btn" class="modal-p-action-btn"><i class="fas fa-shopping-bag"></i> AGREGAR AL CARRITO</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            :root {
+                --gold: #D4AF37;
+                --gold-light: #F3E5AB;
+                --gold-dark: #996515;
+                --dark-bg: rgba(15, 15, 15, 0.85);
+                --dark-solid: #0A0A0A;
+                --glass-border: rgba(212, 175, 55, 0.2);
+                --glass-glow: rgba(212, 175, 55, 0.1);
+                --text-light: #F5F5F7;
+                --text-muted: #A1A1A6;
+                --font-premium: 'Montserrat', sans-serif;
+                --font-serif: 'Playfair Display', 'Cinzel', serif;
+            }
+
+            /* Botón Lanzador Nova AI */
+            #nova-bot-launcher {
+                position: fixed; bottom: 30px; right: 30px;
+                width: 65px; height: 65px; 
+                background: linear-gradient(135deg, var(--dark-solid) 0%, #1A1A1A 50%, var(--gold-dark) 100%);
+                border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                color: #fff; font-size: 1.8rem; cursor: pointer; z-index: 10001;
+                box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3), inset 0 1px 1px rgba(255,255,255,0.1);
+                transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+                border: 2px solid var(--gold);
+            }
+            #nova-bot-launcher:hover {
+                transform: scale(1.1) rotate(5deg) translateY(-5px);
+                box-shadow: 0 20px 40px rgba(212, 175, 55, 0.5), 0 0 15px var(--gold);
+            }
+            .launcher-pulse {
+                position: absolute; width: 100%; height: 100%;
+                border-radius: 50%; background: var(--gold);
+                opacity: 0.4; animation: launcherPulse 2.5s infinite; z-index: -1;
+            }
+            @keyframes launcherPulse {
+                0% { transform: scale(1); opacity: 0.4; }
+                100% { transform: scale(1.7); opacity: 0; }
+            }
+
+            /* Contenedor Principal (Glassmorphism de Lujo) */
+            #nova-chat-container {
+                position: fixed; bottom: 110px; right: 30px;
+                width: 440px; height: 660px;
+                display: flex; z-index: 10001;
+                font-family: var(--font-premium);
+                pointer-events: auto;
+                transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+                perspective: 1000px;
+            }
+            #nova-chat-container.nova-hidden {
+                opacity: 0; transform: translateY(40px) scale(0.92) rotateX(-5deg); pointer-events: none;
+            }
+
+            /* Ventana Central de Chat */
+            #nova-chat-window {
+                flex: 1; display: flex; flex-direction: column;
+                background: var(--dark-bg);
+                backdrop-filter: blur(35px);
+                -webkit-backdrop-filter: blur(35px);
+                border: 1px solid var(--glass-border);
+                border-radius: 28px;
+                box-shadow: 0 30px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 40px rgba(212,175,55,0.05);
+                overflow: hidden;
+                position: relative;
+                z-index: 10;
+                transition: box-shadow 0.3s;
+            }
+            #nova-chat-window:hover {
+                box-shadow: 0 30px 85px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.15), 0 0 50px rgba(212,175,55,0.08);
+            }
+
+            /* Paneles Laterales (Historial / Perfil) */
+            .nova-side-panel {
+                width: 280px; height: 100%;
+                background: rgba(10, 10, 10, 0.95);
+                backdrop-filter: blur(35px);
+                -webkit-backdrop-filter: blur(35px);
+                border: 1px solid var(--glass-border);
+                position: absolute; top: 0; bottom: 0;
+                display: flex; flex-direction: column;
+                transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+                z-index: 5;
+            }
+            #nova-history-panel {
+                left: -290px; border-top-left-radius: 28px; border-bottom-left-radius: 28px;
+            }
+            #nova-history-panel.closed {
+                left: 0; opacity: 0; pointer-events: none;
+            }
+            #nova-profile-panel {
+                left: -290px; border-top-left-radius: 28px; border-bottom-left-radius: 28px;
+            }
+            #nova-profile-panel.closed {
+                left: 0; opacity: 0; pointer-events: none;
+            }
+
+            /* Cabecera del Chat */
+            .nova-header {
+                padding: 18px 24px;
+                background: linear-gradient(135deg, var(--dark-solid) 0%, #151515 100%);
+                color: #fff; display: flex; justify-content: space-between; align-items: center;
+                border-bottom: 2px solid var(--gold);
+            }
+            .bot-info { display: flex; align-items: center; gap: 12px; }
+            .bot-avatar-container { position: relative; }
+            .bot-avatar {
+                width: 42px; height: 42px;
+                background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+                color: #000; border-radius: 50%; display: flex; align-items: center;
+                justify-content: center; font-weight: 800; font-family: var(--font-serif);
+                font-size: 1.1rem;
+                box-shadow: 0 0 10px rgba(212,175,55,0.4);
+            }
+            .avatar-status {
+                position: absolute; bottom: 0; right: 0;
+                width: 11px; height: 11px; background: #2ecc71;
+                border: 2px solid var(--dark-solid); border-radius: 50%;
+                box-shadow: 0 0 5px #2ecc71;
+            }
+            .bot-title { margin: 0; font-size: 1rem; letter-spacing: 2px; font-weight: 700; color: var(--text-light); }
+            .bot-subtitle { font-size: 0.68rem; color: var(--gold); display: block; letter-spacing: 0.5px; font-weight: 500; }
+            
+            .header-btn {
+                background: none; border: none; color: #fff; cursor: pointer;
+                font-size: 1.2rem; padding: 6px; transition: all 0.3s;
+            }
+            .header-btn:hover { color: var(--gold); transform: scale(1.1); }
+            .close-main-btn { margin-left: 8px; }
+
+            /* Panel Estilos */
+            .panel-header {
+                padding: 18px; border-bottom: 1px solid var(--glass-border);
+                display: flex; justify-content: space-between; align-items: center;
+            }
+            .panel-header h3 {
+                margin: 0; font-size: 0.85rem; letter-spacing: 2px; color: var(--gold);
+                font-weight: 700;
+            }
+            .close-panel-btn {
+                background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-muted);
+                transition: color 0.3s;
+            }
+            .close-panel-btn:hover { color: var(--gold); }
+            .panel-body { flex: 1; padding: 18px; overflow-y: auto; }
+            
+            /* Historial list */
+            .history-item {
+                padding: 12px 14px; border-radius: 12px; font-size: 0.78rem;
+                color: var(--text-light); cursor: pointer; transition: all 0.3s;
+                border-bottom: 1px solid rgba(255,255,255,0.03);
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            }
+            .history-item:hover { background: rgba(212, 175, 55, 0.12); color: var(--gold); }
+            .clear-history-btn {
+                margin: 18px; padding: 12px; background: none; border: 1px dashed var(--gold);
+                color: var(--gold); font-size: 0.78rem; border-radius: 12px; cursor: pointer;
+                transition: all 0.3s;
+            }
+            .clear-history-btn:hover { background: var(--gold); color: #000; }
+
+            /* Perfil Card */
+            .profile-card {
+                background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
+                border-radius: 16px; padding: 18px;
+            }
+            .profile-field {
+                margin-bottom: 14px; display: flex; flex-direction: column; gap: 4px;
+            }
+            .profile-field:last-child { margin-bottom: 0; }
+            .field-label { font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1.5px; }
+            .field-value { font-size: 0.85rem; color: var(--gold-light); font-weight: 600; }
+            .profile-helper-text { font-size: 0.7rem; color: var(--text-muted); line-height: 1.6; margin-top: 18px; text-align: center; }
+
+            /* Cuerpo de la conversación (Fondo de textura elegante) */
+            .nova-body {
+                flex: 1; padding: 22px; overflow-y: auto; display: flex;
+                flex-direction: column; gap: 20px; 
+                background: radial-gradient(circle at top right, rgba(30, 25, 20, 0.6) 0%, rgba(10, 10, 10, 0.85) 100%);
+                background-image: radial-gradient(rgba(212,175,55,0.05) 1px, transparent 1px);
+                background-size: 24px 24px;
+            }
+            .nova-msg-wrapper { display: flex; gap: 12px; max-width: 88%; animation: fadeInUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .nova-msg-wrapper.bot { align-self: flex-start; }
+            .nova-msg-wrapper.user { align-self: flex-end; flex-direction: row-reverse; }
+
+            .nova-avatar-msg {
+                width: 32px; height: 32px; border-radius: 50%;
+                background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+                color: #000; display: flex; align-items: center;
+                justify-content: center; font-weight: 800; font-size: 0.85rem;
+                font-family: var(--font-serif); flex-shrink: 0;
+                box-shadow: 0 4px 10px rgba(212,175,55,0.2);
+            }
+            .nova-avatar-msg.pulse { animation: avatarPulse 2s infinite; }
+            @keyframes avatarPulse {
+                0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+                70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+            }
+
+            /* Diseños de Mensajes Enriquecidos */
+            .nova-msg {
+                padding: 14px 18px; border-radius: 18px; font-size: 0.88rem;
+                line-height: 1.6; color: var(--text-light); background: rgba(30, 30, 30, 0.6);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+                border: 1px solid var(--glass-border);
+            }
+            .nova-msg-wrapper.bot .nova-msg { border-top-left-radius: 0; }
+            .nova-msg-wrapper.user .nova-msg {
+                background: linear-gradient(135deg, var(--gold-dark) 0%, #000 100%);
+                color: #fff; border-top-right-radius: 0; border: 1px solid var(--gold);
+                box-shadow: 0 8px 25px rgba(212,175,55,0.15);
+            }
+
+            /* Variaciones de mensaje */
+            .nova-msg.promocion {
+                border-left: 4px solid #e74c3c;
+                background: rgba(231, 76, 60, 0.1);
+            }
+            .nova-msg.advertencia {
+                border-left: 4px solid #f1c40f;
+                background: rgba(241, 196, 15, 0.1);
+            }
+            .nova-msg.informativo {
+                border-left: 4px solid #3498db;
+                background: rgba(52, 152, 219, 0.1);
+            }
+            .nova-msg.diagnostico {
+                border-left: 4px solid var(--gold);
+                background: rgba(212, 175, 87, 0.1);
+            }
+
+            /* Cursor de Streaming */
+            .streaming-cursor::after {
+                content: '❙'; display: inline-block;
+                animation: cursorBlink 0.8s infinite;
+                color: var(--gold); font-weight: bold; margin-left: 3px;
+            }
+            @keyframes cursorBlink {
+                0%, 100% { opacity: 0; }
+                50% { opacity: 1; }
+            }
+
+            /* Burbuja de "Thinking" */
+            .thinking-bubble { display: flex; align-items: center; gap: 12px; background: rgba(20,20,20,0.8) !important; }
+            .thinking-text { font-size: 0.8rem; color: var(--text-muted); }
+            .thinking-dots { display: flex; gap: 5px; }
+            .thinking-dots span {
+                width: 7px; height: 7px; background: var(--gold); border-radius: 50%;
+                animation: thinkingBounce 1.4s infinite both;
+            }
+            .thinking-dots span:nth-child(1) { animation-delay: -0.32s; }
+            .thinking-dots span:nth-child(2) { animation-delay: -0.16s; }
+            @keyframes thinkingBounce {
+                0%, 80%, 100% { transform: scale(0); }
+                40% { transform: scale(1); }
+            }
+
+            /* Botones rápidos (Chips) */
+            .quick-chips-wrapper {
+                padding: 12px 18px; border-top: 1px solid var(--glass-border);
+                background: rgba(10, 10, 10, 0.7);
+            }
+            .quick-chips-container {
+                display: flex; gap: 10px; overflow-x: auto;
+                scrollbar-width: none;
+            }
+            .quick-chips-container::-webkit-scrollbar { display: none; }
+            .quick-chip {
+                white-space: nowrap; padding: 8px 15px; border-radius: 22px;
+                border: 1px solid var(--glass-border); background: rgba(20, 20, 20, 0.6);
+                color: var(--text-light); font-size: 0.75rem; cursor: pointer;
+                transition: all 0.3s; font-weight: 500;
+            }
+            .quick-chip:hover {
+                background: var(--gold); color: #000; border-color: var(--gold);
+                box-shadow: 0 0 10px rgba(212,175,55,0.4);
+            }
+
+            /* Área de entrada del chat */
+            .nova-input-area {
+                padding: 16px 20px; border-top: 1px solid var(--glass-border);
+                display: flex; gap: 12px; background: var(--dark-solid);
+            }
+            #nova-chat-input {
+                flex: 1; border: 1px solid var(--glass-border); border-radius: 30px;
+                padding: 14px 22px; outline: none; font-size: 0.88rem;
+                background: rgba(30, 30, 30, 0.6); color: #fff;
+                transition: all 0.3s;
+            }
+            #nova-chat-input:focus { border-color: var(--gold); box-shadow: 0 0 12px rgba(212,175,55,0.25); background: rgba(40, 40, 40, 0.8); }
+            .nova-input-area button {
+                background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+                border: none; color: #000;
+                width: 48px; height: 48px; border-radius: 50%;
+                cursor: pointer; transition: all 0.3s; display: flex;
+                align-items: center; justify-content: center; font-size: 1rem;
+            }
+            .nova-input-area button:hover {
+                transform: scale(1.08) rotate(15deg);
+                box-shadow: 0 0 15px rgba(212,175,55,0.6);
+            }
+
+            /* Componentes Dinámicos: Tarjeta Premium de Perfume */
+            .nova-p-card {
+                width: 290px; background: rgba(20, 20, 20, 0.85); border-radius: 20px;
+                border: 1px solid var(--glass-border); overflow: hidden;
+                margin-top: 10px; box-shadow: 0 12px 35px rgba(0,0,0,0.5);
+                transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+            .nova-p-card:hover { transform: translateY(-6px); border-color: var(--gold); box-shadow: 0 15px 40px rgba(212,175,55,0.15); }
+            .p-card-img-container {
+                width: 100%; height: 180px; background: #fff;
+                display: flex; align-items: center; justify-content: center;
+                padding: 18px; position: relative;
+            }
+            .p-card-img-container img { max-height: 100%; max-width: 100%; object-fit: contain; transition: transform 0.4s; }
+            .nova-p-card:hover .p-card-img-container img { transform: scale(1.05); }
+            .p-card-badges {
+                position: absolute; top: 12px; left: 12px; display: flex; flex-direction: column; gap: 5px;
+            }
+            .p-card-badge {
+                font-size: 0.65rem; text-transform: uppercase; padding: 4px 8px;
+                border-radius: 6px; font-weight: 700; color: #000;
+            }
+            .p-card-badge.nuevo { background: var(--gold); }
+            .p-card-badge.ventas { background: #fff; border: 1px solid var(--gold-dark); }
+            .p-card-fav-btn {
+                position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.6);
+                border: 1px solid var(--glass-border); width: 32px; height: 32px;
+                border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                cursor: pointer; color: #fff; transition: all 0.3s;
+            }
+            .p-card-fav-btn:hover { background: rgba(212,175,55,0.2); }
+            .p-card-fav-btn.active { color: #e74c3c; background: #fff; }
+
+            .p-card-info { padding: 18px; }
+            .p-brand { font-size: 0.68rem; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+            .p-name { font-size: 1.1rem; font-family: var(--font-serif); font-weight: 700; margin: 4px 0 10px; color: var(--text-light); }
+            .p-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+            .p-price { font-size: 1.05rem; font-weight: 700; color: var(--gold-light); }
+            .p-rating { font-size: 0.78rem; color: #f1c40f; display: flex; align-items: center; gap: 3px; }
+
+            .p-specs {
+                font-size: 0.75rem; color: var(--text-muted); line-height: 1.6;
+                padding-top: 12px; border-top: 1px dashed rgba(212,175,55,0.15);
+                margin-bottom: 14px; display: grid; grid-template-columns: 1fr; gap: 6px;
+            }
+            .p-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+            .p-btn {
+                padding: 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 700;
+                cursor: pointer; text-align: center; text-transform: uppercase;
+                transition: all 0.3s; border: none;
+            }
+            .p-btn.primary { background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%); color: #000; }
+            .p-btn.primary:hover { transform: scale(1.03); box-shadow: 0 4px 12px rgba(212,175,55,0.3); }
+            .p-btn.secondary { background: rgba(255,255,255,0.06); color: var(--text-light); border: 1px solid var(--glass-border); }
+            .p-btn.secondary:hover { background: rgba(255,255,255,0.12); border-color: var(--gold); }
+            .p-btn.span-2 { grid-column: span 2; }
+
+            /* Componente: Carrusel de Productos */
+            .nova-p-carousel {
+                position: relative; width: 100%; max-width: 100%; margin-top: 10px; overflow: hidden;
+            }
+            .carousel-track-container { 
+                width: 100%; overflow-x: auto; overflow-y: hidden; 
+                scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; 
+            }
+            .carousel-track-container::-webkit-scrollbar { display: none; }
+            .carousel-track { display: flex; gap: 12px; padding: 6px 0; }
+            .carousel-nav-btn {
+                position: absolute; top: 50%; transform: translateY(-50%);
+                width: 32px; height: 32px; background: rgba(10,10,10,0.9);
+                border: 1px solid var(--glass-border); border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                cursor: pointer; font-size: 0.85rem; color: var(--gold); z-index: 5;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+                transition: all 0.3s;
+            }
+            .carousel-nav-btn:hover { background: var(--gold); color: #000; }
+            .carousel-nav-btn.prev { left: 4px; }
+            .carousel-nav-btn.next { right: 4px; }
+
+            /* Componente: Tabla Comparativa (Diseño de Lujo) */
+            .nova-compare-box {
+                background: rgba(15,15,15,0.9); border: 1px solid var(--glass-border);
+                border-radius: 18px; padding: 18px; margin-top: 10px;
+                overflow-x: auto; width: 100%; max-width: 100%;
+                box-shadow: 0 12px 35px rgba(0,0,0,0.5);
+            }
+            .compare-table-mini { width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left; color: var(--text-light); }
+            .compare-table-mini th { background: rgba(0,0,0,0.4); padding: 10px; border-bottom: 2px solid var(--glass-border); font-weight: 700; color: var(--gold); }
+            .compare-table-mini td { padding: 10px; border-bottom: 1px solid rgba(212,175,55,0.1); vertical-align: middle; }
+            .compare-table-mini tr:last-child td { border-bottom: none; }
+            .compare-table-mini strong { color: var(--gold-light); }
+
+            /* Componente: Galería de Miniaturas */
+            .nova-gallery-grid {
+                display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+                width: 100%; max-width: 100%; margin-top: 10px;
+            }
+            .gallery-item {
+                background: rgba(20, 20, 20, 0.8); border: 1px solid var(--glass-border);
+                border-radius: 14px; padding: 12px; display: flex; flex-direction: column;
+                align-items: center; text-align: center; cursor: pointer; transition: all 0.3s;
+            }
+            .gallery-item:hover { transform: scale(1.04); border-color: var(--gold); box-shadow: 0 8px 20px rgba(212,175,55,0.15); }
+            .gallery-item img { height: 90px; width: auto; object-fit: contain; margin-bottom: 8px; transition: transform 0.3s; }
+            .gallery-item:hover img { transform: scale(1.06); }
+            .gallery-item h5 { font-size: 0.8rem; margin: 0; font-weight: 600; color: var(--text-light); }
+            .gallery-item span { font-size: 0.75rem; color: var(--gold-light); font-weight: 700; margin-top: 4px; }
+
+            /* MÓDULO MODAL DETALLE DE PRODUCTO (Louis Vuitton Premium Style) */
+            .nova-modal-overlay {
+                position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+                backdrop-filter: blur(12px); display: flex; align-items: center;
+                justify-content: center; z-index: 20000; transition: all 0.4s;
+            }
+            .nova-modal-overlay.hidden { opacity: 0; pointer-events: none; }
+            .nova-modal-content {
+                background: var(--dark-solid); width: 90%; max-width: 800px; border-radius: 24px;
+                overflow: hidden; border: 1px solid var(--gold); position: relative;
+                box-shadow: 0 30px 70px rgba(0,0,0,0.9), 0 0 40px rgba(212,175,55,0.15);
+                animation: modalOpen 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+            @keyframes modalOpen {
+                from { opacity: 0; transform: scale(0.9) translateY(30px); }
+                to { opacity: 1; transform: scale(1) translateY(0); }
+            }
+            .nova-modal-close {
+                position: absolute; top: 20px; right: 20px; background: none;
+                border: none; font-size: 2.2rem; cursor: pointer; color: var(--text-muted);
+                transition: color 0.3s; z-index: 10;
+            }
+            .nova-modal-close:hover { color: var(--gold); }
+            .nova-modal-grid { display: grid; grid-template-columns: 1fr 1.2fr; }
+            .nova-modal-left {
+                background: #fff; display: flex; align-items: center;
+                justify-content: center; padding: 40px; position: relative;
+            }
+            .nova-modal-left img { max-width: 100%; max-height: 380px; object-fit: contain; }
+            .nova-modal-right { padding: 40px; color: var(--text-light); max-height: 550px; overflow-y: auto; }
+            .modal-p-brand { font-size: 0.8rem; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; font-weight: 700; }
+            .modal-p-name { font-family: var(--font-serif); font-size: 2.2rem; margin: 8px 0 15px; color: #fff; line-height: 1.2; }
+            .modal-p-pricing { margin-bottom: 22px; }
+            .modal-p-price { font-size: 1.6rem; font-weight: 700; color: var(--gold-light); }
+            .modal-p-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 25px; }
+            
+            .modal-sec-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; color: var(--gold); margin-bottom: 14px; }
+            .modal-pyramid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; }
+            .pyramid-tier { display: flex; gap: 15px; font-size: 0.85rem; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+            .tier-name { width: 80px; font-weight: 700; color: var(--gold); }
+            .tier-val { color: var(--text-light); }
+            
+            .modal-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 25px; }
+            .modal-meta-grid strong { color: var(--gold-light); }
+            .modal-p-action-btn {
+                width: 100%; padding: 16px; background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%); color: #000;
+                border: none; border-radius: 12px; font-size: 0.9rem; font-weight: 700;
+                cursor: pointer; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px;
+            }
+            .modal-p-action-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(212,175,55,0.5); }
+
+            /* Toast elegante */
+            .toast-container {
+                position: fixed; top: 20px; right: 20px; z-index: 30000;
+                display: flex; flex-direction: column; gap: 10px;
+            }
+            .nova-toast {
+                position: absolute; top: 20px; right: 20px; z-index: 10005;
+                background: rgba(10, 10, 10, 0.95);
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--gold);
+                color: #fff; padding: 12px 20px; border-radius: 12px;
+                font-size: 0.82rem; display: flex; align-items: center; gap: 10px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+                transform: translateY(-20px); opacity: 0;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+                pointer-events: none;
+            }
+            .nova-toast.show { transform: translateY(0); opacity: 1; }
+            .nova-toast.show { transform: translateX(0); }
+
+            /* Ajustes Responsivos */
+            @media (max-width: 500px) {
+                #nova-chat-container { width: 100%; height: 100%; bottom: 0; right: 0; }
+                #nova-chat-window { border-radius: 0; }
+                .nova-side-panel { width: 100%; height: 100%; border-radius: 0 !important; z-index: 100; }
+                #nova-history-panel { left: 0; opacity: 1; pointer-events: auto; }
+                #nova-history-panel.closed { left: -100%; opacity: 0; pointer-events: none; }
+                #nova-profile-panel { left: 0; opacity: 1; pointer-events: auto; }
+                #nova-profile-panel.closed { left: -100%; opacity: 0; pointer-events: none; }
+                .nova-modal-grid { grid-template-columns: 1fr; }
+                .nova-modal-left { padding: 20px; height: 220px; }
+                .nova-modal-left img { max-height: 100%; }
+                .nova-modal-right { padding: 25px; }
+                .nova-p-card, .nova-compare-box, .nova-gallery-grid, .nova-p-carousel { width: 100%; }
+            }
+        </style>
+
+        <script>
+            let novaHistorial = "";
+            let novaDbPerfumes = [];
+            let conversationId = "conv_" + Date.now();
+            let novaFavoritesList = JSON.parse(localStorage.getItem('profumi_favorites') || '[]');
+            let novaLastMatchedPerfumeId = null;
+
+            document.addEventListener('DOMContentLoaded', () => {
+                fetchPerfumesCatalog();
+                loadConversationHistoryList();
+                loadClientProfile();
+            });
+
+            // Obtener el catálogo completo de perfumes en segundo plano
+            async function fetchPerfumesCatalog() {
+                try {
+                    const response = await fetch('/api/chat/perfumes');
+                    novaDbPerfumes = await response.json();
+                } catch (e) {
+                    console.error("Error cargando catálogo local para Nova AI:", e);
+                }
+            }
+
+            function toggleNovaChat() {
+                const container = document.getElementById('nova-chat-container');
+                container.classList.toggle('nova-hidden');
+            }
+
+            function togglePanel(panelId) {
+                const panel = document.getElementById(panelId);
+                const otherPanelId = panelId === 'nova-history-panel' ? 'nova-profile-panel' : 'nova-history-panel';
+                const otherPanel = document.getElementById(otherPanelId);
+                if (otherPanel) {
+                    otherPanel.classList.add('closed');
+                }
+                panel.classList.toggle('closed');
+            }
+
+            function handleNovaKey(e) {
+                if (e.key === 'Enter') sendNovaMessage();
+            }
+
+            // Barra rápida de chips
+            function quickSearch(query) {
+                document.getElementById('nova-chat-input').value = query;
+                sendNovaMessage();
+            }
+
+            // Limpiar etiquetas especiales del texto
+            function cleanInteractiveTags(text) {
+                return text.replace(/\[CARD:[^\]]+\]/g, '')
+                           .replace(/\[CAROUSEL:[^\]]+\]/g, '')
+                           .replace(/\[COMPARE:[^\]]+\]/g, '')
+                           .replace(/\[GALLERY:[^\]]+\]/g, '')
+                           .replace(/\[ADD_TO_CART:[^\]]+\]/g, '')
+                           .trim();
+            }
+
+            // Enviar mensaje al backend
+            async function sendNovaMessage() {
+                const input = document.getElementById('nova-chat-input');
+                const text = input.value.trim();
+                if (!text) return;
+
+                // Agregar burbuja de usuario
+                addNovaMsgWrapper(text, 'user');
+                input.value = '';
+
+                // Guardar entrada del usuario en el historial local
+                saveMessageToLocalHistory('user', text);
+                updateClientProfileFromText(text);
+
+                // Activar indicador "Thinking"
+                showThinking(true);
+
+                const perfilStr = `Género preferido: ${clientProfile.gender || 'No definido'} | Edad: ${clientProfile.age || 'No definido'} | Notas favoritas: ${clientProfile.notes.join(', ') || 'Ninguna'} | Marcas favoritas: ${clientProfile.brands.join(', ') || 'Ninguna'} | Presupuesto máximo: ${clientProfile.budget || 'No definido'}`;
+
+                try {
+                    const response = await fetch('/api/chat/enviar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ mensaje: text, historial: novaHistorial, perfil: perfilStr })
+                    });
+                    const data = await response.json();
+
+                    showThinking(false);
+
+                    // Imprimir respuesta en Streaming
+                    await addNovaMsgStreaming(data.respuesta);
+
+                    // Guardar respuesta del bot en historial local
+                    saveMessageToLocalHistory('bot', data.respuesta);
+
+                    // Actualizar memoria contextual
+                    novaHistorial += "C: " + text + " | N: " + data.respuesta + "\n";
+                    if (novaHistorial.length > 800) {
+                        novaHistorial = novaHistorial.substring(novaHistorial.length - 800);
+                    }
+
+                } catch (e) {
+                    showThinking(false);
+                    addNovaMsgWrapper("Lo siento, mi esencia está algo tenue ahora. ¿Podemos intentar en un momento?", 'bot');
+                }
+            }
+
+            function showThinking(visible) {
+                const thinking = document.getElementById('nova-thinking');
+                const status = document.getElementById('thinking-status');
+                
+                if (visible) {
+                    thinking.classList.remove('hidden');
+                    const statuses = [
+                        "Analizando tus preferencias olfativas...",
+                        "Buscando perfumes en el catálogo de Profumi...",
+                        "Consultando inventario de lujo...",
+                        "Preparando recomendación de sommelier..."
+                    ];
+                    status.textContent = statuses[Math.floor(Math.random() * statuses.length)];
+                } else {
+                    thinking.classList.add('hidden');
+                }
+                const body = document.getElementById('nova-chat-body');
+                body.scrollTop = body.scrollHeight;
+            }
+
+            // Burbujas normales
+            function addNovaMsgWrapper(text, type) {
+                const body = document.getElementById('nova-chat-body');
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nova-msg-wrapper ' + type;
+
+                const avatar = document.createElement('div');
+                avatar.className = 'nova-avatar-msg';
+                avatar.textContent = type === 'user' ? 'U' : 'N';
+
+                const msg = document.createElement('div');
+                
+                // Aplicar estilo de alerta/mensaje enriquecido según palabras clave
+                let msgClass = 'nova-msg';
+                const lowerText = text.toLowerCase();
+                if (lowerText.includes('oferta') || lowerText.includes('promoción') || lowerText.includes('descuento')) {
+                    msgClass += ' promocion';
+                } else if (lowerText.includes('advertencia') || lowerText.includes('cuidado') || lowerText.includes(' stock bajo')) {
+                    msgClass += ' advertencia';
+                } else if (lowerText.includes('diagnóstico') || lowerText.includes('olfativo') || lowerText.includes('descubrimiento')) {
+                    msgClass += ' diagnostico';
+                } else if (lowerText.includes('info') || lowerText.includes('importante') || lowerText.includes('envío')) {
+                    msgClass += ' informativo';
+                }
+                msg.className = msgClass;
+
+                const cleaned = type === 'user' ? text : cleanInteractiveTags(text);
+                msg.innerHTML = parseBoldMarkdown(cleaned);
+
+                wrapper.appendChild(avatar);
+                wrapper.appendChild(msg);
+                body.appendChild(wrapper);
+                body.scrollTop = body.scrollHeight;
+                return wrapper;
+            }
+
+            // Streaming de texto letra por letra
+            function addNovaMsgStreaming(text) {
+                return new Promise((resolve) => {
+                    const body = document.getElementById('nova-chat-body');
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'nova-msg-wrapper bot';
+
+                    const avatar = document.createElement('div');
+                    avatar.className = 'nova-avatar-msg';
+                    avatar.textContent = 'N';
+
+                    const msg = document.createElement('div');
+                    
+                    // Clases para respuestas en streaming
+                    let msgClass = 'nova-msg streaming-cursor';
+                    const lowerText = text.toLowerCase();
+                    if (lowerText.includes('oferta') || lowerText.includes('promoción') || lowerText.includes('descuento')) {
+                        msgClass += ' promocion';
+                    } else if (lowerText.includes('advertencia') || lowerText.includes('cuidado')) {
+                        msgClass += ' advertencia';
+                    } else if (lowerText.includes('diagnóstico') || lowerText.includes('olfativo')) {
+                        msgClass += ' diagnostico';
+                    } else if (lowerText.includes('info') || lowerText.includes('envío')) {
+                        msgClass += ' informativo';
+                    }
+                    msg.className = msgClass;
+
+                    wrapper.appendChild(avatar);
+                    wrapper.appendChild(msg);
+                    body.appendChild(wrapper);
+
+                    const cleanedText = cleanInteractiveTags(text);
+                    let index = 0;
+                    
+                    // Intervalo de renderizado de caracteres
+                    const timer = setInterval(() => {
+                        if (index < cleanedText.length) {
+                            msg.innerHTML = parseBoldMarkdown(cleanedText.substring(0, index + 1));
+                            index++;
+                            body.scrollTop = body.scrollHeight;
+                        } else {
+                            clearInterval(timer);
+                            msg.classList.remove('streaming-cursor');
+                            
+                            // Inyectar tarjetas/carruseles/tablas según tags estructurados
+                            detectAndAppendInteractiveContent(text, wrapper);
+                            
+                            resolve();
+                        }
+                    }, 12);
+                });
+            }
+
+            // Convertir **text** a negritas
+            function parseBoldMarkdown(text) {
+                return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            }
+
+            // Parser de etiquetas interactivas de lujo
+            function detectAndAppendInteractiveContent(text, containerEl) {
+                const cardRegex = /\[CARD:([^\]]+)\]/g;
+                const carouselRegex = /\[CAROUSEL:([^\]]+)\]/g;
+                const compareRegex = /\[COMPARE:([^\]]+)\]/g;
+                const galleryRegex = /\[GALLERY:([^\]]+)\]/g;
+
+                let match;
+                let foundAny = false;
+
+                // CASO 1: CARD
+                while ((match = cardRegex.exec(text)) !== null) {
+                    const id = match[1].trim();
+                    const p = novaDbPerfumes.find(item => item.id === id || item.nombre.toLowerCase().includes(id.toLowerCase()));
+                    if (p) {
+                        appendProductCard(p, containerEl);
+                        foundAny = true;
+                    }
+                }
+
+                // CASO 2: CAROUSEL
+                while ((match = carouselRegex.exec(text)) !== null) {
+                    const ids = match[1].split(',').map(s => s.trim());
+                    const perfumes = ids.map(id => novaDbPerfumes.find(item => item.id === id || item.nombre.toLowerCase().includes(id.toLowerCase()))).filter(Boolean);
+                    if (perfumes.length > 0) {
+                        appendProductCarousel(perfumes, containerEl);
+                        foundAny = true;
+                    }
+                }
+
+                // CASO 3: COMPARE
+                while ((match = compareRegex.exec(text)) !== null) {
+                    const ids = match[1].split(',').map(s => s.trim());
+                    const perfumes = ids.map(id => novaDbPerfumes.find(item => item.id === id || item.nombre.toLowerCase().includes(id.toLowerCase()))).filter(Boolean);
+                    if (perfumes.length > 0) {
+                        appendComparisonTable(perfumes, containerEl);
+                        foundAny = true;
+                    }
+                }
+
+                // CASO 4: GALLERY
+                while ((match = galleryRegex.exec(text)) !== null) {
+                    const ids = match[1].split(',').map(s => s.trim());
+                    const perfumes = ids.map(id => novaDbPerfumes.find(item => item.id === id || item.nombre.toLowerCase().includes(id.toLowerCase()))).filter(Boolean);
+                    if (perfumes.length > 0) {
+                        appendMiniGallery(perfumes, containerEl);
+                        foundAny = true;
+                    }
+                }
+
+                // CASO 5: ADD TO CART
+                const addToCartRegex = /\[ADD_TO_CART:([^\]]+)\]/g;
+                while ((match = addToCartRegex.exec(text)) !== null) {
+                    const id = match[1].trim();
+                    const p = novaDbPerfumes.find(item => item.id === id || item.nombre.toLowerCase().includes(id.toLowerCase()));
+                    if (p) {
+                        addNovaToCart(null, p.id);
+                    }
+                }
+
+                // Fallback de coincidencias si no se detectaron tags estructurados
+                if (!foundAny) {
+                    const query = text.toLowerCase();
+                    const matchedPerfumes = [];
+
+                    // Normalize text matching helper
+                    const cleanStr = str => str.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+                    const cleanQuery = cleanStr(query);
+
+                    novaDbPerfumes.forEach(p => {
+                        const cleanName = cleanStr(p.nombre);
+                        const cleanBrand = cleanStr(p.marca);
+                        
+                        // Check if query contains the full name, or all words of the name if name is long
+                        if (cleanQuery.includes(cleanName) || 
+                            cleanQuery.includes(cleanBrand + " " + cleanName) ||
+                            (cleanName.split(' ').length > 2 && cleanName.split(' ').every(word => cleanQuery.includes(word)))) {
+                            if (!matchedPerfumes.some(item => item.id === p.id)) {
+                                matchedPerfumes.push(p);
+                            }
+                        }
+                    });
+
+                    // Context-aware fallback: if the user asks to see/show the product but no specific name is mentioned
+                    const isShowRequest = cleanQuery.includes('muestra') || cleanQuery.includes('ver') || cleanQuery.includes('foto') || cleanQuery.includes('imagen') || cleanQuery.includes('detalles') || cleanQuery.includes('mostrar');
+                    if (isShowRequest && matchedPerfumes.length === 0 && novaLastMatchedPerfumeId) {
+                        const lastP = novaDbPerfumes.find(item => item.id === novaLastMatchedPerfumeId);
+                        if (lastP) {
+                            matchedPerfumes.push(lastP);
+                        }
+                    }
+
+                    if ((cleanQuery.includes('compara') || cleanQuery.includes('comparacion') || cleanQuery.includes(' vs ')) && matchedPerfumes.length >= 2) {
+                        appendComparisonTable(matchedPerfumes, containerEl);
+                    } else if (matchedPerfumes.length > 1) {
+                        appendProductCarousel(matchedPerfumes, containerEl);
+                    } else if (matchedPerfumes.length === 1) {
+                        appendProductCard(matchedPerfumes[0], containerEl);
+                    } else if (cleanQuery.includes('hombre') || cleanQuery.includes('masculino')) {
+                        const menPerfumes = novaDbPerfumes.filter(p => p.genero === 'Hombre').slice(0, 4);
+                        if (menPerfumes.length > 0) appendMiniGallery(menPerfumes, containerEl);
+                    } else if (cleanQuery.includes('mujer') || cleanQuery.includes('femenino')) {
+                        const womenPerfumes = novaDbPerfumes.filter(p => p.genero === 'Mujer').slice(0, 4);
+                        if (womenPerfumes.length > 0) appendMiniGallery(womenPerfumes, containerEl);
+                    }
+                }
+            }
+
+            // Inyección: Tarjeta Premium de Perfume
+            function appendProductCard(p, containerEl) {
+                novaLastMatchedPerfumeId = p.id;
+                const img = p.imagenUrl && p.imagenUrl !== 'Sin imagen' ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
+                const isFav = novaFavoritesList.includes(p.id);
+                
+                const card = document.createElement('div');
+                card.className = 'nova-p-card';
+                card.innerHTML = `
+                    <div class="p-card-img-container">
+                        <div class="p-card-badges">
+                            ${p.nuevo ? '<span class="p-card-badge nuevo">Nuevo</span>' : ''}
+                            ${p.topVentas ? '<span class="p-card-badge ventas">Top Ventas</span>' : ''}
+                        </div>
+                        <img src="${img}" alt="${p.nombre}">
+                        <button class="p-card-fav-btn ${isFav ? 'active' : ''}" onclick="toggleNovaFavorite(event, '${p.id}', this)">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="p-card-info">
+                        <span class="p-brand">${p.marca}</span>
+                        <h4 class="p-name">${p.nombre}</h4>
+                        <div class="p-price-row">
+                            <span class="p-price">$${p.precio.toLocaleString('es-CO')} COP</span>
+                            <span class="p-rating"><i class="fas fa-star"></i> ${p.stock > 10 ? '4.9' : '4.8'}</span>
+                        </div>
+                        <div class="p-specs">
+                            <div><strong>Concentración:</strong> ${p.concentracion || 'EDP'}</div>
+                            <div><strong>Familia:</strong> ${p.familiaOlfativa || 'Lujo'}</div>
+                            <div><strong>Género:</strong> ${p.genero || 'Unisex'}</div>
+                            <div><strong>Salida:</strong> ${p.notasSalida || 'Fresca'}</div>
+                            <div><strong>Corazón:</strong> ${p.notasCorazon || 'Especiada'}</div>
+                            <div><strong>Fondo:</strong> ${p.notasFondo || 'Persistente'}</div>
+                            <div><strong>Duración:</strong> ${p.duracion || '8 Horas'}</div>
+                            <div><strong>Proyección:</strong> ${p.proyeccion || 'Moderada'}</div>
+                            <div><strong>Temporada ideal:</strong> ${p.temporadaRecomendada || 'Todo el año'}</div>
+                            <div><strong>Clima:</strong> ${p.climaRecomendado || 'Templado'}</div>
+                            <div><strong>Intensidad:</strong> ${p.intensidad || 'Alta'}</div>
+                            <div><strong>Stock:</strong> ${p.stock > 0 ? p.stock + ' uds' : 'Agotado'}</div>
+                        </div>
+                        <div class="p-actions">
+                            <button class="p-btn primary" onclick="addNovaToCart(event, '${p.id}')">Agregar 🛍️</button>
+                            <button class="p-btn secondary" onclick="openNovaDetails('${p.id}')">Detalles 🔍</button>
+                            <button class="p-btn secondary" onclick="window.location.href='/producto/${p.id}'">Ver Producto</button>
+                            <button class="p-btn secondary" onclick="quickSearch('Compara ${p.nombre}')">Comparar</button>
+                            <button class="p-btn secondary" onclick="shareProduct('${p.id}', '${p.nombre}')">Compartir 🔗</button>
+                            <button class="p-btn secondary" onclick="quickSearch('Recomiéndame perfumes similares a ${p.nombre}')">Similares</button>
+                        </div>
+                    </div>
+                `;
+                containerEl.after(card);
+                const body = document.getElementById('nova-chat-body');
+                body.scrollTop = body.scrollHeight;
+            }
+
+            // Inyección: Carrusel Deslizable de Productos
+            function appendProductCarousel(perfumes, containerEl) {
+                if (perfumes.length > 0) {
+                    novaLastMatchedPerfumeId = perfumes[0].id;
+                }
+                const carouselId = "carousel-" + Date.now();
+                const container = document.createElement('div');
+                container.className = 'nova-p-carousel';
+                container.id = carouselId;
+                
+                let trackContent = "";
+                perfumes.forEach(p => {
+                    const img = p.imagenUrl && p.imagenUrl !== 'Sin imagen' ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
+                    trackContent += `
+                        <div class="gallery-item" onclick="openNovaDetails('${p.id}')" style="min-width: 150px; max-width: 150px; padding: 12px;">
+                            <img src="${img}" alt="${p.nombre}">
+                            <h5 style="font-size: 0.78rem; font-weight:700; margin: 4px 0; color: #FFF;">${p.nombre}</h5>
+                            <span style="font-size:0.75rem; color: var(--gold-light);">$${p.precio.toLocaleString('es-CO')}</span>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = `
+                    <button class="carousel-nav-btn prev" onclick="slideCarousel('${carouselId}', -150)">&lt;</button>
+                    <div class="carousel-track-container" id="track-${carouselId}">
+                        <div class="carousel-track">${trackContent}</div>
+                    </div>
+                    <button class="carousel-nav-btn next" onclick="slideCarousel('${carouselId}', 150)">&gt;</button>
+                `;
+                
+                containerEl.after(container);
+                const body = document.getElementById('nova-chat-body');
+                body.scrollTop = body.scrollHeight;
+            }
+
+            function slideCarousel(carouselId, offset) {
+                const track = document.getElementById('track-' + carouselId);
+                track.scrollLeft += offset;
+            }
+
+            // Inyección: Tabla de Comparación Avanzada
+            function appendComparisonTable(perfumes, containerEl) {
+                const container = document.createElement('div');
+                container.className = 'nova-compare-box';
+
+                let rowHeader = '<tr><th>Atributo</th>';
+                let rowImage = '<tr><td><strong>Imagen</strong></td>';
+                let rowPrice = '<tr><td><strong>Precio</strong></td>';
+                let rowBrand = '<tr><td><strong>Marca</strong></td>';
+                let rowNotes = '<tr><td><strong>Notas</strong></td>';
+                let rowLongevity = '<tr><td><strong>Duración</strong></td>';
+                let rowProjection = '<tr><td><strong>Proyección</strong></td>';
+                let rowRating = '<tr><td><strong>Calificación</strong></td>';
+                let rowWeather = '<tr><td><strong>Clima</strong></td>';
+                let rowUse = '<tr><td><strong>Uso recomendado</strong></td>';
+                let rowPros = '<tr><td><strong>Pros</strong></td>';
+                let rowContras = '<tr><td><strong>Contras</strong></td>';
+                let rowActions = '<tr><td><strong>Acción</strong></td>';
+
+                perfumes.forEach(p => {
+                    const img = p.imagenUrl && p.imagenUrl !== 'Sin imagen' ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
+                    rowHeader += `<th>${p.nombre}</th>`;
+                    rowImage += `<td><img src="${img}" alt="${p.nombre}" style="height:60px; object-fit:contain;"></td>`;
+                    rowPrice += `<td><strong>$${p.precio.toLocaleString('es-CO')} COP</strong></td>`;
+                    rowBrand += `<td>${p.marca}</td>`;
+                    rowNotes += `<td>S: ${p.notasSalida || 'N/A'}, F: ${p.notasFondo || 'N/A'}</td>`;
+                    rowLongevity += `<td>${p.duracion || '8h'}</td>`;
+                    rowProjection += `<td>${p.proyeccion || 'Media'}</td>`;
+                    rowRating += `<td>⭐ 4.9</td>`;
+                    rowWeather += `<td>${p.climaRecomendado || 'Todo clima'}</td>`;
+                    rowUse += `<td>${p.idealPara || 'Cualquiera'}</td>`;
+                    rowPros += `<td>${p.estilo || 'Excelente aroma'}</td>`;
+                    rowContras += `<td>Ninguno</td>`;
+                    rowActions += `<td><button class="p-btn primary" style="padding: 6px 10px; font-size:0.7rem;" onclick="addNovaToCart(event, '${p.id}')">Comprar</button></td>`;
+                });
+
+                rowHeader += '</tr>'; rowImage += '</tr>'; rowPrice += '</tr>'; rowBrand += '</tr>'; rowNotes += '</tr>';
+                rowLongevity += '</tr>'; rowProjection += '</tr>'; rowRating += '</tr>';
+                rowWeather += '</tr>'; rowUse += '</tr>'; rowPros += '</tr>'; rowContras += '</tr>'; rowActions += '</tr>';
+
+                container.innerHTML = `
+                    <table class="compare-table-mini">
+                        ${rowHeader}
+                        ${rowImage}
+                        ${rowPrice}
+                        ${rowBrand}
+                        ${rowNotes}
+                        ${rowLongevity}
+                        ${rowProjection}
+                        ${rowRating}
+                        ${rowWeather}
+                        ${rowUse}
+                        ${rowPros}
+                        ${rowContras}
+                        ${rowActions}
+                    </table>
+                `;
+
+                containerEl.after(container);
+                const body = document.getElementById('nova-chat-body');
+                body.scrollTop = body.scrollHeight;
+            }
+
+            // Inyección: Mini Galería
+            function appendMiniGallery(perfumes, containerEl) {
+                const container = document.createElement('div');
+                container.className = 'nova-gallery-grid';
+                
+                perfumes.forEach(p => {
+                    const img = p.imagenUrl && p.imagenUrl !== 'Sin imagen' ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.onclick = () => openNovaDetails(p.id);
+                    item.innerHTML = `
+                        <img src="${img}" alt="${p.nombre}">
+                        <h5>${p.nombre}</h5>
+                        <span>$${p.precio.toLocaleString('es-CO')}</span>
+                    `;
+                    container.appendChild(item);
+                });
+
+                containerEl.after(container);
+                const body = document.getElementById('nova-chat-body');
+                body.scrollTop = body.scrollHeight;
+            }
+
+            // Compartir Producto
+            function shareProduct(id, name) {
+                const url = window.location.origin + '/producto/' + id;
+                navigator.clipboard.writeText(url).then(() => {
+                    showNovaToast('¡Enlace de ' + name + ' copiado al portapapeles! 🔗', 'fa-link');
+                }).catch(() => {
+                    showNovaToast('No se pudo copiar el enlace', 'fa-exclamation-circle');
+                });
+            }
+
+            // Modal: Detalles del Perfume (Visualización local sin salir del chat)
+            function openNovaDetails(productId) {
+                const p = novaDbPerfumes.find(item => item.id === productId);
+                if (!p) return;
+
+                const img = p.imagenUrl && p.imagenUrl !== 'Sin imagen' ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
+                
+                document.getElementById('modal-p-img').src = img;
+                document.getElementById('modal-p-brand').textContent = p.marca;
+                document.getElementById('modal-p-name').textContent = p.nombre;
+                document.getElementById('modal-p-price').textContent = `$${p.precio.toLocaleString('es-CO')} COP`;
+                document.getElementById('modal-p-desc').textContent = p.descripcion || 'Composición olfativa premium importada para el cliente más sofisticado.';
+                
+                document.getElementById('modal-p-salida').textContent = p.notasSalida || 'Acordes cítricos / aromáticos';
+                document.getElementById('modal-p-corazon').textContent = p.notasCorazon || 'Esencias florales / maderosas';
+                document.getElementById('modal-p-fondo').textContent = p.notasFondo || 'Acordes de fondo persistentes';
+                
+                document.getElementById('modal-p-duracion').textContent = p.duracion || '8 - 10 Horas';
+                document.getElementById('modal-p-proyeccion').textContent = p.proyeccion || 'Moderada - Alta';
+                document.getElementById('modal-p-ocasion').textContent = p.idealPara || 'Uso diario / Evento formal';
+                document.getElementById('modal-p-stock').textContent = p.stock > 0 ? p.stock + ' unidades disponibles' : 'Agotado';
+
+                // Lógica de video interactivo
+                const videoContainer = document.getElementById('modal-p-video-container');
+                if (p.videos && p.videos.length > 0 && p.videos[0] !== 'Sin video') {
+                    videoContainer.innerHTML = `
+                        <h4 class="modal-sec-title"><i class="fas fa-video"></i> Presentación Exclusiva</h4>
+                        <video controls style="width:100%; border-radius:12px; border: 1px solid var(--gold);">
+                            <source src="${p.videos[0]}" type="video/mp4">
+                            Tu navegador no soporta reproducción de video.
+                        </video>
+                    `;
+                } else {
+                    videoContainer.innerHTML = '';
+                }
+
+                document.getElementById('modal-p-add-btn').onclick = (e) => {
+                    addNovaToCart(e, p.id);
+                    closeNovaDetails();
+                };
+
+                document.getElementById('nova-details-modal').classList.remove('hidden');
+            }
+
+            function closeNovaDetails() {
+                document.getElementById('nova-details-modal').classList.add('hidden');
+            }
+
+            // Acción: Añadir al carrito
+            async function addNovaToCart(e, productId) {
+                if (e) e.stopPropagation();
+                try {
+                    const response = await fetch(`/carrito/agregar/${productId}`, {
+                        method: 'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    const data = await response.json();
+                    if (data.success) {
+                        showNovaToast('¡Añadido al carrito con éxito! 🛍️', 'fa-check-circle');
+                        
+                        // Update cart badge dynamically
+                        const badge = document.getElementById('cart-badge');
+                        if (badge) {
+                            badge.textContent = data.cartCount;
+                            badge.style.display = 'inline-flex';
+                        }
+                        
+                        if (typeof updateCartCount === 'function') {
+                            updateCartCount(data.cartCount);
+                        }
+                    }
+                } catch (error) {
+                    showNovaToast('Error al agregar al carrito', 'fa-exclamation-circle');
+                }
+            }
+
+            // Favoritos del Chatbot
+            function toggleNovaFavorite(e, id, btn) {
+                if (e) e.stopPropagation();
+                if (novaFavoritesList.includes(id)) {
+                    novaFavoritesList = novaFavoritesList.filter(v => v !== id);
+                    btn.classList.remove('active');
+                    showNovaToast('Removido de favoritos', 'fa-info-circle');
+                } else {
+                    novaFavoritesList.push(id);
+                    btn.classList.add('active');
+                    showNovaToast('Añadido a tus favoritos ❤️', 'fa-heart');
+                }
+                localStorage.setItem('profumi_favorites', JSON.stringify(novaFavoritesList));
+            }
+
+            function showNovaToast(message, icon = 'fa-check-circle') {
+                const container = document.getElementById('nova-chat-window'); // Append inside chat window bounds
+                if (!container) return;
+                const toast = document.createElement('div');
+                toast.className = 'nova-toast';
+                toast.innerHTML = `<i class="fas ${icon}" style="color: var(--gold);"></i> <span>${message}</span>`;
+                container.appendChild(toast);
+                
+                // Reflow
+                toast.offsetHeight;
+                toast.classList.add('show');
+
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 400);
+                }, 2500);
+            }
+
+            // ==========================================
+            // MÓDULO DE MEMORIA Y PERFIL DEL CLIENTE
+            // ==========================================
+            let clientProfile = {
+                gender: null,
+                age: null,
+                notes: [],
+                brands: [],
+                budget: null
+            };
+
+            function loadClientProfile() {
+                const saved = localStorage.getItem('nova_client_profile');
+                if (saved) {
+                    clientProfile = JSON.parse(saved);
+                    updateProfilePanelUI();
+                }
+            }
+
+            function saveClientProfile() {
+                localStorage.setItem('nova_client_profile', JSON.stringify(clientProfile));
+                updateProfilePanelUI();
+            }
+
+            function updateProfilePanelUI() {
+                document.getElementById('profile-gender').textContent = clientProfile.gender || 'Sin definir';
+                document.getElementById('profile-age').textContent = clientProfile.age ? clientProfile.age + ' años' : 'Sin definir';
+                document.getElementById('profile-notes').textContent = clientProfile.notes.length > 0 ? clientProfile.notes.join(', ') : 'Sin definir';
+                document.getElementById('profile-brands').textContent = clientProfile.brands.length > 0 ? clientProfile.brands.join(', ') : 'Sin definir';
+                document.getElementById('profile-budget').textContent = clientProfile.budget ? '$' + clientProfile.budget.toLocaleString('es-CO') + ' COP' : 'Sin definir';
+            }
+
+            // Análisis semántico en tiempo real del mensaje del usuario
+            function updateClientProfileFromText(text) {
+                const query = text.toLowerCase();
+
+                // Género
+                if (query.includes('hombre') || query.includes('masculino') || query.includes('caballero')) {
+                    clientProfile.gender = 'Masculino';
+                } else if (query.includes('mujer') || query.includes('femenino') || query.includes('dama')) {
+                    clientProfile.gender = 'Femenino';
+                } else if (query.includes('unisex')) {
+                    clientProfile.gender = 'Unisex';
+                }
+
+                // Edad
+                const ageMatch = query.match(/(\d+)\s*años/);
+                if (ageMatch) {
+                    clientProfile.age = parseInt(ageMatch[1]);
+                }
+
+                // Presupuesto
+                const budgetMatch = query.match(/(?:presupuesto|precio|maximo|máximo|hasta)\s*(?:de\s*)?\$?\s*([\d\.]+)/);
+                if (budgetMatch) {
+                    const cleanVal = budgetMatch[1].replace(/\./g, '');
+                    clientProfile.budget = parseInt(cleanVal);
+                }
+
+                // Notas e Ingredientes comunes
+                const commonNotes = ['vainilla', 'madera', 'jazmín', 'rosa', 'cítrico', 'ámbar', 'cuero', 'miel', 'sándalo', 'menta', 'coco', 'lavanda'];
+                commonNotes.forEach(note => {
+                    if (query.includes(note) && !clientProfile.notes.includes(note)) {
+                        clientProfile.notes.push(note);
+                    }
+                });
+
+                // Marcas comunes
+                const commonBrands = ['creed', 'tom ford', 'dior', 'chanel', 'carolina herrera', 'versace', 'armani', 'sauvage', 'bleu'];
+                commonBrands.forEach(brand => {
+                    if (query.includes(brand) && !clientProfile.brands.includes(brand)) {
+                        clientProfile.brands.push(brand);
+                    }
+                });
+
+                saveClientProfile();
+            }
+
+            // ==========================================
+            // HISTORIAL DE CONVERSACIONES
+            // ==========================================
+            function saveMessageToLocalHistory(sender, messageText) {
+                const key = 'nova_chat_history_' + conversationId;
+                let chatHistory = JSON.parse(localStorage.getItem(key) || '[]');
+                chatHistory.push({ sender: sender, text: messageText, time: new Date().toLocaleTimeString() });
+                localStorage.setItem(key, JSON.stringify(chatHistory));
+
+                // Guardar ID de conversación en la lista global
+                let conversations = JSON.parse(localStorage.getItem('nova_conversations') || '[]');
+                if (!conversations.some(c => c.id === conversationId)) {
+                    conversations.push({ id: conversationId, date: new Date().toLocaleDateString(), preview: messageText.substring(0, 30) + '...' });
+                    localStorage.setItem('nova_conversations', JSON.stringify(conversations));
+                }
+                loadConversationHistoryList();
+            }
+
+            function loadConversationHistoryList() {
+                const listContainer = document.getElementById('nova-history-list');
+                listContainer.innerHTML = '';
+                const conversations = JSON.parse(localStorage.getItem('nova_conversations') || '[]');
+
+                if (conversations.length === 0) {
+                    listContainer.innerHTML = '<div style="font-size:0.75rem; text-align:center; color:#A1A1A6; padding:20px;">Sin conversaciones anteriores</div>';
+                    return;
+                }
+
+                conversations.forEach(c => {
+                    const item = document.createElement('div');
+                    item.className = 'history-item';
+                    item.innerHTML = `<i class="far fa-comment" style="color: var(--gold);"></i> ${c.date} - ${c.preview}`;
+                    item.onclick = () => loadConversation(c.id);
+                    listContainer.appendChild(item);
+                });
+            }
+
+            function loadConversation(convId) {
+                conversationId = convId;
+                const historyData = JSON.parse(localStorage.getItem('nova_chat_history_' + convId) || '[]');
+                const body = document.getElementById('nova-chat-body');
+                body.innerHTML = '';
+
+                // Regenerar burbujas
+                historyData.forEach(msg => {
+                    addNovaMsgWrapper(msg.text, msg.sender);
+                });
+                togglePanel('nova-history-panel');
+            }
+
+            function clearConversations() {
+                const conversations = JSON.parse(localStorage.getItem('nova_conversations') || '[]');
+                conversations.forEach(c => {
+                    localStorage.removeItem('nova_chat_history_' + c.id);
+                });
+                localStorage.removeItem('nova_conversations');
+                localStorage.removeItem('nova_client_profile');
+                
+                conversationId = "conv_" + Date.now();
+                novaHistorial = "";
+                document.getElementById('nova-chat-body').innerHTML = `
+                    <div class="nova-msg-wrapper bot">
+                        <div class="nova-avatar-msg">N</div>
+                        <div class="nova-msg">Historial borrado. Soy Nova, tu asesora de fragancias de lujo. ¿Cómo puedo guiar tu viaje olfativo hoy?</div>
+                    </div>
+                `;
+                loadConversationHistoryList();
+                loadClientProfile();
+                showNovaToast('Historial y perfil borrados', 'fa-trash');
+            }
+        </script>
+    </div>
+</body>
+</html>

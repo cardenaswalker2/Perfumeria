@@ -1,0 +1,27 @@
+<!-- chatbot-product-card.html -->
+<div class="nova-msg-wrapper bot">
+  <div class="nova-avatar-msg">N</div>
+  <div class="nova-msg">
+    <div class="nova-p-card" data-product-id="[[${product.id}]]">
+      <div class="p-card-img-container">
+        <img src="[[${product.imageUrl}]]" alt="[[${product.nombre}]]"/>
+        <div class="p-card-badges">
+          <span class="p-card-badge nuevo" th:if="${product.nuevo}">NUEVO</span>
+          <span class="p-card-badge ventas" th:if="${product.destacado}">TOP</span>
+        </div>
+        <button class="p-card-fav-btn" th:onclick="|toggleFavorite(${product.id})|">
+          <i class="fas fa-heart"></i>
+        </button>
+      </div>
+      <div class="p-card-info">
+        <div class="p-brand">[[${product.marca}]]</div>
+        <div class="p-name">[[${product.nombre}]]</div>
+        <div class="p-price-row">
+          <div class="p-price">$[[${product.precio}]] COP</div>
+          <div class="p-rating">&#9733; [[${product.rating}]]</div>
+        </div>
+        <button class="p-btn primary" th:onclick="|addToCart(${product.id})|">Agregar al carrito</button>
+      </div>
+    </div>
+  </div>
+</div>

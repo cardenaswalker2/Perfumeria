@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario | Profumi Cartagena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #c5a059;
+            --dark: #0a0a0a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text: #e0e0e0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+
+        body {
+            background: radial-gradient(circle at top right, #1a1a1a, #0a0a0a);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar similar to dashboard */
+        .sidebar {
+            width: 280px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--glass-border);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--primary); margin-bottom: 3rem; text-align: center; letter-spacing: 2px; }
+        .nav-links { list-style: none; }
+        .nav-links li { margin-bottom: 1rem; }
+        .nav-links a { color: var(--text); text-decoration: none; display: flex; align-items: center; padding: 0.8rem 1rem; border-radius: 10px; transition: all 0.3s ease; }
+        .nav-links a i { margin-right: 1rem; width: 20px; text-align: center; }
+        .nav-links a:hover, .nav-links a.active { background: var(--glass); color: var(--primary); transform: translateX(5px); }
+
+        .main-content { flex: 1; padding: 3rem; overflow-y: auto; }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
+        .header h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; }
+
+        /* Table Design */
+        .table-container {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 1.2rem;
+            border-bottom: 1px solid var(--glass-border);
+            color: var(--primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            vertical-align: middle;
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        .perfume-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid var(--glass-border);
+        }
+
+        .badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-stock { background: rgba(197, 160, 89, 0.1); color: var(--primary); }
+        .badge-low { background: rgba(255, 77, 77, 0.1); color: #ff4d4d; }
+
+        .actions { display: flex; gap: 0.5rem; }
+        .btn-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-edit { background: rgba(255, 255, 255, 0.05); }
+        .btn-edit:hover { background: var(--primary); color: var(--dark); border-color: var(--primary); }
+        .btn-delete { background: rgba(255, 77, 77, 0.05); color: #ff4d4d; }
+        .btn-delete:hover { background: #ff4d4d; color: #fff; border-color: #ff4d4d; }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--dark);
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover { background: #d4b47a; box-shadow: 0 0 20px rgba(197, 160, 89, 0.3); }
+
+        /* Responsive Design System Overrides */
+        @media (max-width: 992px) {
+            body {
+                flex-direction: column !important;
+            }
+            .sidebar {
+                position: static !important;
+                width: 100% !important;
+                height: auto !important;
+                padding: 1.5rem !important;
+                border-right: none !important;
+                border-bottom: 1px solid var(--glass-border) !important;
+            }
+            .nav-links {
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                gap: 0.5rem !important;
+            }
+            .nav-links li {
+                margin-bottom: 0 !important;
+            }
+            .nav-links a {
+                padding: 6px 12px !important;
+                font-size: 0.85rem !important;
+            }
+            .nav-links li[style*="margin-top"] {
+                margin-top: 0 !important;
+            }
+            .main-content {
+                padding: 1.5rem !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 1rem !important;
+            }
+            .header h1 {
+                font-size: 1.8rem !important;
+            }
+            .btn-primary {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div style="margin-bottom: 3rem; line-height: 1.1; text-align: center;">
+            <span style="font-family: 'Cinzel', serif; font-size: 1.6rem; letter-spacing: 4px; font-weight: 600; color: var(--primary);">PROFUMI</span>
+            <span style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.45rem; letter-spacing: 2px; font-weight: 500; color: #FFF; text-transform: uppercase; margin-top: 3px;">FRAGRANCE STORE</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/admin/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="/admin/perfumes" class="active"><i class="fas fa-flask"></i> Inventario</a></li>
+            <li><a href="/catalogo"><i class="fas fa-store"></i> Ver Tienda</a></li>
+            <li style="margin-top: auto;"><a href="/logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Inventario de Perfumes</h1>
+            <a href="/admin/perfumes/nuevo" class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo Perfume</a>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Marca</th>
+                        <th>SKU</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${perfumes}">
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <img th:src="${p.imagenUrl}" class="perfume-img" alt="perfume">
+                                <span th:text="${p.nombre}">Nombre</span>
+                            </div>
+                        </td>
+                        <td th:text="${p.marca}">Marca</td>
+                        <td th:text="${p.sku != null ? p.sku : '---'}">SKU</td>
+                        <td th:text="'$' + ${#numbers.formatDecimal(p.precio, 0, 'POINT', 0, 'POINT')}"></td>
+                        <td>
+                            <span th:class="${p.stock != null && p.stock < 5 ? 'badge badge-low' : 'badge badge-stock'}" 
+                                  th:text="${p.stock != null ? p.stock + ' unidades' : 'N/A'}">0</span>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <a th:href="@{/admin/perfumes/editar/{id}(id=${p.id})}" class="btn-icon btn-edit" title="Editar"><i class="fas fa-edit"></i></a>
+                                <a th:href="@{/admin/perfumes/eliminar/{id}(id=${p.id})}" class="btn-icon btn-delete" title="Eliminar" onclick="return confirm('¿Estás seguro?')"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Kits de Descubrimiento | Profumi</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body style="background: #faf8f5; font-family: 'Outfit', sans-serif; overflow-x: hidden;">
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <!-- HERO KITS -->
+    <section
+        style="padding-top: 170px; padding-bottom: 100px; background: linear-gradient(180deg, #fff 0%, #fffbf7 50%, #faf8f5 100%); position: relative; overflow: hidden;">
+        <!-- Elementos decorativos flotantes -->
+        <div
+            style="position: absolute; top: 10%; right: -5%; width: 450px; height: 450px; background: radial-gradient(circle, rgba(244,154,31,0.06) 0%, transparent 70%); border-radius: 50%; animation: float 12s ease-in-out infinite;">
+        </div>
+        <div
+            style="position: absolute; bottom: 5%; left: -5%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(139,90,43,0.04) 0%, transparent 70%); border-radius: 50%; animation: float-reverse 15s ease-in-out infinite;">
+        </div>
+
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem; text-align: center; position: relative; z-index: 2;">
+            <div
+                style="display: inline-flex; align-items: center; gap: 0.8rem; background: linear-gradient(135deg, #fff9f2 0%, #fff5e8 100%); padding: 0.6rem 1.6rem; border-radius: 50px; margin-bottom: 2.5rem; border: 1px solid rgba(244,154,31,0.18); box-shadow: 0 4px 20px rgba(244,154,31,0.06);">
+                <span style="width: 8px; height: 8px; background: var(--accent-primary); border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
+                <span style="font-size: 0.85rem; color: var(--accent-primary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Colección de Lujo</span>
+            </div>
+
+            <h1 style="font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5.5vw, 4.5rem); margin-bottom: 1.5rem; line-height: 1.1; color: #1a1a1a; font-weight: 700;">
+                Kits de Descubrimiento<br>
+                <span style="color: var(--accent-primary); position: relative; display: inline-block;">
+                    Exclusivos
+                    <svg style="position: absolute; bottom: -8px; left: 0; width: 100%; height: 10px;" viewBox="0 0 200 10" preserveAspectRatio="none">
+                        <path d="M0,6 Q50,0 100,6 T200,6" stroke="var(--accent-primary)" stroke-width="2.5" fill="none" opacity="0.25" />
+                    </svg>
+                </span>
+            </h1>
+
+            <p style="color: #666; max-width: 750px; margin: 0 auto 3rem; font-size: 1.2rem; line-height: 1.8; font-weight: 300;">
+                Diseñados para los amantes de la alta perfumería. Explora, experimenta y encuentra tu fragancia signature ideal a través de selecciones curadas con perfumes 100% auténticos de nuestro catálogo.
+            </p>
+
+            <!-- Stats animadas -->
+            <div style="display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; margin-top: 4rem;">
+                <div style="text-align: center; min-width: 150px;">
+                    <p style="font-size: 3rem; font-weight: 700; color: #1a1a1a; margin: 0; font-family: 'Playfair Display', serif;">⭐️⭐️⭐️⭐️⭐️</p>
+                    <p style="font-size: 0.85rem; color: #888; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-top: 0.5rem;">+500 Clientes Felices</p>
+                </div>
+                <div style="text-align: center; min-width: 150px;">
+                    <p style="font-size: 3rem; font-weight: 700; color: var(--accent-primary); margin: 0; line-height: 1; font-family: 'Outfit', sans-serif;">+30</p>
+                    <p style="font-size: 0.85rem; color: #888; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-top: 0.5rem;">Perfumes Disponibles</p>
+                </div>
+                <div style="text-align: center; min-width: 150px;">
+                    <p style="font-size: 3rem; font-weight: 700; color: var(--accent-primary); margin: 0; line-height: 1; font-family: 'Outfit', sans-serif;">+100</p>
+                    <p style="font-size: 0.85rem; color: #888; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-top: 0.5rem;">Kits Vendidos</p>
+                </div>
+                <div style="text-align: center; min-width: 150px;">
+                    <p style="font-size: 3rem; font-weight: 700; color: var(--accent-primary); margin: 0; line-height: 1; font-family: 'Outfit', sans-serif;">🇨🇴</p>
+                    <p style="font-size: 0.85rem; color: #888; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-top: 0.5rem;">Envíos a Todo el País</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHAT EACH KIT INCLUDES -->
+    <section style="background: #fff; padding: 5rem 2rem; border-top: 1px solid #f0e6da; border-bottom: 1px solid #f0e6da;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 2.8rem); color: #1a1a1a; margin-bottom: 1rem;">¿Qué incluye cada kit?</h2>
+                <p style="color: #777; max-width: 600px; margin: 0 auto;">Cuidamos cada detalle para ofrecerte una experiencia de unboxing y uso verdaderamente premium.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                <div style="background: #faf8f5; padding: 2rem; border-radius: 24px; text-align: center; border: 1px solid rgba(0,0,0,0.02); transition: all 0.3s;" class="hover-up">
+                    <span style="font-size: 2.5rem; display: block; margin-bottom: 1rem;">🧪</span>
+                    <h4 style="font-size: 1.15rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem;">5 Perfumes Seleccionados</h4>
+                    <p style="color: #666; font-size: 0.9rem; line-height: 1.6; margin: 0;">Fragancias icónicas elegidas minuciosamente por su sinergia y complementación olfativa.</p>
+                </div>
+                <div style="background: #faf8f5; padding: 2rem; border-radius: 24px; text-align: center; border: 1px solid rgba(0,0,0,0.02); transition: all 0.3s;" class="hover-up">
+                    <span style="font-size: 2.5rem; display: block; margin-bottom: 1rem;">💎</span>
+                    <h4 style="font-size: 1.15rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem;">Decants de 2ml / 5ml</h4>
+                    <p style="color: #666; font-size: 0.9rem; line-height: 1.6; margin: 0;">Viales de vidrio de alta resistencia que protegen la integridad y longevidad de los aceites aromáticos.</p>
+                </div>
+                <div style="background: #faf8f5; padding: 2rem; border-radius: 24px; text-align: center; border: 1px solid rgba(0,0,0,0.02); transition: all 0.3s;" class="hover-up">
+                    <span style="font-size: 2.5rem; display: block; margin-bottom: 1rem;">📦</span>
+                    <h4 style="font-size: 1.15rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem;">Caja Exclusiva Premium</h4>
+                    <p style="color: #666; font-size: 0.9rem; line-height: 1.6; margin: 0;">Empaque sofisticado, rígido y minimalista con detalles dorados, listo para lucir o regalar.</p>
+                </div>
+                <div style="background: #faf8f5; padding: 2rem; border-radius: 24px; text-align: center; border: 1px solid rgba(0,0,0,0.02); transition: all 0.3s;" class="hover-up">
+                    <span style="font-size: 2.5rem; display: block; margin-bottom: 1rem;">✨</span>
+                    <h4 style="font-size: 1.15rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem;">Atomizadores de Precisión</h4>
+                    <p style="color: #666; font-size: 0.9rem; line-height: 1.6; margin: 0;">Válvulas spray de alta tecnología que entregan una nube de atomización fina y homogénea.</p>
+                </div>
+                <div style="background: #faf8f5; padding: 2rem; border-radius: 24px; text-align: center; border: 1px solid rgba(0,0,0,0.02); transition: all 0.3s;" class="hover-up">
+                    <span style="font-size: 2.5rem; display: block; margin-bottom: 1rem;">🏷️</span>
+                    <h4 style="font-size: 1.15rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem;">Tarjetas Identificadoras</h4>
+                    <p style="color: #666; font-size: 0.9rem; line-height: 1.6; margin: 0;">Cada vial incluye una elegante etiqueta con el nombre, marca y familia olfativa de la esencia.</p>
+                </div>
+                <div style="background: #faf8f5; padding: 2rem; border-radius: 24px; text-align: center; border: 1px solid rgba(0,0,0,0.02); transition: all 0.3s;" class="hover-up">
+                    <span style="font-size: 2.5rem; display: block; margin-bottom: 1rem;">🎁</span>
+                    <h4 style="font-size: 1.15rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem;">Presentación para Obsequio</h4>
+                    <p style="color: #666; font-size: 0.9rem; line-height: 1.6; margin: 0;">Llega envuelto de forma elegante, ideal para sorprender a esa persona especial.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KITS CATALOGUE SECTION -->
+    <section style="max-width: 1400px; margin: 0 auto; padding: 6rem 2rem;" id="kits">
+        <div style="text-align: center; margin-bottom: 5rem;">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.5rem); color: #1a1a1a; margin-bottom: 1rem; font-weight: 700;">
+                Nuestras Selecciones Curadas
+            </h2>
+            <p style="color: #777; max-width: 600px; margin: 0 auto;">Kits listos para ordenar creados a partir de combinaciones inteligentes y gustos específicos.</p>
+        </div>
+
+        <div class="kit-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 3rem;">
+
+            <!-- 1. Kit Elegancia Femenina -->
+            <div class="kit-card" th:with="kit=${kits.?[sku == 'KIT-FEM-ELEG'].isEmpty() ? null : kits.?[sku == 'KIT-FEM-ELEG'][0]}">
+                <div class="kit-image-container">
+                    <div style="background-image: url('https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop');" class="kit-image-inner"></div>
+                    <div class="kit-image-overlay"></div>
+                    <span class="kit-badge-type">Femenino Premium</span>
+                    <div class="kit-price-tag">$180.000 <span style="font-size: 0.75rem; color: #aaa;">COP</span></div>
+                </div>
+                <div class="kit-info-container">
+                    <span class="kit-collection-label">Elegancia Exclusiva</span>
+                    <h3 class="kit-title">Kit Elegancia Femenina</h3>
+                    <p class="kit-desc">Una selección majestuosa de fragancias sofisticadas y con clase, perfectas para eventos y alta sociedad.</p>
+                    
+                    <div class="perfumes-included-box">
+                        <span class="included-header"><i class="fas fa-flask"></i> Perfumes incluidos:</span>
+                        <div class="perfumes-tags-grid">
+                            <span>Good Girl</span>
+                            <span>Coco Mademoiselle</span>
+                            <span>Miss Dior</span>
+                            <span>J'adore</span>
+                            <span>Valentino Donna</span>
+                        </div>
+                    </div>
+
+                    <div class="kit-target-badge"><i class="fas fa-user-tie"></i> 👩 Para mujeres elegantes y con personalidad</div>
+                    
+                    <button class="kit-action-btn" th:if="${kit != null}" th:data-id="${kit.id}" onclick="addToCartKit(this, this.getAttribute('data-id'))">
+                        <i class="fas fa-shopping-bag"></i> <span>Añadir al Carrito</span>
+                    </button>
+                    <button class="kit-action-btn-disabled" th:unless="${kit != null}" disabled>Próximamente disponible</button>
+                </div>
+            </div>
+
+            <!-- 2. Kit Dulces y Gourmand -->
+            <div class="kit-card" th:with="kit=${kits.?[sku == 'KIT-DUL-GOUR'].isEmpty() ? null : kits.?[sku == 'KIT-DUL-GOUR'][0]}">
+                <div class="kit-image-container">
+                    <div style="background-image: url('https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=800&auto=format&fit=crop');" class="kit-image-inner"></div>
+                    <div class="kit-image-overlay"></div>
+                    <span class="kit-badge-type">Gourmand Dulce</span>
+                    <div class="kit-price-tag">$160.000 <span style="font-size: 0.75rem; color: #aaa;">COP</span></div>
+                </div>
+                <div class="kit-info-container">
+                    <span class="kit-collection-label">Aromas Adictivos</span>
+                    <h3 class="kit-title">Kit Dulces y Gourmand</h3>
+                    <p class="kit-desc">Fragancias irresistibles y magnéticas con deliciosos acordes de vainilla, frutas y caramelo.</p>
+                    
+                    <div class="perfumes-included-box">
+                        <span class="included-header"><i class="fas fa-flask"></i> Perfumes incluidos:</span>
+                        <div class="perfumes-tags-grid">
+                            <span>Yara Tradicional</span>
+                            <span>Yara Elixir</span>
+                            <span>Scandal</span>
+                            <span>Thank U, Next</span>
+                            <span>Toy Bubble Gum</span>
+                        </div>
+                    </div>
+
+                    <div class="kit-target-badge"><i class="fas fa-heart"></i> 💕 Ideal para regalar o para salir de fiesta</div>
+                    
+                    <button class="kit-action-btn" th:if="${kit != null}" th:data-id="${kit.id}" onclick="addToCartKit(this, this.getAttribute('data-id'))">
+                        <i class="fas fa-shopping-bag"></i> <span>Añadir al Carrito</span>
+                    </button>
+                    <button class="kit-action-btn-disabled" th:unless="${kit != null}" disabled>Próximamente disponible</button>
+                </div>
+            </div>
+
+            <!-- 3. Kit Frescura Diaria -->
+            <div class="kit-card" th:with="kit=${kits.?[sku == 'KIT-FRE-DIAR'].isEmpty() ? null : kits.?[sku == 'KIT-FRE-DIAR'][0]}">
+                <div class="kit-image-container">
+                    <div style="background-image: url('https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=800&auto=format&fit=crop');" class="kit-image-inner"></div>
+                    <div class="kit-image-overlay"></div>
+                    <span class="kit-badge-type">Fresco y Versátil</span>
+                    <div class="kit-price-tag">$170.000 <span style="font-size: 0.75rem; color: #aaa;">COP</span></div>
+                </div>
+                <div class="kit-info-container">
+                    <span class="kit-collection-label">Día a Día</span>
+                    <h3 class="kit-title">Kit Frescura Diaria</h3>
+                    <p class="kit-desc">Una brisa cítrica, limpia y floral ideal para lucir impecable en la oficina, universidad o clima cálido.</p>
+                    
+                    <div class="perfumes-included-box">
+                        <span class="included-header"><i class="fas fa-flask"></i> Perfumes incluidos:</span>
+                        <div class="perfumes-tags-grid">
+                            <span>Versace Bright Crystal</span>
+                            <span>Light Blue</span>
+                            <span>Omnia Crystalline</span>
+                            <span>Omnia Coral</span>
+                            <span>Chance Eau Tendre</span>
+                        </div>
+                    </div>
+
+                    <div class="kit-target-badge"><i class="fas fa-briefcase"></i> 💼 Excelente para oficina y clima cálido</div>
+                    
+                    <button class="kit-action-btn" th:if="${kit != null}" th:data-id="${kit.id}" onclick="addToCartKit(this, this.getAttribute('data-id'))">
+                        <i class="fas fa-shopping-bag"></i> <span>Añadir al Carrito</span>
+                    </button>
+                    <button class="kit-action-btn-disabled" th:unless="${kit != null}" disabled>Próximamente disponible</button>
+                </div>
+            </div>
+
+            <!-- 4. Kit Noches Inolvidables -->
+            <div class="kit-card" th:with="kit=${kits.?[sku == 'KIT-NOC-INOL'].isEmpty() ? null : kits.?[sku == 'KIT-NOC-INOL'][0]}">
+                <div class="kit-image-container">
+                    <div style="background-image: url('https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?q=80&w=800&auto=format&fit=crop');" class="kit-image-inner"></div>
+                    <div class="kit-image-overlay"></div>
+                    <span class="kit-badge-type">Sensual y Nocturno</span>
+                    <div class="kit-price-tag">$190.000 <span style="font-size: 0.75rem; color: #aaa;">COP</span></div>
+                </div>
+                <div class="kit-info-container">
+                    <span class="kit-collection-label">Alta Proyección</span>
+                    <h3 class="kit-title">Kit Noches Inolvidables</h3>
+                    <p class="kit-desc">Esencias opulentas, cálidas y con gran estela que cautivarán las miradas en cualquier fiesta o cena de gala.</p>
+                    
+                    <div class="perfumes-included-box">
+                        <span class="included-header"><i class="fas fa-flask"></i> Perfumes incluidos:</span>
+                        <div class="perfumes-tags-grid">
+                            <span>Good Girl Blush Elixir</span>
+                            <span>Fame The Couture</span>
+                            <span>Amber Oud Gold</span>
+                            <span>Valentino Donna</span>
+                            <span>Coco Mademoiselle</span>
+                        </div>
+                    </div>
+
+                    <div class="kit-target-badge"><i class="fas fa-moon"></i> 🌙 Uso nocturno y citas románticas especiales</div>
+                    
+                    <button class="kit-action-btn" th:if="${kit != null}" th:data-id="${kit.id}" onclick="addToCartKit(this, this.getAttribute('data-id'))">
+                        <i class="fas fa-shopping-bag"></i> <span>Añadir al Carrito</span>
+                    </button>
+                    <button class="kit-action-btn-disabled" th:unless="${kit != null}" disabled>Próximamente disponible</button>
+                </div>
+            </div>
+
+            <!-- 5. Kit Hombre Elegante -->
+            <div class="kit-card" th:with="kit=${kits.?[sku == 'KIT-HOM-ELEG'].isEmpty() ? null : kits.?[sku == 'KIT-HOM-ELEG'][0]}">
+                <div class="kit-image-container">
+                    <div style="background-image: url('https://images.unsplash.com/photo-1523293182086-7651a899d37f?q=80&w=800&auto=format&fit=crop');" class="kit-image-inner"></div>
+                    <div class="kit-image-overlay"></div>
+                    <span class="kit-badge-type">Masculino Distinguido</span>
+                    <div class="kit-price-tag">$180.000 <span style="font-size: 0.75rem; color: #aaa;">COP</span></div>
+                </div>
+                <div class="kit-info-container">
+                    <span class="kit-collection-label">Presencia y Carácter</span>
+                    <h3 class="kit-title">Kit Hombre Elegante</h3>
+                    <p class="kit-desc">Notas maderosas, aromáticas y herbales perfectas para proyectar pulcritud, clase y seriedad ejecutiva.</p>
+                    
+                    <div class="perfumes-included-box">
+                        <span class="included-header"><i class="fas fa-flask"></i> Perfumes incluidos:</span>
+                        <div class="perfumes-tags-grid">
+                            <span>Bleu de Chanel</span>
+                            <span>Sauvage Elixir</span>
+                            <span>Valentino Born in Roma</span>
+                            <span>Toy Boy</span>
+                            <span>212 Men NYC</span>
+                        </div>
+                    </div>
+
+                    <div class="kit-target-badge"><i class="fas fa-user-tie"></i> 👨 Para hombres ejecutivos y oficina formal</div>
+                    
+                    <button class="kit-action-btn" th:if="${kit != null}" th:data-id="${kit.id}" onclick="addToCartKit(this, this.getAttribute('data-id'))">
+                        <i class="fas fa-shopping-bag"></i> <span>Añadir al Carrito</span>
+                    </button>
+                    <button class="kit-action-btn-disabled" th:unless="${kit != null}" disabled>Próximamente disponible</button>
+                </div>
+            </div>
+
+            <!-- 6. Kit Hombre para Fiesta -->
+            <div class="kit-card" th:with="kit=${kits.?[sku == 'KIT-HOM-FIES'].isEmpty() ? null : kits.?[sku == 'KIT-HOM-FIES'][0]}">
+                <div class="kit-image-container">
+                    <div style="background-image: url('https://images.unsplash.com/photo-1547887537-6158d64c35b3?q=80&w=800&auto=format&fit=crop');" class="kit-image-inner"></div>
+                    <div class="kit-image-overlay"></div>
+                    <span class="kit-badge-type">Atractivo y Moderno</span>
+                    <div class="kit-price-tag">$175.000 <span style="font-size: 0.75rem; color: #aaa;">COP</span></div>
+                </div>
+                <div class="kit-info-container">
+                    <span class="kit-collection-label">Seducción Activa</span>
+                    <h3 class="kit-title">Kit Hombre para Fiesta</h3>
+                    <p class="kit-desc">Aromas vibrantes, dulces y chispeantes que generan cumplidos y duran toda la noche en la pista.</p>
+                    
+                    <div class="perfumes-included-box">
+                        <span class="included-header"><i class="fas fa-flask"></i> Perfumes incluidos:</span>
+                        <div class="perfumes-tags-grid">
+                            <span>Versace Eros Flame</span>
+                            <span>212 VIP Black</span>
+                            <span>Invictus</span>
+                            <span>Lacoste Rouge</span>
+                            <span>Blue Seduction</span>
+                        </div>
+                    </div>
+
+                    <div class="kit-target-badge"><i class="fas fa-glass-cheers"></i> 🎉 Para fiestas, clubes y salidas informales</div>
+                    
+                    <button class="kit-action-btn" th:if="${kit != null}" th:data-id="${kit.id}" onclick="addToCartKit(this, this.getAttribute('data-id'))">
+                        <i class="fas fa-shopping-bag"></i> <span>Añadir al Carrito</span>
+                    </button>
+                    <button class="kit-action-btn-disabled" th:unless="${kit != null}" disabled>Próximamente disponible</button>
+                </div>
+            </div>
+
+            <!-- 7. Kit Más Vendidos -->
+            <div class="kit-card" th:with="kit=${kits.?[sku == 'KIT-MAS-VEND'].isEmpty() ? null : kits.?[sku == 'KIT-MAS-VEND'][0]}">
+                <div class="kit-image-container">
+                    <div style="background-image: url('https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=800&auto=format&fit=crop');" class="kit-image-inner"></div>
+                    <div class="kit-image-overlay"></div>
+                    <span class="kit-badge-type">Favoritos de la Casa</span>
+                    <div class="kit-price-tag">$185.000 <span style="font-size: 0.75rem; color: #aaa;">COP</span></div>
+                </div>
+                <div class="kit-info-container">
+                    <span class="kit-collection-label">Best Sellers</span>
+                    <h3 class="kit-title">Kit Más Vendidos</h3>
+                    <p class="kit-desc">Las esencias más vendidas y aclamadas de toda nuestra tienda agrupadas en un kit supremo.</p>
+                    
+                    <div class="perfumes-included-box">
+                        <span class="included-header"><i class="fas fa-flask"></i> Perfumes incluidos:</span>
+                        <div class="perfumes-tags-grid">
+                            <span>Sauvage</span>
+                            <span>Baccarat Rouge 540</span>
+                            <span>Good Girl</span>
+                            <span>Bleu de Chanel</span>
+                            <span>Club de Nuit</span>
+                        </div>
+                    </div>
+
+                    <div class="kit-target-badge"><i class="fas fa-star"></i> ⭐ Favoritos asegurados e ideal para regalar</div>
+                    
+                    <button class="kit-action-btn" th:if="${kit != null}" th:data-id="${kit.id}" onclick="addToCartKit(this, this.getAttribute('data-id'))">
+                        <i class="fas fa-shopping-bag"></i> <span>Añadir al Carrito</span>
+                    </button>
+                    <button class="kit-action-btn-disabled" th:unless="${kit != null}" disabled>Próximamente disponible</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- VISUAL COMPARISON: FULL BOTTLE VS KIT -->
+    <section style="background: linear-gradient(180deg, #fff 0%, #fff9f2 100%); padding: 6rem 2rem;">
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4.5vw, 3rem); color: #1a1a1a; margin-bottom: 1rem;">¿Frasco completo o Kit de Descubrimiento?</h2>
+                <p style="color: #777;">Compara la mejor manera de sumergirte en la alta perfumería.</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; align-items: stretch;">
+                <!-- Full Bottle Option -->
+                <div style="background: #fff; border: 1px solid rgba(0,0,0,0.06); border-radius: 28px; padding: 2.5rem; display: flex; flex-direction: column;">
+                    <h3 style="font-size: 1.3rem; font-weight: 700; color: #1a1a1a; margin-bottom: 1.5rem;">Frasco Completo</h3>
+                    <ul style="list-style: none; padding: 0; margin: 0 0 2rem; display: flex; flex-direction: column; gap: 1rem; color: #666; font-size: 0.95rem;">
+                        <li style="display: flex; gap: 0.5rem; align-items: flex-start;"><span style="color: #ef4444;">❌</span> Requiere una inversión alta inicial.</li>
+                        <li style="display: flex; gap: 0.5rem; align-items: flex-start;"><span style="color: #ef4444;">❌</span> Riesgo de que no te encante tras unas horas de uso.</li>
+                        <li style="display: flex; gap: 0.5rem; align-items: flex-start;"><span style="color: #ef4444;">❌</span> Difícil de transportar en viajes.</li>
+                        <li style="display: flex; gap: 0.5rem; align-items: flex-start;"><span style="color: #ef4444;">❌</span> Te amarras a un solo aroma por meses.</li>
+                    </ul>
+                    <p style="margin-top: auto; color: #888; font-size: 0.85rem; text-align: center;">Ideal cuando ya tienes tu firma olfativa definida.</p>
+                </div>
+
+                <!-- Discovery Kit Option -->
+                <div style="background: #fff; border: 2px solid var(--accent-primary); border-radius: 28px; padding: 2.5rem; display: flex; flex-direction: column; position: relative; box-shadow: 0 20px 40px rgba(244,154,31,0.08);">
+                    <div style="position: absolute; top: -15px; right: 25px; background: var(--accent-primary); color: #fff; padding: 0.3rem 1rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">La mejor opción</div>
+                    <h3 style="font-size: 1.3rem; font-weight: 700; color: #1a1a1a; margin-bottom: 1.5rem;">Kit de Descubrimiento Profumi</h3>
+                    <ul style="list-style: none; padding: 0; margin: 0 0 2rem; display: flex; flex-direction: column; gap: 1rem; color: #1a1a1a; font-size: 0.95rem; font-weight: 500;">
+                        <li style="display: flex; gap: 0.5rem; align-items: flex-start;"><span style="color: #22c55e;">✅</span> Inversión sumamente accesible.</li>
+                        <li style="display: flex; gap: 0.5rem; align-items: flex-start;"><span style="color: #22c55e;">✅</span> Prueba 5 aromas diferentes en tu propia piel.</li>
+                        <li style="display: flex; gap: 0.5rem; align-items: flex-start;"><span style="color: #22c55e;">✅</span> Tamaño compacto ideal para viajes y retoques.</li>
+                        <li style="display: flex; gap: 0.5rem; align-items: flex-start;"><span style="color: #22c55e;">✅</span> Evitas compras erróneas de frascos costosos.</li>
+                        <li style="display: flex; gap: 0.5rem; align-items: flex-start;"><span style="color: #22c55e;">✅</span> 10% de descuento en tu próxima compra.</li>
+                    </ul>
+                    <p style="margin-top: auto; color: var(--accent-primary); font-weight: 700; font-size: 0.9rem; text-align: center;">Explora aromas sin arrepentimientos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IDEAL FOR GIFTING -->
+    <section style="background: #1a1a1a; padding: 8rem 2rem; color: #fff; position: relative; overflow: hidden;">
+        <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 4rem; align-items: center; position: relative; z-index: 2;">
+            <div>
+                <span style="color: var(--accent-primary); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 2px; display: block; margin-bottom: 1rem;">Detalles únicos</span>
+                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1.5rem; line-height: 1.2;">Ideal para obsequiar a tus seres queridos</h2>
+                <p style="color: #ccc; font-size: 1.05rem; line-height: 1.8; margin-bottom: 2rem;">
+                    Nuestros kits son el regalo perfecto para cumpleaños, aniversarios, San Valentín, Navidad, Día de la Madre, Día del Padre o cualquier ocasión especial. Sorprende a esa persona especial permitiéndole elegir su fragancia favorita con total libertad y lujo.
+                </p>
+                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-gift" style="color: var(--accent-primary);"></i> Envoltura de Lujo</div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-envelope-open" style="color: var(--accent-primary);"></i> Tarjeta Personalizable</div>
+                </div>
+            </div>
+            <div style="border-radius: 28px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.5); position: relative; aspect-ratio: 4/3;">
+                <div style="background-image: url('https://images.unsplash.com/photo-1608528577891-eb05fce3674c?q=80&w=800&auto=format&fit=crop'); width: 100%; height: 100%; background-size: cover; background-position: center;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section style="background: #fff; padding: 7rem 2rem;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 2.8rem); color: #1a1a1a; margin-bottom: 1rem;">Experiencias Reales de Clientes</h2>
+                <p style="color: #777;">Lo que opinan quienes ya se atrevieron a probar.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+                <div class="testimonial-card" style="background: #faf8f5; border-radius: 28px; padding: 2.5rem; border: 1px solid rgba(0,0,0,0.03); position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; gap: 0.2rem; margin-bottom: 1rem;">
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                        </div>
+                        <p style="color: #444; line-height: 1.8; margin-bottom: 1.5rem; font-style: italic; font-size: 0.95rem;">
+                            "El kit Elegancia Femenina superó mis expectativas. Pude probar perfumes súper costosos como Coco Mademoiselle y J'adore antes de gastar un dineral en el frasco grande. ¡El atomizador es de lujo y dura un montón!"
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; border-top: 1px solid #f0e6da; padding-top: 1rem;">
+                        <div style="width: 44px; height: 44px; background: var(--accent-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700;">VS</div>
+                        <div>
+                            <p style="font-weight: 700; color: #1a1a1a; margin: 0; font-size: 0.9rem;">Valentina Sierra</p>
+                            <p style="color: #999; margin: 0; font-size: 0.75rem;">Medellín, Colombia</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card" style="background: #faf8f5; border-radius: 28px; padding: 2.5rem; border: 1px solid rgba(0,0,0,0.03); position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; gap: 0.2rem; margin-bottom: 1rem;">
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                        </div>
+                        <p style="color: #444; line-height: 1.8; margin-bottom: 1.5rem; font-style: italic; font-size: 0.95rem;">
+                            "Pedí el kit de Hombre Elegante para ir a la oficina. Me encantó poder alternar entre Sauvage Elixir y Bleu de Chanel. La cajita está espectacular y la presentación de verdad se siente muy costosa. Lo súper recomiendo."
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; border-top: 1px solid #f0e6da; padding-top: 1rem;">
+                        <div style="width: 44px; height: 44px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700;">CH</div>
+                        <div>
+                            <p style="font-weight: 700; color: #1a1a1a; margin: 0; font-size: 0.9rem;">Carlos Herrera</p>
+                            <p style="color: #999; margin: 0; font-size: 0.75rem;">Bogotá, Colombia</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card" style="background: #faf8f5; border-radius: 28px; padding: 2.5rem; border: 1px solid rgba(0,0,0,0.03); position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; gap: 0.2rem; margin-bottom: 1rem;">
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.95rem;"></i>
+                        </div>
+                        <p style="color: #444; line-height: 1.8; margin-bottom: 1.5rem; font-style: italic; font-size: 0.95rem;">
+                            "El de Dulces y Gourmand huele increíble, sobre todo Scandal y Yara. Es perfecto para salir de fiesta. Recibo cumplidos constantemente. El envío me llegó al día siguiente en Cartagena."
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; border-top: 1px solid #f0e6da; padding-top: 1rem;">
+                        <div style="width: 44px; height: 44px; background: #ec4899; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700;">MP</div>
+                        <div>
+                            <p style="font-weight: 700; color: #1a1a1a; margin: 0; font-size: 0.9rem;">Mariana Prado</p>
+                            <p style="color: #999; margin: 0; font-size: 0.75rem;">Cartagena, Colombia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section style="background: #faf8f5; padding: 6rem 2rem; border-top: 1px solid #f0e6da;">
+        <div style="max-width: 850px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 2.8rem); color: #1a1a1a; margin-bottom: 1rem;">Preguntas Frecuentes</h2>
+                <p style="color: #777;">Resolvemos todas tus inquietudes.</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1.2rem;">
+                <div class="faq-item" style="background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.03); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
+                    <button onclick="toggleFaq(this)" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; background: none; border: none; cursor: pointer; text-align: left;">
+                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.05rem;">¿Los perfumes son 100% originales?</span>
+                        <i class="fas fa-chevron-down" style="color: var(--accent-primary); transition: transform 0.3s;"></i>
+                    </button>
+                    <div style="max-height: 0; overflow: hidden; transition: all 0.3s ease;">
+                        <div style="padding: 0 2rem 1.5rem; color: #666; line-height: 1.7; font-size: 0.95rem;">
+                            Sí, garantizamos total autenticidad. Cada vial es decantado directamente de la botella original sellada de marcas de lujo a frascos pequeños bajo rigurosos estándares de higiene.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" style="background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.03); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
+                    <button onclick="toggleFaq(this)" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; background: none; border: none; cursor: pointer; text-align: left;">
+                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.05rem;">¿Cuántas atomizaciones rinde cada decant?</span>
+                        <i class="fas fa-chevron-down" style="color: var(--accent-primary); transition: transform 0.3s;"></i>
+                    </button>
+                    <div style="max-height: 0; overflow: hidden; transition: all 0.3s ease;">
+                        <div style="padding: 0 2rem 1.5rem; color: #666; line-height: 1.7; font-size: 0.95rem;">
+                            Un decant de 2ml ofrece aproximadamente 25 a 30 atomizaciones. Un decant de 5ml ofrece de 60 a 70 atomizaciones, lo que te permite probarlo bajo distintas situaciones y evaluar su fijación.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" style="background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.03); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
+                    <button onclick="toggleFaq(this)" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; background: none; border: none; cursor: pointer; text-align: left;">
+                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.05rem;">¿Los perfumes vienen identificados en la caja?</span>
+                        <i class="fas fa-chevron-down" style="color: var(--accent-primary); transition: transform 0.3s;"></i>
+                    </button>
+                    <div style="max-height: 0; overflow: hidden; transition: all 0.3s ease;">
+                        <div style="padding: 0 2rem 1.5rem; color: #666; line-height: 1.7; font-size: 0.95rem;">
+                            Totalmente. Cada frasco tiene una etiqueta premium donde se lee la marca y el nombre de la fragancia respectiva para que los identifiques sin problema.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" style="background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.03); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
+                    <button onclick="toggleFaq(this)" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; background: none; border: none; cursor: pointer; text-align: left;">
+                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.05rem;">¿Cuánto dura el envío del kit?</span>
+                        <i class="fas fa-chevron-down" style="color: var(--accent-primary); transition: transform 0.3s;"></i>
+                    </button>
+                    <div style="max-height: 0; overflow: hidden; transition: all 0.3s ease;">
+                        <div style="padding: 0 2rem 1.5rem; color: #666; line-height: 1.7; font-size: 0.95rem;">
+                            En Cartagena entregamos en 24 horas hábiles. Para el resto de Colombia, las empresas de transporte tardan de 2 a 3 días hábiles en llegar a tu domicilio.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STYLES -->
+    <style>
+        :root {
+            --accent-primary: #f49a1f;
+            --accent-secondary: #e8890c;
+            --text-dark: #1a1a1a;
+        }
+
+        .hover-up:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+            border-color: rgba(244,154,31,0.2) !important;
+        }
+
+        /* Kit Cards Style */
+        .kit-card {
+            background: #fff;
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.04);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kit-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+            border-color: rgba(244,154,31,0.15);
+        }
+
+        .kit-image-container {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .kit-image-inner {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .kit-card:hover .kit-image-inner {
+            transform: scale(1.08);
+        }
+
+        .kit-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%);
+        }
+
+        .kit-badge-type {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
+            color: #1a1a1a;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .kit-price-tag {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.15rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .kit-info-container {
+            padding: 2.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kit-collection-label {
+            color: var(--accent-primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .kit-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin: 0 0 0.8rem 0;
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        .kit-desc {
+            color: #666;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin: 0 0 1.5rem 0;
+        }
+
+        .perfumes-included-box {
+            background: #faf8f5;
+            padding: 1.2rem;
+            border-radius: 18px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .included-header {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        .perfumes-tags-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .perfumes-tags-grid span {
+            background: #fff;
+            color: #555;
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            border: 1px solid #f0e6da;
+            font-weight: 500;
+        }
+
+        .kit-target-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #777;
+            font-size: 0.82rem;
+            margin-top: auto;
+            margin-bottom: 1.8rem;
+            font-weight: 500;
+        }
+
+        .kit-action-btn {
+            width: 100%;
+            padding: 1.1rem;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: #fff;
+            border: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            box-shadow: 0 10px 25px rgba(244,154,31,0.25);
+        }
+
+        .kit-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(244,154,31,0.35);
+        }
+
+        .kit-action-btn-disabled {
+            width: 100%;
+            padding: 1.1rem;
+            border-radius: 16px;
+            background: #f0f0f0;
+            color: #aaa;
+            border: 1px dashed #ccc;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: not-allowed;
+            text-transform: uppercase;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes float-reverse {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(15px); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(244,154,31,0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(244,154,31,0); }
+            100% { box-shadow: 0 0 0 0 rgba(244,154,31,0); }
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .kit-grid {
+                grid-template-columns: 1fr !important;
+                gap: 2rem !important;
+            }
+            .kit-card {
+                border-radius: 24px !important;
+            }
+            .kit-image-container {
+                height: 250px !important;
+            }
+        }
+    </style>
+
+    <!-- SCRIPTS -->
+    <script>
+        // FAQ Toggle
+        function toggleFaq(button) {
+            const item = button.parentElement;
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+
+            const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+            document.querySelectorAll('.faq-item').forEach(faq => {
+                if (faq !== item) {
+                    faq.querySelector('div').style.maxHeight = '0px';
+                    faq.querySelector('i').style.transform = 'rotate(0deg)';
+                    faq.classList.remove('active');
+                }
+            });
+
+            if (isOpen) {
+                content.style.maxHeight = '0px';
+                icon.style.transform = 'rotate(0deg)';
+                item.classList.remove('active');
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.style.transform = 'rotate(180deg)';
+                item.classList.add('active');
+            }
+        }
+
+        // Add to Cart para Kits
+        async function addToCartKit(btn, id) {
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> <span>Preparando...</span>';
+            btn.style.pointerEvents = 'none';
+            btn.style.opacity = '0.8';
+
+            try {
+                const response = await fetch(`/carrito/agregar/${id}`, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        if (typeof updateCartCount === 'function') updateCartCount(data.cartCount);
+                        if (typeof showToast === 'function') {
+                            showToast('¡Kit añadido con éxito! 🎉', 'success');
+                        }
+
+                        btn.innerHTML = '<i class="fas fa-check"></i> <span>¡Añadido!</span>';
+                        btn.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
+                        btn.style.boxShadow = '0 10px 30px rgba(34,197,94,0.3)';
+
+                        // Confetti
+                        createConfetti(btn);
+
+                        setTimeout(() => {
+                            btn.innerHTML = originalContent;
+                            btn.style.background = '';
+                            btn.style.boxShadow = '';
+                            btn.style.pointerEvents = 'auto';
+                            btn.style.opacity = '1';
+                        }, 2500);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                btn.innerHTML = '<i class="fas fa-exclamation"></i> <span>Error</span>';
+                btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.style.background = '';
+                    btn.style.pointerEvents = 'auto';
+                    btn.style.opacity = '1';
+                }, 2000);
+
+                if (typeof showToast === 'function') {
+                    showToast('Error al añadir el kit', 'error');
+                }
+            }
+        }
+
+        // Mini confetti
+        function createConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            const colors = ['#f49a1f', '#e8890c', '#22c55e', '#ffd700', '#3b82f6'];
+
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: fixed;
+                    width: 8px;
+                    height: 8px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 99999;
+                    left: ${rect.left + rect.width / 2}px;
+                    top: ${rect.top}px;
+                `;
+                document.body.appendChild(particle);
+
+                const angle = (Math.PI * 2 * i) / 10 - Math.PI / 2;
+                const velocity = 100 + Math.random() * 60;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+
+                let x = 0, y = 0;
+                let opacity = 1;
+
+                const animate = () => {
+                    x += vx * 0.015;
+                    y += vy * 0.015 + 3;
+                    opacity -= 0.015;
+                    particle.style.transform = `translate(${x}px, ${y}px)`;
+                    particle.style.opacity = opacity;
+
+                    if (opacity > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        particle.remove();
+                    }
+                };
+
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.kit-card, .testimonial-card, .faq-item, .hover-up').forEach((el, i) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = `all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) ${i * 0.1}s`;
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+
+</html>

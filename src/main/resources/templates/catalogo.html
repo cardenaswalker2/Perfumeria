@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Catálogo | Profumi</title>
+    <!-- Fonts & Shared Iconography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=5)}">
+    <link rel="stylesheet" th:href="@{/css/catalogo.css(v=5)}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Explora nuestra exclusiva colección de perfumes de lujo en Profumi. Fragancias originales de diseñador con envíos a toda Colombia y recomendación inteligente de aromas.">
+    <meta property="og:title" content="Catálogo de Fragancias de Lujo | Profumi">
+    <meta property="og:description" content="Colección premium de perfumes de las marcas más prestigiosas: Chanel, Dior, Tom Ford y más.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=800">
+    <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+
+    <!-- Header / Navbar fragment -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <!-- Toast notification container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- 1. HERO SECTION WITH PARALLAX & SCENT PARTICLES -->
+    <section class="catalog-hero" id="catalog-hero">
+        <div class="particle-container" id="particle-container"></div>
+        
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 2;">
+            <div style="max-width: 750px;">
+                <span class="carousel-brand-tag" style="animation: slideUpFade 0.8s ease;">Profumi Haute Parfumerie</span>
+                <h1 style="font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4.2rem); line-height: 1.1; color: #111; font-weight: 700; margin-bottom: 1.5rem; animation: slideUpFade 1s ease;">
+                    Nuestra Colección<br>
+                    <span style="color: var(--accent-primary);">Exclusiva</span>
+                </h1>
+                <p style="color: #444; font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem; font-weight: 300; animation: slideUpFade 1.2s ease;">
+                    Descubre una selección exclusiva de aromas importados, extractos puros y kits de descubrimiento diseñados para elevar tus sentidos.
+                </p>
+                
+                <!-- Quick Filter / Action Buttons in Hero -->
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; animation: slideUpFade 1.4s ease;">
+                    <button class="filter-chip active" onclick="setQuickFilter(event, 'novedades')">Nuevas Colecciones</button>
+                    <button class="filter-chip" onclick="setQuickFilter(event, 'ventas')">Más Vendidos</button>
+                    <a href="/diagnostico" class="filter-chip" style="background: var(--accent-primary); color: #fff; border-color: var(--accent-primary);"><i class="fa-solid fa-wand-magic-sparkles"></i> Diagnóstico IA</a>
+                </div>
+            </div>
+            
+            <!-- 2. AMAZON-STYLE INTELLIGENT SEARCH BAR -->
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" class="search-input" id="smart-search" 
+                           placeholder="Busca por marca, notas (jazmín, vainilla), familia olfativa, género..." 
+                           autocomplete="off" aria-label="Buscador inteligente de perfumes">
+                </div>
+                <!-- Autocomplete Dropdown list -->
+                <div class="search-dropdown" id="search-dropdown" role="listbox"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="catalog-main-content" style="max-width: 1400px; margin: 0 auto; padding: 0 2rem 5rem;">
+        <div class="catalog-main-layout" style="display: flex; gap: 3rem; align-items: flex-start;">
+            
+            <!-- 3. PREMIUM SIDEBAR FILTERS (Acordeón) -->
+            <aside class="catalog-sidebar" id="catalog-sidebar" aria-label="Filtros de catálogo">
+                <div style="background: #fff; border-radius: 24px; border: 1px solid #f2edd5; box-shadow: 0 10px 30px rgba(0,0,0,0.02); overflow: hidden; padding: 1.5rem 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 1rem; border-bottom: 1.5px solid #f5f2eb;">
+                        <h3 style="font-family: var(--font-serif); font-size: 1.4rem; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 10px;">
+                            <i class="fa-solid fa-sliders"></i> Filtros
+                        </h3>
+                        <button onclick="clearAllFilters()" style="background: none; border: none; color: var(--accent-primary); font-size: 0.8rem; font-weight: 600; cursor: pointer; text-decoration: underline;">Limpiar todo</button>
+                    </div>
+
+                    <!-- Accordion: Gender -->
+                    <div class="filter-section">
+                        <button class="filter-header active" onclick="toggleAccordion(this)">
+                            <span>Género</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="filter-content open" id="filter-gender-list"></div>
+                    </div>
+
+                    <!-- Accordion: Olfactory Family -->
+                    <div class="filter-section">
+                        <button class="filter-header active" onclick="toggleAccordion(this)">
+                            <span>Familia Olfativa</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="filter-content open" id="filter-family-list"></div>
+                    </div>
+
+                    <!-- Accordion: Brand -->
+                    <div class="filter-section">
+                        <button class="filter-header" onclick="toggleAccordion(this)">
+                            <span>Marca</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="filter-content" id="filter-brand-list"></div>
+                    </div>
+
+                    <!-- Accordion: Intensity -->
+                    <div class="filter-section">
+                        <button class="filter-header" onclick="toggleAccordion(this)">
+                            <span>Intensidad (Estela)</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="filter-content" id="filter-intensity-list"></div>
+                    </div>
+
+                    <!-- Accordion: Longevity -->
+                    <div class="filter-section">
+                        <button class="filter-header" onclick="toggleAccordion(this)">
+                            <span>Duración</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="filter-content" id="filter-longevity-list"></div>
+                    </div>
+
+                    <!-- Accordion: Price Range -->
+                    <div class="filter-section">
+                        <button class="filter-header active" onclick="toggleAccordion(this)">
+                            <span>Precio Máximo</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="filter-content open" style="padding: 10px 0;">
+                            <input type="range" id="price-slider" min="50000" max="2500000" step="50000" value="2500000" style="width:100%; accent-color:var(--accent-primary);">
+                            <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-top:5px; color:#666; font-weight:600;">
+                                <span>$50K COP</span>
+                                <span id="price-slider-value">$2.5M COP</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accordion: Availability / Stock -->
+                    <div class="filter-section">
+                        <button class="filter-header" onclick="toggleAccordion(this)">
+                            <span>Disponibilidad</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                        <div class="filter-content" id="filter-stock-list"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- PRODUCT DISPLAY AREA -->
+            <section style="flex: 1; width: 100%;">
+                
+                <!-- Results count & Sorting selector -->
+                <div style="background: #fff; border-radius: 20px; padding: 1.2rem 2rem; margin-bottom: 2rem; border: 1px solid #f2edd5; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div style="font-weight: 500; color: var(--text-dark);" id="results-counter">
+                        Mostrando 0 perfumes
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <label for="sort-select" style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888;">Ordenar por:</label>
+                        <select id="sort-select" onchange="applySorting()" style="padding: 8px 16px; border-radius: 10px; border: 1.5px solid #eae2d5; font-family: var(--font-sans); font-size: 0.88rem; outline: none; background: #fff; cursor: pointer;">
+                            <option value="default">Recomendados</option>
+                            <option value="best_sellers">Más vendidos</option>
+                            <option value="top_rated">Mejor valorados</option>
+                            <option value="price_asc">Menor precio</option>
+                            <option value="price_desc">Mayor precio</option>
+                            <option value="newest">Más nuevos</option>
+                            <option value="alphabetical_asc">A-Z</option>
+                            <option value="alphabetical_desc">Z-A</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 4. RETAIL PRODUCTS GRID (Reactive JS populated) -->
+                <div class="catalog-grid" id="catalog-grid"></div>
+                
+                <!-- Empty Search State Illustration placeholder -->
+                <div id="empty-state" style="display: none; text-align: center; padding: 5rem 2rem;">
+                    <span style="font-size: 4rem;">🌸</span>
+                    <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin: 1rem 0;">No encontramos coincidencias para tus filtros</h3>
+                    <p style="color: #888; max-width: 500px; margin: 0 auto 1.5rem;">Intenta desactivar algunos criterios de búsqueda o presiona el botón inferior para restaurar el catálogo completo.</p>
+                    <button onclick="clearAllFilters()" class="btn-buy-card" style="display: inline-flex; width: auto; padding: 1rem 2rem;">Ver todo el catálogo</button>
+                </div>
+
+                <!-- Pagination/Load more button -->
+                <div style="text-align: center; margin-top: 4rem;" id="load-more-container">
+                    <button onclick="loadMoreProducts()" class="btn-buy-card" style="display: inline-flex; width: auto; padding: 1rem 3rem; background: #fff; color: #111; border: 1.5px solid #eae2d5;">Cargar más fragancias</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- 5. AI PERSONALIZED RECOMMENDATIONS SECTION -->
+        <section style="margin-top: 6rem; border-top: 1px solid #f2edd5; padding-top: 4rem;">
+            <h2 style="font-family: var(--font-serif); font-size: 2.2rem; color: var(--text-dark); margin-bottom: 0.5rem; text-align: center;">Perfumes recomendados para ti</h2>
+            <p style="color: #777; text-align: center; margin-bottom: 3rem; font-weight: 300;">Selección inteligente basada en tus favoritos, búsquedas e interacciones en la boutique.</p>
+            <div class="catalog-grid" id="recommendations-grid"></div>
+        </section>
+    </main>
+
+    <!-- 6. FLOATING PRODUCT COMPARATOR BAR -->
+    <div class="comparator-bar" id="comparator-bar">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <span style="color: #fff; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;"><i class="fa-solid fa-scale-balanced" style="color:var(--accent-primary); margin-right: 8px;"></i> Comparador</span>
+            <div class="comparator-slots" id="comparator-slots"></div>
+        </div>
+        <button onclick="openComparisonModal()" class="btn-buy-card" style="width: auto; padding: 0.8rem 1.8rem; background: var(--accent-primary); box-shadow: 0 4px 15px rgba(244,154,31,0.3);">Comparar ahora</button>
+    </div>
+
+    <!-- 7. REAL-TIME DETAILED QUICK VIEW MODAL -->
+    <div class="modal-overlay" id="quickview-overlay" onclick="closeQuickView(event)">
+        <div class="quickview-modal" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeQuickView(null)" aria-label="Cerrar ventana">&times;</button>
+            <div class="modal-grid">
+                <div class="modal-left">
+                    <div id="quickview-badge-box" class="card-badges"></div>
+                    <img id="quickview-img" src="" alt="Perfume" style="max-height: 400px; width: 100%; object-fit: contain;">
+                </div>
+                <div class="modal-right">
+                    <span id="quickview-brand" class="card-brand">Marca</span>
+                    <h2 id="quickview-title" class="card-title" style="font-size: 2.2rem; line-height: 1.1; margin-bottom: 0.8rem;">Nombre del perfume</h2>
+                    <div id="quickview-rating" class="card-rating"></div>
+                    <div id="quickview-pricing" class="card-pricing" style="margin-bottom: 1.5rem;">
+                        <span id="quickview-price" class="card-price" style="font-size: 1.8rem;">$0 COP</span>
+                        <span id="quickview-old-price" class="card-old-price" style="font-size: 1.3rem;"></span>
+                    </div>
+
+                    <p id="quickview-desc" style="color: #555; line-height: 1.7; margin-bottom: 2rem; font-size: 0.95rem;">Descripción detallada.</p>
+
+                    <!-- Olfactory pyramid details -->
+                    <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; color: var(--text-dark); margin-bottom: 1rem;">Pirámide Olfativa</h3>
+                    <div class="olfactory-pyramid">
+                        <div class="pyramid-level pyramid-top" title="Notas que percibes en los primeros 15 minutos">
+                            <span class="level-name">Notas de salida</span>
+                            <div class="level-chips" id="pyramid-out-chips"></div>
+                        </div>
+                        <div class="pyramid-level pyramid-middle" title="El corazón de la fragancia, dura varias horas">
+                            <span class="level-name">Notas corazón</span>
+                            <div class="level-chips" id="pyramid-heart-chips"></div>
+                        </div>
+                        <div class="pyramid-level pyramid-bottom" title="Las notas más profundas que permanecen todo el día">
+                            <span class="level-name">Notas fondo</span>
+                            <div class="level-chips" id="pyramid-base-chips"></div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 2rem; font-size: 0.85rem; color: #555;">
+                        <div><strong>Intensidad:</strong> <span id="quickview-intensity">Alta</span></div>
+                        <div><strong>Longevidad:</strong> <span id="quickview-longevity">8 hrs</span></div>
+                        <div><strong>Ideal para:</strong> <span id="quickview-occasion">Uso Diario</span></div>
+                        <div><strong>Género:</strong> <span id="quickview-gender">Uniséx</span></div>
+                    </div>
+
+                    <div style="display: flex; gap: 15px;">
+                        <button id="quickview-add-btn" class="btn-buy-card" style="flex: 1;"><i class="fa-solid fa-shopping-bag"></i> Añadir al carrito</button>
+                        <button id="quickview-fav-btn" class="card-action-btn" style="width: 50px; height: 50px; border: 1.5px solid #eae2d5; border-radius: 12px;" aria-label="Favorito"><i class="fa-regular fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. DETAILED COMPARISON TABLE MODAL -->
+    <div class="modal-overlay" id="compare-overlay" onclick="closeComparisonModal()">
+        <div class="quickview-modal" onclick="event.stopPropagation()" style="max-width: 960px; padding: 2.5rem;">
+            <button class="modal-close-btn" onclick="closeComparisonModal()">&times;</button>
+            <h2 style="font-family: var(--font-serif); font-size: 2rem; margin-bottom: 2rem; text-align: center;"><i class="fa-solid fa-scale-balanced" style="color:var(--accent-primary);"></i> Comparación Detallada</h2>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;" id="compare-table"></table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOBILE NAVIGATION BOTTOM PANEL -->
+    <nav class="mobile-bottom-nav">
+        <div class="mobile-nav-item active" onclick="scrollToTop()"><i class="fa-solid fa-house"></i>Inicio</div>
+        <div class="mobile-nav-item" onclick="toggleMobileFilterDrawer()"><i class="fa-solid fa-filter"></i>Filtros</div>
+        <a href="/carrito" class="mobile-nav-item" style="text-decoration:none;"><i class="fa-solid fa-shopping-bag"></i>Carrito</a>
+        <a href="/diagnostico" class="mobile-nav-item" style="text-decoration:none;"><i class="fa-solid fa-wand-magic-sparkles"></i>Nova AI</a>
+    </nav>
+
+    <!-- Schema.org Dynamic Product Structured Data script injection placeholder -->
+    <script type="application/ld+json" id="seo-json-ld"></script>
+
+    <!-- CLIENT INTERACTIVE MODULES -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const dbPerfumes = /*[[${perfumes}]]*/ [];
+        /*]]>*/
+
+        // Initial States
+        let filteredPerfumes = [...dbPerfumes];
+        let visibleCount = 9;
+        let compareList = [];
+        let favoritesList = [];
+        try {
+            favoritesList = JSON.parse(localStorage.getItem('profumi_favorites') || '[]');
+            if (!Array.isArray(favoritesList)) favoritesList = [];
+        } catch (e) {
+            favoritesList = [];
+        }
+        
+        let filters = {
+            gender: [],
+            family: [],
+            brand: [],
+            intensity: [],
+            longevity: [],
+            stock: [],
+            maxPrice: 2500000,
+            quick: null
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Generate Amber Floating Particles
+            const container = document.getElementById('particle-container');
+            for(let i=0; i<8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = particle.style.height = `${Math.random() * 80 + 30}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                particle.style.animationDuration = `${Math.random() * 6 + 6}s`;
+                container.appendChild(particle);
+            }
+
+            // Price slider listener
+            const slider = document.getElementById('price-slider');
+            const sliderVal = document.getElementById('price-slider-value');
+            slider.addEventListener('input', (e) => {
+                const val = parseInt(e.target.value);
+                sliderVal.textContent = `$${(val/1000000).toFixed(1)}M COP`;
+                filters.maxPrice = val;
+                applyFilters();
+            });
+
+            // Initialize Dynamic Sidebar checkboxes & quantities
+            buildFilterOptions();
+            applyFilters();
+            buildSEOStructuredData();
+
+            // Setup Smart Search input event listeners
+            initSmartSearch();
+        });
+
+        // 1. DYNAMIC FILTERS GENERATOR (Calculating matches & rendering options)
+        function buildFilterOptions() {
+            // Helper to fill accordion lists
+            const generateOptions = (key, attribute, elementId) => {
+                const container = document.getElementById(elementId);
+                const values = [...new Set(dbPerfumes.map(p => p[attribute]).filter(Boolean))];
+                container.innerHTML = '';
+                values.forEach(val => {
+                    const count = dbPerfumes.filter(p => p[attribute] === val).length;
+                    container.innerHTML += `
+                        <label class="filter-checkbox-label">
+                            <input type="checkbox" class="filter-checkbox" data-key="${key}" data-value="${val}" onchange="onFilterCheckboxChange(this)">
+                            <span>${val}</span>
+                            <span class="filter-count">${count}</span>
+                        </label>
+                    `;
+                });
+            };
+
+            generateOptions('gender', 'genero', 'filter-gender-list');
+            generateOptions('family', 'familiaOlfativa', 'filter-family-list');
+            generateOptions('brand', 'marca', 'filter-brand-list');
+            generateOptions('intensity', 'concentracion', 'filter-intensity-list');
+            generateOptions('longevity', 'duracion', 'filter-longevity-list');
+            
+            // Stock filter
+            const stockContainer = document.getElementById('filter-stock-list');
+            const inStockCount = dbPerfumes.filter(p => p.stock > 0).length;
+            stockContainer.innerHTML = `
+                <label class="filter-checkbox-label">
+                    <input type="checkbox" class="filter-checkbox" data-key="stock" data-value="instock" onchange="onFilterCheckboxChange(this)">
+                    <span>En Stock</span>
+                    <span class="filter-count">${inStockCount}</span>
+                </label>
+            `;
+        }
+
+        // Toggle Accordion Panels
+        function toggleAccordion(btn) {
+            btn.classList.toggle('active');
+            const content = btn.nextElementSibling;
+            content.classList.toggle('open');
+        }
+
+        // Handle Checkbox Selection Change
+        function onFilterCheckboxChange(chk) {
+            const key = chk.getAttribute('data-key');
+            const val = chk.getAttribute('data-value');
+            if (chk.checked) {
+                filters[key].push(val);
+            } else {
+                filters[key] = filters[key].filter(v => v !== val);
+            }
+            applyFilters();
+        }
+
+        // Quick Filter Buttons (Hero clicks)
+        function setQuickFilter(e, type) {
+            document.querySelectorAll('.catalog-hero .filter-chip').forEach(btn => btn.classList.remove('active'));
+            if (e && e.target) {
+                e.target.classList.add('active');
+            }
+            filters.quick = type;
+            applyFilters();
+        }
+
+        // Clear All
+        function clearAllFilters() {
+            document.querySelectorAll('.filter-checkbox').forEach(chk => chk.checked = false);
+            document.querySelectorAll('.catalog-hero .filter-chip').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.catalog-hero .filter-chip').classList.add('active'); // set first active
+            
+            filters = { gender: [], family: [], brand: [], intensity: [], longevity: [], stock: [], maxPrice: 2500000, quick: null };
+            document.getElementById('price-slider').value = 2500000;
+            document.getElementById('price-slider-value').textContent = '$2.5M COP';
+            document.getElementById('smart-search').value = '';
+            
+            applyFilters();
+        }
+
+        // 2. UNIFIED FILTER ENGINE
+        function applyFilters() {
+            filteredPerfumes = dbPerfumes.filter(p => {
+                if (filters.gender.length > 0 && !filters.gender.includes(p.genero)) return false;
+                if (filters.family.length > 0 && !filters.family.includes(p.familiaOlfativa)) return false;
+                if (filters.brand.length > 0 && !filters.brand.includes(p.marca)) return false;
+                if (filters.intensity.length > 0 && !filters.intensity.includes(p.concentracion)) return false;
+                if (filters.longevity.length > 0 && !filters.longevity.includes(p.duracion)) return false;
+                if (filters.stock.length > 0 && filters.stock.includes('instock') && p.stock <= 0) return false;
+                if (p.precio > filters.maxPrice) return false;
+                
+                // Quick Filters
+                if (filters.quick === 'novedades' && !p.nuevo) return false;
+                if (filters.quick === 'ventas' && !p.topVentas) return false;
+                
+                return true;
+            });
+
+            applySorting();
+        }
+
+        // 3. SORTING MODULE
+        function applySorting() {
+            const criteria = document.getElementById('sort-select').value;
+            if (criteria === 'price_asc') {
+                filteredPerfumes.sort((a,b) => (a.precio || 0) - (b.precio || 0));
+            } else if (criteria === 'price_desc') {
+                filteredPerfumes.sort((a,b) => (b.precio || 0) - (a.precio || 0));
+            } else if (criteria === 'alphabetical_asc') {
+                filteredPerfumes.sort((a,b) => a.nombre.localeCompare(b.nombre));
+            } else if (criteria === 'alphabetical_desc') {
+                filteredPerfumes.sort((a,b) => b.nombre.localeCompare(a.nombre));
+            } else if (criteria === 'newest') {
+                filteredPerfumes.sort((a,b) => (b.nuevo ? 1 : 0) - (a.nuevo ? 1 : 0));
+            } else if (criteria === 'top_rated') {
+                filteredPerfumes.sort((a,b) => (b.rating || 0) - (a.rating || 0));
+            } else if (criteria === 'best_sellers') {
+                filteredPerfumes.sort((a,b) => (b.topVentas ? 1 : 0) - (a.topVentas ? 1 : 0));
+            }
+
+            renderCatalog();
+            renderRecommendations();
+        }
+
+        // 4. CARD RENDER ENGINE
+        function renderCatalog() {
+            const grid = document.getElementById('catalog-grid');
+            const counter = document.getElementById('results-counter');
+            const empty = document.getElementById('empty-state');
+            const loadMoreBtn = document.getElementById('load-more-container');
+
+            grid.innerHTML = '';
+            counter.textContent = `Mostrando ${filteredPerfumes.length} perfumes`;
+
+            if (filteredPerfumes.length === 0) {
+                empty.style.display = 'block';
+                loadMoreBtn.style.display = 'none';
+                return;
+            } else {
+                empty.style.display = 'none';
+            }
+
+            const visibleSlice = filteredPerfumes.slice(0, visibleCount);
+            if (visibleCount >= filteredPerfumes.length) {
+                loadMoreBtn.style.display = 'none';
+            } else {
+                loadMoreBtn.style.display = 'block';
+            }
+
+            visibleSlice.forEach(p => {
+                grid.appendChild(createProductCard(p));
+            });
+
+            if (typeof injectProductCardOverlays === 'function') {
+                injectProductCardOverlays();
+            }
+        }
+
+        function createProductCard(p) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            
+            // Image Fallback
+            const img = p.imagenUrl && p.imagenUrl !== 'Sin imagen' ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
+
+            // Badges HTML
+            let badgesHtml = '';
+            if (p.nuevo) badgesHtml += '<span class="badge badge-new">Nuevo</span>';
+            if (p.topVentas) badgesHtml += '<span class="badge badge-best">Top Ventas</span>';
+            if (p.destacado) badgesHtml += '<span class="badge badge-exclusive">Exclusivo</span>';
+            if (p.stock <= 2 && p.stock > 0) badgesHtml += '<span class="badge badge-low-stock">Stock Bajo</span>';
+
+            // Star Rating HTML
+            const ratingVal = p.rating || 4.7;
+            let starsHtml = '';
+            for(let i=1; i<=5; i++) {
+                starsHtml += `<i class="${i <= Math.floor(ratingVal) ? 'fa-solid' : 'fa-regular'} fa-star"></i>`;
+            }
+
+            const isFav = favoritesList.includes(p.id);
+            const isComparing = compareList.includes(p.id);
+
+            card.innerHTML = `
+                <div class="card-badges">${badgesHtml}</div>
+                <div class="card-actions">
+                    <button class="card-action-btn fav-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${p.id}', this)" aria-label="Favorito">
+                        <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                    </button>
+                    <button class="card-action-btn compare-btn ${isComparing ? 'active' : ''}" onclick="toggleCompare(event, '${p.id}', this)" aria-label="Comparar">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </button>
+                    <button class="card-action-btn" onclick="openQuickView('${p.id}')" aria-label="Vista rápida">
+                        <i class="fa-regular fa-eye"></i>
+                    </button>
+                </div>
+                <a href="/producto/${p.id}">
+                    <div class="card-img-box" style="background-image: url('${img}');"></div>
+                </a>
+                <div class="card-body">
+                    <span class="card-brand">${p.marca}</span>
+                    <h3 class="card-title">${p.nombre}</h3>
+                    <div class="card-rating">${starsHtml} <span>(${ratingVal})</span></div>
+                    <div class="card-meta-tags">
+                        <span class="card-meta-tag">${p.familiaOlfativa || 'Lujo'}</span>
+                        <span class="card-meta-tag">${p.concentracion || 'EDP'}</span>
+                    </div>
+                    <div class="card-pricing">
+                        <span class="card-price">$${(p.precio || 0).toLocaleString('es-CO')} COP</span>
+                    </div>
+                    <button class="btn-buy-card" onclick="addToCart(event, '${p.id}')"><i class="fa-solid fa-shopping-bag"></i> Agregar</button>
+                </div>
+            `;
+
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+                card.style.transition = 'all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1)';
+            }, 50);
+
+            return card;
+        }
+
+        function loadMoreProducts() {
+            visibleCount += 6;
+            renderCatalog();
+        }
+
+        // 5. AMAZON-STYLE LIVE INTERACTIVE SEARCH
+        let selectedSearchIndex = -1;
+        function initSmartSearch() {
+            const input = document.getElementById('smart-search');
+            const dropdown = document.getElementById('search-dropdown');
+
+            input.addEventListener('input', (e) => {
+                const query = e.target.value.trim().toLowerCase();
+                if (query.length < 2) {
+                    dropdown.classList.remove('active');
+                    return;
+                }
+
+                // Filter database
+                const matches = dbPerfumes.filter(p => {
+                    const notesMatch = (p.notasOlfativas || []).some(n => n.toLowerCase().includes(query));
+                    return p.nombre.toLowerCase().includes(query) ||
+                           p.marca.toLowerCase().includes(query) ||
+                           (p.familiaOlfativa || '').toLowerCase().includes(query) ||
+                           (p.ocasion || '').toLowerCase().includes(query) ||
+                           notesMatch;
+                });
+
+                renderSearchDropdown(matches, query);
+            });
+
+            // Keyboard navigation in search dropdown
+            input.addEventListener('keydown', (e) => {
+                const items = dropdown.querySelectorAll('.search-item');
+                if (!dropdown.classList.contains('active') || items.length === 0) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedSearchIndex = (selectedSearchIndex + 1) % items.length;
+                    updateSearchSelection(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedSearchIndex = (selectedSearchIndex - 1 + items.length) % items.length;
+                    updateSearchSelection(items);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (selectedSearchIndex >= 0 && selectedSearchIndex < items.length) {
+                        items[selectedSearchIndex].click();
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.classList.remove('active');
+                }
+            });
+
+            // Close search dropdown on click outside
+            document.addEventListener('click', (e) => {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+        }
+
+        function renderSearchDropdown(matches, query) {
+            const dropdown = document.getElementById('search-dropdown');
+            dropdown.innerHTML = '';
+            selectedSearchIndex = -1;
+
+            if (matches.length === 0) {
+                // Show similar suggestions
+                dropdown.innerHTML = `
+                    <div class="search-group-title">No hay coincidencia exacta</div>
+                    <div style="padding: 1.5rem; text-align: center; color: #888; font-size: 0.9rem;">
+                        ¿Quizá buscabas algo cítrico, amaderado o floral?
+                    </div>
+                `;
+            } else {
+                dropdown.innerHTML = '<div class="search-group-title">Fragancias sugeridas</div>';
+                matches.slice(0, 5).forEach(p => {
+                    const img = p.imagenUrl && p.imagenUrl !== 'Sin imagen' ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
+                    const item = document.createElement('div');
+                    item.className = 'search-item';
+                    item.role = 'option';
+                    item.innerHTML = `
+                        <img src="${img}" alt="${p.nombre}">
+                        <div class="search-item-info">
+                            <div class="search-item-name">${p.nombre}</div>
+                            <div class="search-item-brand">${p.marca} - ${p.familiaOlfativa || 'Esencia'}</div>
+                        </div>
+                        <div class="search-item-price">$${(p.precio || 0).toLocaleString('es-CO')}</div>
+                    `;
+                    item.addEventListener('click', () => {
+                        dropdown.classList.remove('active');
+                        openQuickView(p.id);
+                    });
+                    dropdown.appendChild(item);
+                });
+            }
+            dropdown.classList.add('active');
+        }
+
+        function updateSearchSelection(items) {
+            items.forEach((item, index) => {
+                if (index === selectedSearchIndex) {
+                    item.classList.add('selected');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        // 6. DETAILED QUICK VIEW & OLFACTORY PYRAMID
+        function openQuickView(id) {
+            const p = dbPerfumes.find(item => item.id === id);
+            if (!p) return;
+
+            document.getElementById('quickview-brand').textContent = p.marca;
+            document.getElementById('quickview-title').textContent = p.nombre;
+            document.getElementById('quickview-desc').textContent = p.descripcion || 'Una composición olfativa lujosa que evoca exclusividad y personalidad única.';
+            document.getElementById('quickview-price').textContent = `$${(p.precio || 0).toLocaleString('es-CO')} COP`;
+            
+            // Image
+            const img = p.imagenUrl && p.imagenUrl !== 'Sin imagen' ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
+            document.getElementById('quickview-img').src = img;
+
+            // Badges
+            const badgeBox = document.getElementById('quickview-badge-box');
+            badgeBox.innerHTML = '';
+            if (p.nuevo) badgeBox.innerHTML += '<span class="badge badge-new">Nuevo</span>';
+            if (p.topVentas) badgeBox.innerHTML += '<span class="badge badge-best">Top Ventas</span>';
+
+            // Rating Stars
+            const ratingBox = document.getElementById('quickview-rating');
+            ratingBox.innerHTML = '';
+            const ratingVal = p.rating || 4.7;
+            for(let i=1; i<=5; i++) {
+                ratingBox.innerHTML += `<i class="${i <= Math.floor(ratingVal) ? 'fa-solid' : 'fa-regular'} fa-star"></i>`;
+            }
+            ratingBox.innerHTML += ` <span>(${ratingVal})</span>`;
+
+            // Olfactory Pyramid Chips
+            const buildChips = (notesStr, containerId) => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                const notes = notesStr ? notesStr.split(',') : [];
+                if (notes.length === 0) {
+                    container.innerHTML = '<span class="level-chip">Esencias Florales</span>';
+                } else {
+                    notes.forEach(note => {
+                        container.innerHTML += `<span class="level-chip">${note.trim()}</span>`;
+                    });
+                }
+            };
+            
+            // Simulating pyramid partitioning if database has flat list
+            const notesList = p.notasOlfativas || [];
+            buildChips(notesList.slice(0, 2).join(', '), 'pyramid-out-chips');
+            buildChips(notesList.slice(2, 4).join(', '), 'pyramid-heart-chips');
+            buildChips(notesList.slice(4).join(', '), 'pyramid-base-chips');
+
+            document.getElementById('quickview-intensity').textContent = p.concentracion || 'Eau de Parfum';
+            document.getElementById('quickview-longevity').textContent = p.duracion || '8 - 10 Horas';
+            document.getElementById('quickview-occasion').textContent = p.idealPara || 'Uso Diario / Eventos';
+            document.getElementById('quickview-gender').textContent = p.genero || 'Uniséx';
+
+            // Action mappings
+            document.getElementById('quickview-add-btn').onclick = (e) => {
+                addToCart(e, p.id);
+                closeQuickView(null);
+            };
+
+            const favBtn = document.getElementById('quickview-fav-btn');
+            const isFav = favoritesList.includes(p.id);
+            favBtn.className = `card-action-btn fav-btn ${isFav ? 'active' : ''}`;
+            favBtn.onclick = (e) => toggleFavorite(e, p.id, favBtn);
+
+            document.getElementById('quickview-overlay').classList.add('active');
+        }
+
+        function closeQuickView(e) {
+            if (!e || e.target === document.getElementById('quickview-overlay')) {
+                document.getElementById('quickview-overlay').classList.remove('active');
+            }
+        }
+
+        // 7. COMPARING MODULE (Persistent bottom drawer)
+        function toggleCompare(e, id, btn) {
+            if (e) e.stopPropagation();
+            if (compareList.includes(id)) {
+                compareList = compareList.filter(v => v !== id);
+                btn.classList.remove('active');
+                showToast('Removido del comparador', 'info');
+            } else {
+                if (compareList.length >= 4) {
+                    showToast('Puedes comparar hasta 4 perfumes a la vez', 'error');
+                    return;
+                }
+                compareList.push(id);
+                btn.classList.add('active');
+                showToast('Añadido al comparador', 'success');
+            }
+            updateComparatorBar();
+        }
+
+        function updateComparatorBar() {
+            const bar = document.getElementById('comparator-bar');
+            const container = document.getElementById('comparator-slots');
+            container.innerHTML = '';
+
+            if (compareList.length === 0) {
+                bar.classList.remove('active');
+                return;
+            }
+
+            compareList.forEach(id => {
+                const p = dbPerfumes.find(item => item.id === id);
+                if (!p) return;
+                const img = p.imagenUrl && p.imagenUrl !== 'Sin imagen' ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
+                container.innerHTML += `
+                    <div class="comparator-slot">
+                        <img src="${img}" alt="${p.nombre}">
+                        <button class="remove-slot" onclick="removeCompareSlot('${p.id}')">&times;</button>
+                    </div>
+                `;
+            });
+            bar.classList.add('active');
+        }
+
+        function removeCompareSlot(id) {
+            compareList = compareList.filter(v => v !== id);
+            updateComparatorBar();
+            // Deselect card compare btn if exists
+            document.querySelectorAll('.compare-btn').forEach(btn => {
+                // If button belongs to this id
+                if (btn.outerHTML.includes(id)) {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        function openComparisonModal() {
+            const overlay = document.getElementById('compare-overlay');
+            const table = document.getElementById('compare-table');
+            table.innerHTML = '';
+
+            const list = dbPerfumes.filter(p => compareList.includes(p.id));
+            if (list.length === 0) return;
+
+            let rowHeader = '<tr><th style="padding:1rem; border-bottom:2px solid #eae2d5;">Propiedad</th>';
+            let rowPrice = '<tr><td style="padding:1rem; font-weight:700; border-bottom:1px solid #f5f2eb;">Precio</td>';
+            let rowBrand = '<tr><td style="padding:1rem; font-weight:700; border-bottom:1px solid #f5f2eb;">Marca</td>';
+            let rowFamily = '<tr><td style="padding:1rem; font-weight:700; border-bottom:1px solid #f5f2eb;">Familia Olfativa</td>';
+            let rowLongevity = '<tr><td style="padding:1rem; font-weight:700; border-bottom:1px solid #f5f2eb;">Duración</td>';
+            let rowConcentration = '<tr><td style="padding:1rem; font-weight:700; border-bottom:1px solid #f5f2eb;">Concentración</td>';
+            let rowGender = '<tr><td style="padding:1rem; font-weight:700; border-bottom:1px solid #f5f2eb;">Género</td>';
+            let rowNotes = '<tr><td style="padding:1rem; font-weight:700; border-bottom:1px solid #f5f2eb;">Notas</td>';
+            let rowActions = '<tr><td style="padding:1rem; font-weight:700; border-bottom:none;">Acción</td>';
+
+            list.forEach(p => {
+                rowHeader += `<th style="padding:1rem; border-bottom:2px solid #eae2d5; text-align:center;">${p.nombre}</th>`;
+                rowPrice += `<td style="padding:1rem; text-align:center; color:var(--accent-primary); font-weight:700; border-bottom:1px solid #f5f2eb;">$${p.precio.toLocaleString('es-CO')} COP</td>`;
+                rowBrand += `<td style="padding:1rem; text-align:center; border-bottom:1px solid #f5f2eb;">${p.marca}</td>`;
+                rowFamily += `<td style="padding:1rem; text-align:center; border-bottom:1px solid #f5f2eb;">${p.familiaOlfativa || 'De Lujo'}</td>`;
+                rowLongevity += `<td style="padding:1rem; text-align:center; border-bottom:1px solid #f5f2eb;">${p.duracion || '8 Horas'}</td>`;
+                rowConcentration += `<td style="padding:1rem; text-align:center; border-bottom:1px solid #f5f2eb;">${p.concentracion || 'EDP'}</td>`;
+                rowGender += `<td style="padding:1rem; text-align:center; border-bottom:1px solid #f5f2eb;">${p.genero}</td>`;
+                rowNotes += `<td style="padding:1rem; text-align:center; font-size:0.8rem; border-bottom:1px solid #f5f2eb;">${(p.notasOlfativas || []).join(', ')}</td>`;
+                rowActions += `<td style="padding:1rem; text-align:center; border-bottom:none;"><button class="btn-buy-card" onclick="addToCart('${p.id}')" style="padding: 0.6rem 1.2rem; font-size: 0.8rem; width: auto; margin: 0 auto; display: inline-flex;"><i class="fa-solid fa-shopping-bag"></i> Comprar</button></td>`;
+            });
+
+            rowHeader += '</tr>'; rowPrice += '</tr>'; rowBrand += '</tr>'; rowFamily += '</tr>'; rowLongevity += '</tr>'; rowConcentration += '</tr>'; rowGender += '</tr>'; rowNotes += '</tr>'; rowActions += '</tr>';
+            table.innerHTML = rowHeader + rowPrice + rowBrand + rowFamily + rowLongevity + rowConcentration + rowGender + rowNotes + rowActions;
+            overlay.classList.add('active');
+        }
+
+        function closeComparisonModal() {
+            document.getElementById('compare-overlay').classList.remove('active');
+        }
+
+        // 8. FAVORITES & TOASTS
+        function toggleFavorite(e, id, btn) {
+            if (e) e.stopPropagation();
+            if (favoritesList.includes(id)) {
+                favoritesList = favoritesList.filter(v => v !== id);
+                btn.classList.remove('active');
+                btn.querySelector('i').className = 'fa-regular fa-heart';
+                showToast('Removido de favoritos', 'info');
+            } else {
+                favoritesList.push(id);
+                btn.classList.add('active');
+                btn.querySelector('i').className = 'fa-solid fa-heart';
+                showToast('Añadido a tus favoritos ❤️', 'success');
+            }
+            localStorage.setItem('profumi_favorites', JSON.stringify(favoritesList));
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = 'toast show';
+            let icon = '<i class="fa-solid fa-circle-info"></i>';
+            if (type === 'success') icon = '<i class="fa-solid fa-circle-check" style="color: var(--accent-primary);"></i>';
+            if (type === 'error') icon = '<i class="fa-solid fa-circle-exclamation" style="color: #e74c3c;"></i>';
+
+            toast.innerHTML = `${icon}<span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        // 9. DYNAMIC PERSONALIZED RECOMMENDATIONS (Matches favorites families)
+        function renderRecommendations() {
+            const recGrid = document.getElementById('recommendations-grid');
+            recGrid.innerHTML = '';
+            
+            // Find user's favorite families
+            const favPerfumes = dbPerfumes.filter(p => favoritesList.includes(p.id));
+            const favFamilies = favPerfumes.map(p => p.familiaOlfativa).filter(Boolean);
+            
+            let recommended = [];
+            if (favFamilies.length > 0) {
+                // Recommend items sharing these families but not already in favorites
+                recommended = dbPerfumes.filter(p => favFamilies.includes(p.familiaOlfativa) && !favoritesList.includes(p.id));
+            }
+            
+            // Fallback to top rated perfumes
+            if (recommended.length === 0) {
+                recommended = dbPerfumes.filter(p => p.topVentas || p.destacado);
+            }
+
+            recommended.slice(0, 4).forEach(p => {
+                recGrid.appendChild(createProductCard(p));
+            });
+
+            if (typeof injectProductCardOverlays === 'function') {
+                injectProductCardOverlays();
+            }
+        }
+
+        // 10. ADD TO BASKET INTEGRATION
+        async function addToCart(e, productId) {
+            if (e) e.stopPropagation();
+            try {
+                const response = await fetch(`/carrito/agregar/${productId}`, {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await response.json();
+                if (data.success) {
+                    showToast('¡Añadido al carrito con éxito! 🎉', 'success');
+                    
+                    // Update cart badge dynamically
+                    const badge = document.getElementById('cart-badge');
+                    if (badge) {
+                        badge.textContent = data.cartCount;
+                        badge.style.display = 'inline-flex';
+                    }
+                    
+                    if (typeof updateCartCount === 'function') {
+                        updateCartCount(data.cartCount);
+                    }
+                }
+            } catch (error) {
+                showToast('Error al agregar al carrito', 'error');
+            }
+        }
+
+        // 11. SEO STRUCTURED DATA MICRODATA
+        function buildSEOStructuredData() {
+            const jsonLd = document.getElementById('seo-json-ld');
+            const dataList = dbPerfumes.slice(0, 5).map(p => {
+                return {
+                    "@context": "https://schema.org/",
+                    "@type": "Product",
+                    "name": p.nombre,
+                    "image": p.imagenUrl && p.imagenUrl !== 'Sin imagen' ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800',
+                    "description": p.descripcion || "Perfume exclusivo de diseñador.",
+                    "brand": {
+                        "@type": "Brand",
+                        "name": p.marca
+                    },
+                    "offers": {
+                        "@type": "Offer",
+                        "priceCurrency": "COP",
+                        "price": p.precio,
+                        "itemCondition": "https://schema.org/NewCondition",
+                        "availability": p.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+                    }
+                };
+            });
+            jsonLd.textContent = JSON.stringify(dataList);
+        }
+
+        // MOBILE BAR CONTROLS
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileFilterDrawer() {
+            const sidebar = document.getElementById('catalog-sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

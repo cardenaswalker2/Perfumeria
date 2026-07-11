@@ -1,0 +1,894 @@
+/* ==========================================================================
+   PROFUMI LUXURY HOMEPAGE STYLING - home.css
+   ========================================================================== */
+
+/* 1. EXTENDED LUXURY DESIGN SYSTEM */
+:root {
+    --gold: #C9A96E;
+    --gold-light: #E5D5B0;
+    --gold-glow: rgba(201, 169, 110, 0.4);
+    --dark: #0A0A0A;
+    --darker: #050505;
+    --cream: #FAF6F1;
+    --cream-dark: #E6DCD0;
+    --glass-bg: rgba(250, 246, 241, 0.7);
+    --glass-border: rgba(201, 169, 110, 0.2);
+    --font-serif: 'Cormorant Garamond', serif;
+    --font-sans: 'Montserrat', sans-serif;
+    --transition-smooth: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: all 0.3s ease;
+}
+
+/* Base resets & layouts */
+html, body {
+    overflow-x: hidden;
+    background-color: var(--cream);
+    color: #2c2c2c;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--darker);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 3px;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+}
+
+.glass-panel-light {
+    background: rgba(250, 246, 241, 0.8);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 20px 50px rgba(139,90,43,0.08);
+}
+
+/* 2. ADVANCED HERO COMPONENTS */
+.hero {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #050505;
+    perspective: 1200px;
+}
+
+/* Amber particles canvas */
+#hero-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.hero-smoke-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140%;
+    height: 140%;
+    background: radial-gradient(circle at center, rgba(201, 169, 110, 0.08) 0%, transparent 60%);
+    filter: blur(50px);
+    z-index: 0;
+    pointer-events: none;
+    animation: slowSmoke 20s ease-in-out infinite alternate;
+}
+
+@keyframes slowSmoke {
+    0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+    100% { transform: translate(-50%, -50%) rotate(10deg) scale(1.1); }
+}
+
+/* 3D CSS PERFUME BOTTLE */
+.hero-scene-3d {
+    position: absolute;
+    right: 15%;
+    width: 320px;
+    height: 450px;
+    transform-style: preserve-3d;
+    z-index: 3;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s ease-out;
+}
+
+.perfume-bottle-3d {
+    width: 180px;
+    height: 280px;
+    transform-style: preserve-3d;
+    animation: autoFloatBottle 8s ease-in-out infinite alternate;
+}
+
+@keyframes autoFloatBottle {
+    0% { transform: translateY(0) rotateY(15deg); }
+    100% { transform: translateY(-25px) rotateY(-15deg) rotateX(5deg); }
+}
+
+/* Glass Bottle Faces */
+.bottle-face {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(201, 169, 110, 0.3);
+    box-shadow: inset 0 0 40px rgba(255,255,255,0.1), 0 10px 40px rgba(0,0,0,0.4);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bottle-front {
+    width: 180px;
+    height: 240px;
+    transform: translateZ(35px);
+}
+
+.bottle-back {
+    width: 180px;
+    height: 240px;
+    transform: translateZ(-35px) rotateY(180deg);
+}
+
+.bottle-left {
+    width: 70px;
+    height: 240px;
+    left: 55px;
+    transform: rotateY(-90deg) translateZ(90px);
+}
+
+.bottle-right {
+    width: 70px;
+    height: 240px;
+    left: 55px;
+    transform: rotateY(90deg) translateZ(90px);
+}
+
+.bottle-top {
+    width: 180px;
+    height: 70px;
+    top: -35px;
+    transform: rotateX(90deg) translateZ(35px);
+}
+
+.bottle-bottom {
+    width: 180px;
+    height: 70px;
+    bottom: -35px;
+    transform: rotateX(-90deg) translateZ(205px);
+    background: rgba(201, 169, 110, 0.2);
+    box-shadow: 0 30px 50px rgba(201,169,110,0.3);
+}
+
+/* Perfume Label on Front Face */
+.bottle-label-niche {
+    background: #000;
+    color: #fff;
+    border: 1px solid var(--gold);
+    width: 130px;
+    padding: 1.2rem 0.5rem;
+    text-align: center;
+    font-family: var(--font-serif);
+    text-transform: uppercase;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+}
+
+.bottle-label-niche span {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+    color: var(--gold-light);
+}
+
+.bottle-label-niche h3 {
+    font-size: 1.2rem;
+    letter-spacing: 4px;
+    margin: 0;
+    font-weight: 300;
+}
+
+/* Bottle Cap (3D) */
+.bottle-cap-3d {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: -60px;
+    left: 60px;
+    transform-style: preserve-3d;
+}
+
+.cap-face {
+    position: absolute;
+    background: linear-gradient(135deg, #111 0%, #333 50%, #000 100%);
+    border: 1px solid var(--gold);
+}
+
+.cap-front, .cap-back { width: 60px; height: 50px; }
+.cap-front { transform: translateZ(15px); }
+.cap-back { transform: translateZ(-15px) rotateY(180deg); }
+.cap-left, .cap-right { width: 30px; height: 50px; left: 15px; }
+.cap-left { transform: rotateY(-90deg) translateZ(30px); }
+.cap-right { transform: rotateY(90deg) translateZ(30px); }
+.cap-top { width: 60px; height: 30px; top: -15px; transform: rotateX(90deg) translateZ(15px); }
+
+/* Liquid Level Inside */
+.bottle-liquid {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70%;
+    background: linear-gradient(to top, rgba(201, 169, 110, 0.4) 0%, rgba(229, 213, 176, 0.2) 100%);
+    box-shadow: inset 0 0 20px rgba(201, 169, 110, 0.3);
+    z-index: -1;
+}
+
+/* 3. PREMIUM PRODUCTS CARDS OVERHAUL */
+.luxury-product-card {
+    background: #ffffff;
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.01);
+}
+
+.luxury-product-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--gold);
+    box-shadow: 0 30px 60px rgba(201,169,110,0.12);
+}
+
+.luxury-card-image-box {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--cream);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.luxury-card-image-box img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    transition: var(--transition-smooth);
+}
+
+.luxury-product-card:hover .luxury-card-image-box img {
+    transform: scale(1.08);
+}
+
+/* Technical Details Hidden Drawer */
+.luxury-card-tech-info {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1.8rem;
+    color: #eee;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 5;
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.luxury-product-card:hover .luxury-card-tech-info {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.tech-spec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    font-size: 0.72rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.tech-spec-item strong {
+    color: var(--gold-light);
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card-pyramid-chips {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.7rem;
+}
+
+.card-pyramid-chips span {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-pyramid-chips strong {
+    color: var(--gold);
+}
+
+/* Luxury Indicators */
+.luxury-indicator-badges {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.luxury-badge {
+    font-size: 0.62rem;
+    padding: 3px 10px;
+    border-radius: 40px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.luxury-badge.premium-tag {
+    background: var(--gold);
+    color: #fff;
+}
+
+.luxury-badge.exclusive-tag {
+    background: var(--dark);
+    color: #fff;
+    border: 1px solid var(--gold);
+}
+
+/* Card Actions Overlay */
+.luxury-card-actions {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 3;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: var(--transition-smooth);
+}
+
+.luxury-product-card:hover .luxury-card-actions {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 4. LA CIENCIA DEL AROMA (Interactive Diagram) */
+.science-pyramid-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-top: 4rem;
+}
+
+.interactive-pyramid-shape {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 1.15;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    background: linear-gradient(180deg, #1c1c1c 0%, #111111 100%);
+    border: 1px solid var(--gold);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+}
+
+.pyramid-slice-level {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    border-bottom: 1.5px dashed rgba(201, 169, 110, 0.2);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.pyramid-slice-level:last-child {
+    border-bottom: none;
+}
+
+.pyramid-slice-level:hover {
+    background: rgba(201, 169, 110, 0.1);
+}
+
+.pyramid-slice-level.active {
+    background: rgba(201, 169, 110, 0.15);
+}
+
+.pyramid-slice-level h4 {
+    font-size: 1.3rem;
+    color: #fff;
+    margin-bottom: 4px;
+    letter-spacing: 1.5px;
+}
+
+.pyramid-slice-level span {
+    font-size: 0.65rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.pyramid-detail-overlay-info {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(201,169,110,0.15);
+    border-radius: 16px;
+    padding: 2.2rem;
+    max-width: 600px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: var(--transition-fast);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.pyramid-detail-overlay-info h3 {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    color: var(--gold);
+    margin-bottom: 12px;
+}
+
+.pyramid-detail-overlay-info p {
+    color: rgba(255,255,255,0.7);
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* 5. IMPORT EXPERIENCE PROCESS (Europa → Cartagena) */
+.timeline-process-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 5rem auto 0;
+    padding: 2rem 0;
+}
+
+.timeline-process-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: var(--cream-dark);
+    z-index: 1;
+    transform: translateY(-50%);
+}
+
+.timeline-process-line-active {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--gold);
+    z-index: 1.5;
+    transform: translateY(-50%);
+    transition: width 1.5s ease-in-out;
+}
+
+.timeline-process-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.timeline-process-step {
+    background: var(--cream);
+    padding: 0 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timeline-process-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1.5px solid var(--glass-border);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    box-shadow: 0 10px 25px rgba(139,90,43,0.04);
+    margin-bottom: 1.5rem;
+    transition: var(--transition-fast);
+}
+
+.timeline-process-step:hover .timeline-process-icon {
+    border-color: var(--gold);
+    background: var(--gold);
+    color: #fff;
+    transform: scale(1.1);
+    box-shadow: 0 15px 30px rgba(201, 169, 110, 0.2);
+}
+
+.timeline-process-step h4 {
+    font-size: 1.15rem;
+    color: var(--dark);
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+}
+
+.timeline-process-step p {
+    font-size: 0.78rem;
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+/* 6. SENSORIAL EXPERIENCE (Hover notes) */
+.sensorial-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+    max-width: 1300px;
+    margin: 4rem auto 0;
+}
+
+.sensorial-node {
+    background: #ffffff;
+    border: 1px solid var(--glass-border);
+    padding: 2.2rem 1.5rem;
+    border-radius: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.sensorial-node:hover {
+    background: var(--dark);
+    color: #fff;
+    border-color: var(--gold);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.sensorial-node-icon {
+    font-size: 2rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    transition: var(--transition-smooth);
+}
+
+.sensorial-node h4 {
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+}
+
+.sensorial-node span {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.sensorial-node p {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    margin: 0;
+}
+
+.sensorial-node:hover p {
+    opacity: 0.8;
+    height: auto;
+    margin-top: 10px;
+}
+
+/* 7. CINEMATIC VIDEO BACKGROUND WRAPPER */
+.cinematic-video-container {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    overflow: hidden;
+    border-radius: 24px;
+    margin: 6rem 0;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+    background: #050505;
+}
+
+.cinematic-video-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.4) blur(3px);
+    z-index: 0;
+}
+
+.cinematic-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+    padding: 0 2rem;
+    backdrop-filter: blur(2px);
+}
+
+.cinematic-content h2 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    margin-bottom: 1rem;
+    letter-spacing: -1px;
+}
+
+.cinematic-content p {
+    max-width: 600px;
+    font-size: 1.1rem;
+    opacity: 0.8;
+    font-weight: 300;
+}
+
+/* 8. PINTEREST STYLED LUXURY GALLERY */
+.pinterest-luxury-gallery {
+    column-count: 4;
+    column-gap: 20px;
+    max-width: 1400px;
+    margin: 4rem auto 0;
+}
+
+.pinterest-gallery-item {
+    background: #fff;
+    break-inside: avoid;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    transition: var(--transition-smooth);
+    position: relative;
+}
+
+.pinterest-gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: var(--transition-smooth);
+}
+
+.pinterest-gallery-item:hover img {
+    transform: scale(1.05);
+    filter: brightness(0.85);
+}
+
+.pinterest-gallery-info {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+    color: #fff;
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.pinterest-gallery-item:hover .pinterest-gallery-info {
+    opacity: 1;
+}
+
+.pinterest-gallery-info span {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold-light);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.pinterest-gallery-info h4 {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* 9. TESTIMONIAL CAROUSEL */
+.testimonial-carousel-container {
+    max-width: 850px;
+    margin: 4rem auto 0;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem 0;
+}
+
+.testimonial-carousel-track {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.testimonial-slide {
+    min-width: 100%;
+    padding: 3rem;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.testimonial-slide img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--gold);
+    margin-bottom: 1.5rem;
+}
+
+.testimonial-slide h4 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.testimonial-slide .testimonial-city {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+}
+
+.testimonial-slide .testimonial-perfume {
+    font-size: 0.8rem;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.testimonial-stars {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    color: #ffa500;
+    margin-bottom: 1.5rem;
+    font-size: 0.8rem;
+}
+
+.testimonial-text {
+    font-family: var(--font-serif);
+    font-size: 1.45rem;
+    line-height: 1.7;
+    font-style: italic;
+    color: var(--text);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.carousel-nav-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1.5rem;
+}
+
+.carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cream-dark);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.carousel-dot.active {
+    background: var(--gold);
+    transform: scale(1.3);
+}
+
+/* 10. BRANDS MARQUEE (Black & White Gold Hover) */
+.brand-marquee-track {
+    display: flex;
+    animation: infiniteScrollMarquee 25s linear infinite;
+    width: max-content;
+}
+
+.brand-marquee-item {
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    color: #888;
+    padding: 0 4.5rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    transition: var(--transition-fast);
+    cursor: pointer;
+    filter: grayscale(100%);
+}
+
+.brand-marquee-item:hover {
+    color: var(--gold);
+    filter: grayscale(0%);
+    transform: scale(1.05);
+}
+
+@keyframes infiniteScrollMarquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* 11. RESPONSIVE BREAKPOINTS */
+@media (max-width: 1200px) {
+    .pinterest-luxury-gallery {
+        column-count: 3;
+    }
+    .sensorial-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .hero-scene-3d {
+        display: none; /* Hide 3D bottle on tablets/mobiles for best performance & layout */
+    }
+    .timeline-process-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    .timeline-process-line {
+        display: none;
+    }
+    .pinterest-luxury-gallery {
+        column-count: 2;
+    }
+    .sensorial-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .pinterest-luxury-gallery {
+        column-count: 1;
+    }
+    .sensorial-grid {
+        grid-template-columns: 1fr;
+    }
+    .cinematic-video-container {
+        height: 380px;
+    }
+}
