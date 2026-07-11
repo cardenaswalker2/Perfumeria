@@ -290,7 +290,33 @@
                     <h1>admin console.</h1>
                     <p>Resumen analítico y estadísticas de rendimiento comercial.</p>
                 </div>
-                <button onclick="openPerfumeDrawer(null)" class="btn-action"><i class="fas fa-plus"></i> NUEVO PRODUCTO</button>
+                <div class="header-actions">
+                    <!-- Ver Tienda -->
+                    <a href="/catalogo" class="btn-action btn-secondary" style="text-decoration: none;"><i class="fas fa-store"></i> Ver Tienda</a>
+                    
+                    <!-- Alertas de Negocio -->
+                    <div class="bell-btn-container">
+                        <button class="btn-action btn-secondary" onclick="toggleHeaderDropdown(event)" style="padding: 10px 14px;"><i class="fas fa-bell"></i><span class="badge-dot"></span></button>
+                        <div class="header-dropdown" id="alerts-dropdown">
+                            <span class="dropdown-title">Notificaciones</span>
+                            <div class="dropdown-item">
+                                <i class="fas fa-exclamation-triangle" style="color: #f1c40f;"></i>
+                                <span>3 perfumes con poco stock.</span>
+                            </div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-check-circle" style="color: #2ecc71;"></i>
+                                <span>Sistema de pagos Stripe activo.</span>
+                            </div>
+                            <div class="dropdown-item">
+                                <i class="fas fa-robot" style="color: var(--accent);"></i>
+                                <span>Chatbot Nova AI operativo.</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Nuevo Producto -->
+                    <button onclick="openPerfumeDrawer(null)" class="btn-action"><i class="fas fa-plus"></i> NUEVO PRODUCTO</button>
+                </div>
             </div>
 
             <!-- Stats grid -->
@@ -601,7 +627,7 @@
     </main>
 
     <!-- Professional 11-Tab Drawer (Included inside Dashboard too) -->
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    <div th:replace="~{fragments/chatbot :: chatbot}"></div>
 
     <!-- Script for Tab switcher & Charts -->
     <script>
@@ -619,6 +645,18 @@
                     switchAdminTab('panel-' + tab, btn);
                 }
             }
+        });
+
+
+        function toggleHeaderDropdown(event) {
+            event.stopPropagation();
+            const el = document.getElementById('alerts-dropdown');
+            el.classList.toggle('active');
+        }
+        
+        window.addEventListener('click', () => {
+            const el = document.getElementById('alerts-dropdown');
+            if (el) el.classList.remove('active');
         });
 
         function switchAdminTab(panelId, btn) {
