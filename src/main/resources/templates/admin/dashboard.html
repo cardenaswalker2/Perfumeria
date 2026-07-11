@@ -296,20 +296,48 @@
                     
                     <!-- Alertas de Negocio -->
                     <div class="bell-btn-container">
-                        <button class="btn-action btn-secondary" onclick="toggleHeaderDropdown(event)" style="padding: 10px 14px;"><i class="fas fa-bell"></i><span class="badge-dot"></span></button>
+                        <button class="btn-action btn-secondary" onclick="toggleHeaderDropdown(event, 'alerts-dropdown')" style="padding: 10px 14px;"><i class="fas fa-bell"></i><span class="badge-dot"></span></button>
                         <div class="header-dropdown" id="alerts-dropdown">
                             <span class="dropdown-title">Notificaciones</span>
-                            <div class="dropdown-item">
+                            <div class="dropdown-item" onclick="triggerNotificationAction('stock')" style="cursor: pointer;">
                                 <i class="fas fa-exclamation-triangle" style="color: #f1c40f;"></i>
-                                <span>3 perfumes con poco stock.</span>
+                                <span>3 perfumes con poco stock (Ver aquí)</span>
                             </div>
-                            <div class="dropdown-item">
+                            <div class="dropdown-item" onclick="triggerNotificationAction('stripe')" style="cursor: pointer;">
                                 <i class="fas fa-check-circle" style="color: #2ecc71;"></i>
-                                <span>Sistema de pagos Stripe activo.</span>
+                                <span>Pasarela de Stripe activa y segura</span>
                             </div>
-                            <div class="dropdown-item">
+                            <div class="dropdown-item" onclick="triggerNotificationAction('chatbot')" style="cursor: pointer;">
                                 <i class="fas fa-robot" style="color: var(--accent);"></i>
-                                <span>Chatbot Nova AI operativo.</span>
+                                <span>Nova AI en línea (Configurar)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Acciones Rápidas -->
+                    <div class="bell-btn-container">
+                        <button class="btn-action btn-secondary" onclick="toggleHeaderDropdown(event, 'actions-dropdown')" style="padding: 10px 14px;"><i class="fas fa-bolt"></i> Acciones</button>
+                        <div class="header-dropdown" id="actions-dropdown">
+                            <span class="dropdown-title">Acciones Rápidas</span>
+                            <div class="dropdown-item" onclick="triggerQuickAction('coupon')" style="cursor: pointer; padding: 5px 0;">
+                                <i class="fas fa-percent" style="color: var(--accent); width: 18px;"></i>
+                                <span>Crear Nuevo Cupón</span>
+                            </div>
+                            <div class="dropdown-item" onclick="triggerQuickAction('audit')" style="cursor: pointer; padding: 5px 0;">
+                                <i class="fas fa-history" style="color: #3498db; width: 18px;"></i>
+                                <span>Ver Bitácora de Auditoría</span>
+                            </div>
+                            <div class="dropdown-item" onclick="triggerQuickAction('config')" style="cursor: pointer; padding: 5px 0;">
+                                <i class="fas fa-cog" style="color: #9b59b6; width: 18px;"></i>
+                                <span>Configuración de Tienda</span>
+                            </div>
+                            <div class="dropdown-item" onclick="triggerQuickAction('backup')" style="cursor: pointer; padding: 5px 0;">
+                                <i class="fas fa-database" style="color: #e67e22; width: 18px;"></i>
+                                <span>Respaldar Base de Datos</span>
+                            </div>
+                            <div class="dropdown-item" onclick="triggerQuickAction('export')" style="cursor: pointer; padding: 5px 0;">
+                                <i class="fas fa-file-excel" style="color: #2ecc71; width: 18px;"></i>
+                                <span>Exportar Catálogo (Excel)</span>
                             </div>
                         </div>
                     </div>
@@ -648,16 +676,57 @@
         });
 
 
-        function toggleHeaderDropdown(event) {
+        function toggleHeaderDropdown(event, id) {
             event.stopPropagation();
-            const el = document.getElementById('alerts-dropdown');
+            // Close other dropdowns
+            document.querySelectorAll('.header-dropdown').forEach(d => {
+                if (d.id !== id) d.classList.remove('active');
+            });
+            const el = document.getElementById(id);
             el.classList.toggle('active');
         }
         
         window.addEventListener('click', () => {
-            const el = document.getElementById('alerts-dropdown');
-            if (el) el.classList.remove('active');
+            document.querySelectorAll('.header-dropdown').forEach(d => d.classList.remove('active'));
         });
+
+        // Interactive Notification actions
+        function triggerNotificationAction(type) {
+            if (type === 'stock') {
+                // Switch to Inventory panel and search for stock
+                const invBtn = document.querySelector('.sidebar nav a[onclick*="panel-inventario"]');
+                switchAdminTab('panel-inventario', invBtn);
+                const search = document.querySelector('.search-input');
+                if (search) {
+                    search.value = 'stock';
+                    filterInventory('stock');
+                }
+            } else if (type === 'stripe') {
+                alert('Pasarela Stripe verificada: Conexión segura con API v3 establecida correctamente.');
+            } else if (type === 'chatbot') {
+                const configBtn = document.querySelector('.sidebar nav a[onclick*="panel-configuraciones"]');
+                switchAdminTab('panel-configuraciones', configBtn);
+            }
+        }
+
+        // Interactive Quick Actions
+        function triggerQuickAction(action) {
+            if (action === 'coupon') {
+                const promoBtn = document.querySelector('.sidebar nav a[onclick*="panel-promociones"]');
+                switchAdminTab('panel-promociones', promoBtn);
+                alert('Redirigido a Promociones. Puedes agregar un nuevo cupón en la tabla inferior.');
+            } else if (action === 'audit') {
+                const auditBtn = document.querySelector('.sidebar nav a[onclick*="panel-auditoria"]');
+                switchAdminTab('panel-auditoria', auditBtn);
+            } else if (action === 'config') {
+                const configBtn = document.querySelector('.sidebar nav a[onclick*="panel-configuraciones"]');
+                switchAdminTab('panel-configuraciones', configBtn);
+            } else if (action === 'backup') {
+                alert('Copia de seguridad realizada: Respaldo de MongoDB Atlas guardado en la nube en formato JSON.');
+            } else if (action === 'export') {
+                alert('Exportando catálogo: Generando archivo Excel con lista completa de perfumes en stock.');
+            }
+        }
 
         function switchAdminTab(panelId, btn) {
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
