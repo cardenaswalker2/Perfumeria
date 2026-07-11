@@ -24,10 +24,9 @@ public class DataSeeder {
             System.out.println("EJECUTANDO DATA SEEDER...");
             System.out.println("============================================");
             
-            // Clean up and reload all 34 real perfumes from the product sheet
-            perfumeRepository.deleteAll();
-
             List<Perfume> list = new ArrayList<>();
+            if (perfumeRepository.count() == 0) {
+                System.out.println("Base de datos de perfumes vacía. Cargando datos iniciales...");
 
             // 1
             Perfume p1 = new Perfume();
@@ -809,8 +808,11 @@ public class DataSeeder {
             k7.setNotasOlfativas(Arrays.asList("Best Seller", "Popular", "Favoritos"));
             list.add(k7);
 
-            perfumeRepository.saveAll(list);
-            System.out.println("Base de datos de perfumes inicializada con exactamente 34 perfumes de la hoja.");
+                perfumeRepository.saveAll(list);
+                System.out.println("Base de datos de perfumes inicializada con exactamente 34 perfumes de la hoja.");
+            } else {
+                System.out.println("Base de datos de perfumes ya contiene datos. Omitiendo sembrado.");
+            }
 
             if (usuarioRepository.findByEmail("admin@profumi.com").isEmpty()) {
                 com.profumi.profumi.models.Usuario admin = new com.profumi.profumi.models.Usuario(
