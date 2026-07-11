@@ -1169,7 +1169,7 @@
                             </div>
                             <div class="hover-spec-row">
                                 <span>Ventas:</span>
-                                <span th:text="${p.stock > 5 ? '12 unidades' : '4 unidades'}">12 uds</span>
+                                <span th:text="${p.stock != null and p.stock > 5 ? '12 unidades' : '4 unidades'}">12 uds</span>
                             </div>
                         </div>
 
@@ -1181,8 +1181,8 @@
                             <h4 class="card-title" th:text="${p.nombre}">Nombre</h4>
                             <div class="card-price-row">
                                 <span class="card-price" th:text="'$' + ${p.precio != null ? #numbers.formatDecimal(p.precio, 0, 'POINT', 0, 'POINT') : '0'}">$0</span>
-                                <span th:class="'card-stock-badge ' + ${p.stock > 10 ? 'ok' : (p.stock > 0 ? 'low' : 'empty')}"
-                                      th:text="${p.stock > 0 ? p.stock + ' uds' : 'Agotado'}">Stock</span>
+                                <span th:class="'card-stock-badge ' + ${p.stock != null and p.stock > 10 ? 'ok' : (p.stock != null and p.stock > 0 ? 'low' : 'empty')}"
+                                      th:text="${p.stock != null and p.stock > 0 ? p.stock + ' uds' : 'Agotado'}">Stock</span>
                             </div>
                             <div class="card-actions">
                                 <button class="card-btn" th:onclick="'openPerfumeDrawer(\'' + ${p.id} + '\')'">Editar</button>
@@ -1304,7 +1304,7 @@
                             <td th:text="${pedido.id != null and #strings.length(pedido.id) > 8 ? #strings.substring(pedido.id, 0, 8) : pedido.id}">ID</td>
                             <td th:text="${pedido.nombreCliente}">Cliente</td>
                             <td th:text="${pedido.telefonoCliente}">WhatsApp</td>
-                            <td th:text="${#temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+                            <td th:text="${pedido.fechaCreacion != null ? #temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm') : 'N/A'}">Fecha</td>
                             <td th:text="'$' + ${#numbers.formatDecimal(pedido.total, 0, 'POINT', 0, 'POINT')}">$0</td>
                             <td>
                                 <span th:class="'badge ' + ${pedido.estado == 'COMPLETO' ? 'active' : 'pending'}" th:text="${pedido.estado}">Estado</span>
@@ -1468,7 +1468,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="log : ${auditLogs}">
-                            <td class="timeline-time" th:text="${#temporals.format(log.timestamp, 'dd/MM/yyyy HH:mm:ss')}">Tiempo</td>
+                            <td class="timeline-time" th:text="${log.timestamp != null ? #temporals.format(log.timestamp, 'dd/MM/yyyy HH:mm:ss') : 'N/A'}">Tiempo</td>
                             <td><span style="color: var(--accent);" th:text="${log.usuario}">Usuario</span></td>
                             <td th:text="${log.accion}">Acción</td>
                             <td th:text="${log.producto}">Producto</td>
