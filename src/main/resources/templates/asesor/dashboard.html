@@ -487,8 +487,15 @@
                             <p style="font-weight: 700; font-size: 1rem; color: var(--text);" th:text="${pedido.nombreCliente}">Nombre</p>
                             <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;" th:text="${pedido.direccion}">Dirección</p>
                         </div>
-                        <button th:onclick="'contactCustomerWa(this, \'' + ${pedido.telefono} + '\', \'' + ${pedido.nombreCliente} + '\', \'' + ${pedido.id} + '\', ' + ${pedido.total} + ', \'' + ${pedido.metodoPago} + '\', \'' + ${pedido.direccion} + '\')'"
-                                class="btn-whatsapp" style="border: none; cursor: pointer;">
+                        <button class="btn-whatsapp" 
+                                style="border: none; cursor: pointer;"
+                                th:data-telefono="${pedido.telefono}"
+                                th:data-nombre="${pedido.nombreCliente}"
+                                th:data-id="${pedido.id}"
+                                th:data-total="${pedido.total}"
+                                th:data-pago="${pedido.metodoPago}"
+                                th:data-direccion="${pedido.direccion}"
+                                onclick="contactCustomerWa(this)">
                             <i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i> Contactar VIP
                         </button>
                     </div>
@@ -630,7 +637,14 @@
         }
 
         // Contact Customer on WhatsApp with Detailed Order info
-        function contactCustomerWa(btn, phone, clientName, orderId, total, paymentMethod, address) {
+        function contactCustomerWa(btn) {
+            const phone = btn.getAttribute('data-telefono');
+            const clientName = btn.getAttribute('data-nombre');
+            const orderId = btn.getAttribute('data-id');
+            const total = parseFloat(btn.getAttribute('data-total')) || 0;
+            const paymentMethod = btn.getAttribute('data-pago');
+            const address = btn.getAttribute('data-direccion');
+
             const card = btn.closest('.order-card');
             const items = [];
             card.querySelectorAll('.order-item').forEach(item => {
