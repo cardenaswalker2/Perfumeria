@@ -253,38 +253,10 @@
             font-size: 0.85rem;
             margin-bottom: 12px;
         }
-        .search-results {
-            max-height: 220px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .search-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px;
-            border-radius: 8px;
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            font-size: 0.8rem;
-        }
-        .search-item img {
-            width: 35px;
-            height: 35px;
-            border-radius: 6px;
-            object-fit: cover;
-        }
-        .btn-copy-info {
-            background: none;
-            border: none;
-            color: var(--accent);
-            cursor: pointer;
-            margin-left: auto;
-            font-size: 0.95rem;
-            padding: 5px;
-        }
+
+
+
+
         .btn-copy-info:hover {
             color: var(--accent-hover);
         }
@@ -587,30 +559,138 @@
                 return;
             }
 
-            filtered.slice(0, 5).forEach(p => {
+            filtered.slice(0, 10).forEach(p => {
                 const img = (p.imagenUrl && p.imagenUrl !== 'Sin imagen') ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
                 const formattedPrice = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(p.precio);
                 
+                // Build lists of notes or other details
+                const notes = [
+                    p.notasSalida ? `Salida: ${p.notasSalida}` : '',
+                    p.notasCorazon ? `Corazón: ${p.notasCorazon}` : '',
+                    p.notasFondo ? `Fondo: ${p.notasFondo}` : ''
+                ].filter(Boolean).join(' | ');
+
                 const div = document.createElement('div');
                 div.className = 'search-item';
                 div.innerHTML = `
-                    <img src="${img}" alt="Perfume">
-                    <div style="flex:1; overflow:hidden;">
-                        <p style="font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${p.nombre}</p>
-                        <p style="font-size:0.72rem; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${p.marca} | ${formattedPrice}</p>
+                    <div class="search-item-header" onclick="toggleItemDetails('${p.id}')">
+                        <img src="${img}" alt="Perfume">
+                        <div style="flex:1; overflow:hidden;">
+                            <p style="font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; margin-bottom: 2px;">${p.nombre}</p>
+                            <p style="font-size:0.72rem; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${p.marca} | <strong style="color:var(--accent); font-weight:700;">${formattedPrice}</strong></p>
+                        </div>
+                        <i class="fas fa-chevron-down" id="arrow-${p.id}" style="font-size: 0.75rem; color: var(--text-muted); transition: 0.3s;"></i>
                     </div>
-                    <button class="btn-copy-info" onclick="copyPerfumeDetails('${p.nombre}', '${p.marca}', '${formattedPrice}')" title="Copiar info para chat"><i class="fas fa-copy"></i></button>
+                    <div class="search-item-details" id="details-${p.id}">
+                        <div style="margin-bottom: 8px;">
+                            <span class="detail-pill">${p.familiaOlfativa || 'Lujo'}</span>
+                            <span class="detail-pill">${p.concentracion || 'EDP'}</span>
+                            <span class="detail-pill" style="background: ${p.stock > 0 ? '#e8f5e9' : '#ffebee'}; color: ${p.stock > 0 ? '#2e7d32' : '#d32f2f'};">Stock: ${p.stock || 0} un</span>
+                        </div>
+                        <p style="line-height: 1.4; margin-bottom: 6px; font-size: 0.74rem;"><strong>Descripción:</strong> ${p.descripcion || 'Sin descripción comercial.'}</p>
+                        ${notes ? `<p style="line-height: 1.4; margin-bottom: 8px; font-size: 0.72rem; color: #555;"><strong>Notas:</strong> ${notes}</p>` : ''}
+                        
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <button class="btn-assistant-action copy" onclick="copyPerfumeDetails('${p.id}')">
+                                <i class="far fa-copy"></i> Copiar Detalles
+                            </button>
+                            <button class="btn-assistant-action wa" onclick="sendPerfumeWa('${p.id}')">
+                                <i class="fab fa-whatsapp"></i> Compartir
+                            </button>
+                        </div>
+                    </div>
                 `;
                 container.appendChild(div);
             });
         }
 
-        // Copy Perfume Details
-        function copyPerfumeDetails(name, brand, price) {
-            const text = `🌟 Te recomiendo: ${name} de la marca ${brand}. Precio especial de Boutique: ${price}. ¡Es una fragancia espectacular!`;
+        // Toggle Details
+        function toggleItemDetails(id) {
+            const el = document.getElementById(`details-${id}`);
+            const arrow = document.getElementById(`arrow-${id}`);
+            if (el) el.classList.toggle('active');
+            if (arrow) {
+                if (arrow.style.transform === 'rotate(180deg)') {
+                    arrow.style.transform = 'rotate(0deg)';
+                } else {
+                    arrow.style.transform = 'rotate(180deg)';
+                }
+            }
+        }
+
+        // Copy Perfume Details with Image Link and Notes
+        function copyPerfumeDetails(id) {
+            const p = perfumesData.find(x => x.id === id);
+            if (!p) return;
+
+            const formattedPrice = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(p.precio);
+            const imgUrl = (p.imagenUrl && p.imagenUrl !== 'Sin imagen') ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
+
+            const text = `🌟 ¡TE RECOMIENDO ESTA JOYA DE NUESTRA BOUTIQUE! 🌟
+
+` +
+                         `🛍️ Producto: ${p.nombre}
+` +
+                         `🏷️ Marca: ${p.marca}
+` +
+                         `💧 Concentración: ${p.concentracion || 'EDP'}
+` +
+                         `👃 Familia Olfativa: ${p.familiaOlfativa || 'Fragancia Lujosa'}
+` +
+                         (p.notasSalida ? `🍋 Notas de Salida: ${p.notasSalida}
+` : '') +
+                         (p.notasCorazon ? `🌸 Notas de Corazón: ${p.notasCorazon}
+` : '') +
+                         (p.notasFondo ? `🪵 Notas de Fondo: ${p.notasFondo}
+` : '') +
+                         `💵 Precio especial Boutique: ${formattedPrice} COP
+
+` +
+                         `📷 Foto del Producto: ${imgUrl}
+
+` +
+                         `¿Te gustaría coordinar el envío de esta fragancia? ✨`;
+
             navigator.clipboard.writeText(text).then(() => {
-                alert('¡Info de fragancia copiada al portapapeles!');
+                alert('¡Ficha del producto copiada al portapapeles! Listo para enviar.');
             });
+        }
+
+        // Share directly on WhatsApp
+        function sendPerfumeWa(id) {
+            const p = perfumesData.find(x => x.id === id);
+            if (!p) return;
+
+            const formattedPrice = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(p.precio);
+            const imgUrl = (p.imagenUrl && p.imagenUrl !== 'Sin imagen') ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
+
+            const text = `🌟 ¡TE RECOMIENDO ESTA JOYA DE NUESTRA BOUTIQUE! 🌟
+
+` +
+                         `🛍️ Producto: ${p.nombre}
+` +
+                         `🏷️ Marca: ${p.marca}
+` +
+                         `💧 Concentración: ${p.concentracion || 'EDP'}
+` +
+                         `👃 Familia Olfativa: ${p.familiaOlfativa || 'Fragancia Lujosa'}
+` +
+                         (p.notasSalida ? `🍋 Notas de Salida: ${p.notasSalida}
+` : '') +
+                         (p.notasCorazon ? `🌸 Notas de Corazón: ${p.notasCorazon}
+` : '') +
+                         (p.notasFondo ? `🪵 Notas de Fondo: ${p.notasFondo}
+` : '') +
+                         `💵 Precio especial Boutique: ${formattedPrice} COP
+
+` +
+                         `📷 Foto del Producto: ${imgUrl}
+
+` +
+                         `¿Te gustaría coordinar el envío de esta fragancia? ✨`;
+
+            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
         }
 
         // Generate Quote
