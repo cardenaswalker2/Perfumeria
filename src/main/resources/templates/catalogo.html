@@ -262,9 +262,14 @@
                         <div><strong>Género:</strong> <span id="quickview-gender">Uniséx</span></div>
                     </div>
 
-                    <div style="display: flex; gap: 15px;">
-                        <button id="quickview-add-btn" class="btn-buy-card" style="flex: 1;"><i class="fa-solid fa-shopping-bag"></i> Añadir al carrito</button>
-                        <button id="quickview-fav-btn" class="card-action-btn" style="width: 50px; height: 50px; border: 1.5px solid #eae2d5; border-radius: 12px;" aria-label="Favorito"><i class="fa-regular fa-heart"></i></button>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 1.5rem; width: 100%;">
+                        <div style="display: flex; gap: 12px; width: 100%;">
+                            <button id="quickview-add-btn" class="btn-buy-card" style="flex: 1; padding: 14px;"><i class="fa-solid fa-shopping-bag"></i> Añadir al carrito</button>
+                            <button id="quickview-fav-btn" class="card-action-btn" style="width: 50px; height: 50px; border: 1.5px solid #eae2d5; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: none; cursor: pointer;" aria-label="Favorito"><i class="fa-regular fa-heart"></i></button>
+                        </div>
+                        <a id="quickview-more-btn" href="#" class="btn-secondary-card" style="display: block; text-align: center; padding: 12px; border: 1.5px solid var(--accent-primary); color: var(--accent-primary); border-radius: 12px; font-weight: 600; text-decoration: none; transition: all 0.3s; font-size: 0.9rem;">
+                            <i class="fa-solid fa-circle-info"></i> Ver Detalles Completos
+                        </a>
                     </div>
                 </div>
             </div>
@@ -750,6 +755,8 @@
                 addToCart(e, p.id);
                 closeQuickView(null);
             };
+            
+            document.getElementById('quickview-more-btn').href = '/producto/' + p.id;
 
             const favBtn = document.getElementById('quickview-fav-btn');
             const isFav = favoritesList.includes(p.id);
