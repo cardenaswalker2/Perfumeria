@@ -253,6 +253,91 @@
             font-size: 0.85rem;
             margin-bottom: 12px;
         }
+        .search-results {
+            max-height: 380px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-right: 5px;
+        }
+        .search-item {
+            display: flex;
+            flex-direction: column;
+            padding: 12px;
+            border-radius: 12px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        .search-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .search-item-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .search-item-header img {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .search-item-details {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f1f5f9;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: none;
+        }
+        .search-item-details.active {
+            display: block;
+        }
+        .detail-pill {
+            display: inline-block;
+            background: #f1f5f9;
+            color: var(--text);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 500;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-size: 0.7rem;
+        }
+        .btn-assistant-action {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-assistant-action.copy {
+            background: rgba(37, 99, 235, 0.08);
+            color: var(--accent);
+        }
+        .btn-assistant-action.copy:hover {
+            background: var(--accent);
+            color: #ffffff;
+        }
+        .btn-assistant-action.wa {
+            background: #25D366;
+            color: #ffffff;
+        }
+        .btn-assistant-action.wa:hover {
+            background: #1ebc5a;
+        }
 
 
 
