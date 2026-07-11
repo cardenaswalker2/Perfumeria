@@ -1301,7 +1301,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="pedido : ${pedidos}">
-                            <td th:text="${#strings.substring(pedido.id, 0, 8)}">ID</td>
+                            <td th:text="${pedido.id != null and #strings.length(pedido.id) > 8 ? #strings.substring(pedido.id, 0, 8) : pedido.id}">ID</td>
                             <td th:text="${pedido.nombreCliente}">Cliente</td>
                             <td th:text="${pedido.telefonoCliente}">WhatsApp</td>
                             <td th:text="${#temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm')}">Fecha</td>
@@ -1338,7 +1338,7 @@
                         <span class="client-badge-vip" th:if="${c.vip}">VIP</span>
                     </div>
                     <div class="client-header">
-                        <div class="client-pic" th:text="${#strings.substring(c.nombre, 0, 1)}">U</div>
+                        <div class="client-pic" th:text="${c.nombre != null and #strings.length(c.nombre) > 0 ? #strings.substring(c.nombre, 0, 1) : 'U'}">U</div>
                         <div>
                             <h4 style="color: #fff; margin: 0; font-size: 1rem;" th:text="${c.nombre}">Nombre</h4>
                             <p style="font-size: 0.78rem; color: var(--text-muted);" th:text="${c.email}">email</p>
