@@ -644,7 +644,7 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-top: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 14px 20px;
+            padding: 14px 20px calc(14px + env(safe-area-inset-bottom)) 20px;
             display: none;
             align-items: center;
             justify-content: space-between;
@@ -703,7 +703,7 @@
                 display: flex;
             }
             body {
-                padding-bottom: 85px !important;
+                padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
             }
         }
         

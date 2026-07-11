@@ -846,7 +846,7 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-top: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 12px 20px;
+            padding: 12px 20px calc(12px + env(safe-area-inset-bottom)) 20px;
             display: none;
             align-items: center;
             justify-content: space-between;
@@ -905,7 +905,7 @@
                 display: flex;
             }
             body {
-                padding-bottom: 80px !important;
+                padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
             }
         }
             </style>
@@ -1111,7 +1111,7 @@
     <div class="mobile-sticky-bar">
         <div class="sticky-price-info">
             <span class="sticky-price-label">Precio</span>
-            <span class="sticky-price" th:text="'$' + ${#numbers.formatInteger(perfume.precio, 3, 'POINT')} + ' COP'">$1.000.000</span>
+            <span class="sticky-price" th:text="'$' + ${perfume.precio != null ? #numbers.formatDecimal(perfume.precio, 0, 'POINT', 0, 'POINT') : '0'} + ' COP'">$1.000.000</span>
         </div>
         <form th:action="@{/carrito/agregar/{id}(id=${perfume.id})}" method="post" style="flex: 1; display: flex; margin: 0;">
             <input type="hidden" name="cantidad" value="1">
