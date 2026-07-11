@@ -24,6 +24,8 @@
 
     <!-- Toast notification container -->
     <div class="toast-container" id="toast-container"></div>
+    <!-- Sidebar Overlay for mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleMobileFilterDrawer()"></div>
 
     <!-- 1. HERO SECTION WITH PARALLAX & SCENT PARTICLES -->
     <section class="catalog-hero" id="catalog-hero">
@@ -73,7 +75,12 @@
                         <h3 style="font-family: var(--font-serif); font-size: 1.4rem; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 10px;">
                             <i class="fa-solid fa-sliders"></i> Filtros
                         </h3>
-                        <button onclick="clearAllFilters()" style="background: none; border: none; color: var(--accent-primary); font-size: 0.8rem; font-weight: 600; cursor: pointer; text-decoration: underline;">Limpiar todo</button>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <button onclick="clearAllFilters()" style="background: none; border: none; color: var(--accent-primary); font-size: 0.8rem; font-weight: 600; cursor: pointer; text-decoration: underline;">Limpiar todo</button>
+                            <button class="mobile-close-sidebar-btn" onclick="toggleMobileFilterDrawer()" aria-label="Cerrar filtros" style="background: none; border: none; font-size: 1.25rem; color: var(--text-dark); cursor: pointer; display: none; padding: 5px;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Accordion: Gender -->
@@ -143,6 +150,11 @@
                             <i class="fa-solid fa-chevron-down"></i>
                         </button>
                         <div class="filter-content" id="filter-stock-list"></div>
+                    </div>
+                    
+                    <!-- Sticky Bottom Button for mobile -->
+                    <div class="mobile-filter-footer">
+                        <button class="apply-filters-btn" onclick="toggleMobileFilterDrawer()">Ver Resultados</button>
                     </div>
                 </div>
             </aside>
@@ -972,7 +984,9 @@
 
         function toggleMobileFilterDrawer() {
             const sidebar = document.getElementById('catalog-sidebar');
-            sidebar.classList.toggle('active');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar) sidebar.classList.toggle('active');
+            if (overlay) overlay.classList.toggle('active');
         }
     </script>
 </body>
