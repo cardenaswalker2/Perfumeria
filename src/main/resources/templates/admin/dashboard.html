@@ -12,19 +12,28 @@
     <script th:src="@{/js/admin-editor.js}" defer></script>
     <style>
         :root { 
-            --accent: #C5A059; 
-            --accent-hover: #E5C158;
-            --bg: #0A0A0A; 
-            --bg-card: #141414;
-            --border: rgba(255,255,255,0.08); 
-            --text: #F5F5F5;
-            --text-muted: #888888;
+            --accent: #2563eb; /* Royal blue */
+            --accent-hover: #1d4ed8;
+            --bg: #f8fafc; /* Soft grey/blue background */
+            --bg-card: #ffffff; /* Pure white card */
+            --border: rgba(0,0,0,0.08); 
+            --text: #0f172a; /* Slate dark text */
+            --text-muted: #64748b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
         
         /* Layout */
-        .sidebar { width: 280px; background: rgba(0,0,0,0.5); backdrop-filter: blur(20px); border-right: 1px solid var(--border); padding: 3rem 2rem; position: fixed; height: 100vh; z-index: 100; }
+        .sidebar { 
+            width: 280px; 
+            background: #ffffff; 
+            border-right: 1px solid var(--border); 
+            padding: 3rem 2rem; 
+            position: fixed; 
+            height: 100vh; 
+            z-index: 100; 
+            box-shadow: 4px 0 20px rgba(0,0,0,0.02);
+        }
         .main-content { margin-left: 280px; flex: 1; padding: 3rem; overflow-y: auto; }
         
         /* Navigation Links */
@@ -94,22 +103,22 @@
         }
         .search-input {
             flex: 1;
-            background: #1a1a1a;
+            background: #f1f5f9;
             border: 1px solid var(--border);
             padding: 10px 15px;
             border-radius: 8px;
-            color: #fff;
+            color: var(--text);
             outline: none;
         }
         .search-input:focus {
             border-color: var(--accent);
         }
         .filter-select {
-            background: #1a1a1a;
+            background: #f1f5f9;
             border: 1px solid var(--border);
             padding: 10px;
             border-radius: 8px;
-            color: #fff;
+            color: var(--text);
             outline: none;
         }
 
@@ -257,7 +266,7 @@
     <aside class="sidebar">
         <div style="margin-bottom: 3.5rem; line-height: 1.1;">
             <span style="font-family: 'Cinzel', serif; font-size: 1.6rem; letter-spacing: 4px; font-weight: 600; color: var(--accent);">PROFUMI</span>
-            <span style="display: block; font-family: 'Outfit', sans-serif; font-size: 0.45rem; letter-spacing: 2px; font-weight: 500; color: #FFF; text-transform: uppercase; margin-top: 3px;">FRAGRANCE STORE</span>
+            <span style="display: block; font-family: 'Outfit', sans-serif; font-size: 0.45rem; letter-spacing: 2px; font-weight: 500; color: #111; text-transform: uppercase; margin-top: 3px;">FRAGRANCE STORE</span>
         </div>
         <nav>
             <a href="#" class="nav-btn active" onclick="switchAdminTab('panel-dashboard', this)"><i class="fas fa-chart-line"></i> Dashboard</a>
@@ -631,8 +640,8 @@
                     datasets: [{
                         label: 'Ventas Diarias (COP)',
                         data: [1200000, 1850000, 1450000, 2100000, 2800000, 3500000, 3100000],
-                        borderColor: '#C5A059',
-                        backgroundColor: 'rgba(197, 160, 89, 0.05)',
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.04)',
                         borderWidth: 2,
                         tension: 0.3,
                         fill: true
@@ -643,12 +652,12 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#888' }
+                            grid: { color: 'rgba(0, 0, 0, 0.04)' },
+                            ticks: { color: '#64748b' }
                         },
                         x: {
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#888' }
+                            grid: { color: 'rgba(0, 0, 0, 0.04)' },
+                            ticks: { color: '#64748b' }
                         }
                     },
                     plugins: {
