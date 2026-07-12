@@ -1029,7 +1029,7 @@
         </div>
         <div class="occasions-grid">
             <a th:href="@{/catalogo(categoria='Noche')}" class="occasion-card reveal">
-                <div class="occasion-bg" style="background-image: url('https://images.unsplash.com/photo-1515562141207-7a8efbf884ce?q=80&w=800&auto=format&fit=crop')"></div>
+                <div class="occasion-bg" th:style="'background-image: url(' + @{/css/1.jpg} + ');'"></div>
                 <span class="occasion-number">01</span>
                 <div class="occasion-content">
                     <span class="occasion-label">Noche</span>
@@ -1039,7 +1039,7 @@
                 </div>
             </a>
             <a th:href="@{/catalogo(categoria='Trabajo')}" class="occasion-card reveal">
-                <div class="occasion-bg" style="background-image: url('https://images.unsplash.com/photo-1488161628813-04466f872be2?q=80&w=800&auto=format&fit=crop')"></div>
+                <div class="occasion-bg" th:style="'background-image: url(' + @{/css/2.jpg} + ');'"></div>
                 <span class="occasion-number">02</span>
                 <div class="occasion-content">
                     <span class="occasion-label">Oficina</span>
@@ -1049,7 +1049,7 @@
                 </div>
             </a>
             <a th:href="@{/catalogo(categoria='Diario')}" class="occasion-card reveal">
-                <div class="occasion-bg" style="background-image: url('https://images.unsplash.com/photo-1496661415325-ef852f9e8e7c?q=80&w=800&auto=format&fit=crop')"></div>
+                <div class="occasion-bg" th:style="'background-image: url(' + @{/css/3.jpg} + ');'"></div>
                 <span class="occasion-number">03</span>
                 <div class="occasion-content">
                     <span class="occasion-label">Día</span>
@@ -1252,7 +1252,7 @@
     <section class="ai-section" id="nova" style="background:#FAF6F1;">
         <div class="ai-grid">
             <div class="ai-visual reveal">
-                <img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=800" alt="Nova AI Technology">
+                <img th:src="@{/css/4.jpg}" alt="Nova AI Technology">
                 <div class="ai-card glass-panel-light">
                     <div class="ai-card-header">
                         <i class="fas fa-robot"></i> Nova AI Engine
@@ -1296,23 +1296,23 @@
         </div>
         <div class="pinterest-luxury-gallery">
             <div class="pinterest-gallery-item reveal">
-                <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=500" alt="Botella premium">
+                <img th:src="@{/css/5.jpg}" alt="Botella premium">
                 <div class="pinterest-gallery-info"><span>Perfumes</span><h4>Cremas & Elixires</h4></div>
             </div>
             <div class="pinterest-gallery-item reveal">
-                <img src="https://images.unsplash.com/photo-1610461888750-10bfc601b874?q=80&w=500" alt="Esencias e ingredientes">
+                <img th:src="@{/css/6.jpg}" alt="Esencias e ingredientes">
                 <div class="pinterest-gallery-info"><span>Ingredientes</span><h4>Rosas y Cítricos</h4></div>
             </div>
             <div class="pinterest-gallery-item reveal">
-                <img src="https://images.unsplash.com/photo-1541604193435-22287d32c2c2?q=80&w=500" alt="Catas privadas">
+                <img th:src="@{/css/7.jpg}" alt="Catas privadas">
                 <div class="pinterest-gallery-info"><span>Eventos</span><h4>Catas Olfativas</h4></div>
             </div>
             <div class="pinterest-gallery-item reveal">
-                <img src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?q=80&w=500" alt="Boutique Cartagena">
+                <img th:src="@{/css/8.jpg}" alt="Boutique Cartagena">
                 <div class="pinterest-gallery-info"><span>Boutique</span><h4>Ciudad Amurallada</h4></div>
             </div>
             <div class="pinterest-gallery-item reveal">
-                <img src="https://images.unsplash.com/photo-1608528577891-eb05fce3674c?q=80&w=500" alt="Packaging de lujo">
+                <img th:src="@{/css/9.jpg}" alt="Packaging de lujo">
                 <div class="pinterest-gallery-info"><span>Experiencia</span><h4>Empaque Firmado</h4></div>
             </div>
         </div>
