@@ -23,6 +23,12 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
         
+
+        /* Hide store navbar and editor floating bar inside admin console */
+        .navbar, .admin-floating-bar {
+            display: none !important;
+        }
+
         /* Layout */
         .sidebar { 
             width: 280px; 
@@ -604,7 +610,7 @@
     </main>
 
     <!-- Professional 11-Tab Drawer (Included inside Dashboard too) -->
-    <div th:replace="~{fragments/chatbot :: chatbot}"></div>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
     <!-- Script for Tab switcher & Charts -->
     <script>
