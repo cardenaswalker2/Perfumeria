@@ -854,7 +854,7 @@
                 rowConcentration += `<td style="padding:1rem; text-align:center; border-bottom:1px solid #f5f2eb;">${p.concentracion || 'EDP'}</td>`;
                 rowGender += `<td style="padding:1rem; text-align:center; border-bottom:1px solid #f5f2eb;">${p.genero}</td>`;
                 rowNotes += `<td style="padding:1rem; text-align:center; font-size:0.8rem; border-bottom:1px solid #f5f2eb;">${(p.notasOlfativas || []).join(', ')}</td>`;
-                rowActions += `<td style="padding:1rem; text-align:center; border-bottom:none;"><button class="btn-buy-card" onclick="addToCart('${p.id}')" style="padding: 0.6rem 1.2rem; font-size: 0.8rem; width: auto; margin: 0 auto; display: inline-flex;"><i class="fa-solid fa-shopping-bag"></i> Comprar</button></td>`;
+                rowActions += `<td style="padding:1rem; text-align:center; border-bottom:none;"><button class="btn-buy-card" onclick="addToCart(event, '${p.id}')" style="padding: 0.6rem 1.2rem; font-size: 0.8rem; width: auto; margin: 0 auto; display: inline-flex;"><i class="fa-solid fa-shopping-bag"></i> Comprar</button></td>`;
             });
 
             rowHeader += '</tr>'; rowPrice += '</tr>'; rowBrand += '</tr>'; rowFamily += '</tr>'; rowLongevity += '</tr>'; rowConcentration += '</tr>'; rowGender += '</tr>'; rowNotes += '</tr>'; rowActions += '</tr>';
