@@ -114,21 +114,45 @@
                 </span>
             </h1>
 
-            <!-- Description -->
-            <p
-                style="color: #777; font-size: 1.15rem; line-height: 1.9; max-width: 550px; margin: 0 auto 2.5rem; animation: fade-in-up 0.6s ease 0.4s both;">
-                Tu pedido ha sido registrado exitosamente. Ahora solo falta un paso: enviar los detalles a nuestro
-                asesor por WhatsApp para coordinar el pago y la entrega.
-            </p>
-
-            <!-- WhatsApp CTA Button -->
-            <div style="animation: fade-in-up 0.6s ease 0.6s both;">
-                <a th:href="${whatsappUrl}" target="_blank"
-                    style="display: inline-flex; align-items: center; gap: 1rem; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; padding: 1.3rem 3rem; border-radius: 16px; text-decoration: none; font-weight: 700; font-size: 1.05rem; transition: all 0.3s; box-shadow: 0 15px 40px rgba(34,197,94,0.35); text-transform: uppercase; letter-spacing: 1.5px; position: relative; overflow: hidden; font-family: 'Outfit', sans-serif;">
-                    <i class="fab fa-whatsapp" style="font-size: 1.5rem;"></i>
-                    <span>Enviar Pedido por WhatsApp</span>
-                </a>
-                <p style="font-size: 0.85rem; color: #aaa; margin-top: 1rem;">Un asesor te responderá en minutos</p>
+            <!-- Description & Info Block (Luxurious Black & Gold Design) -->
+            <div style="max-width: 600px; margin: 0 auto 2.5rem; background: #ffffff; padding: 2.5rem 2rem; border-radius: 28px; border: 1px solid rgba(244, 154, 31, 0.18); box-shadow: 0 15px 45px rgba(0,0,0,0.03); text-align: center; animation: fade-in-up 0.6s ease 0.4s both;">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: #1a1a1a; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-check-circle" style="color: #22c55e;"></i> ¡Solicitud recibida con éxito!
+                </h2>
+                <p style="color: #555; font-size: 1.02rem; line-height: 1.8; margin-bottom: 1.5rem; font-weight: 500;">
+                    Hemos recibido tu solicitud de compra correctamente en nuestro sistema boutique.
+                </p>
+                <p style="color: #444; font-size: 0.98rem; line-height: 1.8; margin-bottom: 1.8rem;">
+                    Uno de nuestros asesores expertos revisará los detalles de tu pedido y se comunicará contigo directamente por WhatsApp en los próximos minutos para confirmar la información, resolver cualquier duda y finalizar el proceso.
+                </p>
+                
+                <!-- Status Alert Box -->
+                <div style="background: #fff9f2; border-left: 4px solid var(--accent-primary); padding: 1.2rem; border-radius: 12px; text-align: left; margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(244,154,31,0.03);">
+                    <p style="font-size: 0.92rem; color: #b7791f; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                        <i class="fas fa-mobile-alt"></i> 📱 No es necesario que envíes ningún mensaje.
+                    </p>
+                    <p style="font-size: 0.85rem; color: #555; line-height: 1.5; margin: 0;">
+                        Solo espera el contacto directo de nuestro asesor en tu WhatsApp registrado.
+                    </p>
+                </div>
+                
+                <p style="font-size: 0.82rem; color: #999; line-height: 1.6; margin-bottom: 2.2rem; font-style: italic;">
+                    Si presentas algún inconveniente o tienes alguna consulta urgente, puedes escribirnos directamente mediante nuestro canal de atención. Gracias por confiar en Profumi.
+                </p>
+                
+                <!-- Action Button -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                    <a href="/catalogo" 
+                       style="display: inline-flex; align-items: center; gap: 0.8rem; background: linear-gradient(135deg, #111111 0%, #2d2d2d 100%); color: #fff; padding: 1.1rem 2.8rem; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 0.92rem; transition: all 0.3s; box-shadow: 0 10px 25px rgba(0,0,0,0.15); text-transform: uppercase; letter-spacing: 1.2px; font-family: 'Outfit', sans-serif;">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Seguir Comprando</span>
+                    </a>
+                    
+                    <!-- Response Time Badge -->
+                    <span style="font-size: 0.8rem; color: var(--accent-primary); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 6px; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="far fa-clock"></i> Tiempo estimado de contacto: 5 a 15 minutos
+                    </span>
+                </div>
             </div>
 
             <!-- Order Details Card -->
@@ -211,10 +235,8 @@
                         style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; box-shadow: 0 10px 30px rgba(244,154,31,0.2);">
                         <i class="fab fa-whatsapp" style="color: #fff; font-size: 1.3rem;"></i>
                     </div>
-                    <h4 style="font-size: 1.3rem; color: #fff; margin-bottom: 0.8rem; font-weight: 700;">Confirmación
-                        Inmediata</h4>
-                    <p style="color: #aaa; line-height: 1.7; font-size: 0.95rem; margin: 0;">Recibes confirmación del
-                        asesor vía chat en menos de 5 minutos. Validamos tu pedido y disponibilidad.</p>
+                    <h4 style="font-size: 1.3rem; color: #fff; margin-bottom: 0.8rem; font-weight: 700;">Contacto del Asesor</h4>
+                    <p style="color: #aaa; line-height: 1.7; font-size: 0.95rem; margin: 0;">Nuestro asesor experto se comunicará contigo vía WhatsApp en menos de 15 minutos para formalizar el pedido.</p>
                 </div>
 
                 <!-- Step 2 -->
