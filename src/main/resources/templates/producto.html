@@ -5,532 +5,1705 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${title}">Producto | Profumi</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --accent-primary: #d4a574;
+            --accent-secondary: #c4956a;
+            --accent-tertiary: #e8c9a0;
+            --text-dark: #111111;
+            --text-medium: #333333;
+            --text-light: #4f4f4f;
+            --text-muted: #767676;
+            --bg-cream: #faf8f5;
+            --bg-warm: #f5f0eb;
+            --bg-white: #ffffff;
+            --border-light: #e8e0d8;
+            --border-medium: #d4ccc4;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 32px rgba(0,0,0,0.06);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.08);
+            --shadow-xl: 0 30px 80px rgba(0,0,0,0.12);
+            --shadow-accent: 0 12px 40px rgba(212,165,116,0.25);
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 28px;
+            --radius-xl: 40px;
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --transition-slow: 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: var(--bg-cream);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+        }
+
+        @keyframes float-reverse {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(12px) rotate(-1deg); }
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(212,165,116,0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(212,165,116,0); }
+            100% { box-shadow: 0 0 0 0 rgba(212,165,116,0); }
+        }
+
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scale-in {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+
+        /* ===== BREADCRUMB ===== */
+        .breadcrumb-section {
+            padding-top: 140px;
+            padding-bottom: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+            font-weight: 500;
+        }
+
+        .breadcrumb-nav a:hover {
+            color: var(--accent-primary);
+        }
+
+        .breadcrumb-nav i {
+            font-size: 0.55rem;
+            color: var(--border-medium);
+        }
+
+        .breadcrumb-current {
+            color: var(--accent-primary);
+            font-weight: 700;
+        }
+
+        .breadcrumb-product {
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        /* ===== MAIN PRODUCT SECTION ===== */
+        .product-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 2rem 6rem;
+        }
+
+        .product-columns {
+            display: flex;
+            gap: 5rem;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .product-column {
+            flex: 1;
+            min-width: 400px;
+            max-width: 600px;
+        }
+
+        .product-column-info {
+            flex: 1;
+            min-width: 400px;
+            max-width: 650px;
+        }
+
+        /* ===== IMAGE COLUMN ===== */
+        .image-sticky {
+            position: sticky;
+            top: 100px;
+        }
+
+        .image-main-wrapper {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(0,0,0,0.04);
+            background: var(--bg-white);
+        }
+
+        .image-main {
+            width: 100%;
+            display: block;
+            transition: transform var(--transition-slow);
+        }
+
+        .image-main-wrapper:hover .image-main {
+            transform: scale(1.05);
+        }
+
+        .zoom-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.02);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+            cursor: crosshair;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .image-main-wrapper:hover .zoom-overlay {
+            opacity: 1;
+        }
+
+        .zoom-hint {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all var(--transition-smooth);
+        }
+
+        .image-main-wrapper:hover .zoom-hint {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .zoom-hint i {
+            color: var(--accent-primary);
+        }
+
+        /* Badges */
+        .product-badges {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 5;
+        }
+
+        .badge-new {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: #fff;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(34,197,94,0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .badge-discount {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #fff;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(239,68,68,0.3);
+        }
+
+        /* Wishlist */
+        .wishlist-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0,0,0,0.05);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--border-medium);
+            transition: all var(--transition-smooth);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+        }
+
+        .wishlist-btn:hover {
+            color: #ef4444;
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(239,68,68,0.2);
+        }
+
+        .wishlist-btn.active {
+            color: #ef4444;
+            background: #fef2f2;
+        }
+
+        /* Thumbnails */
+        .thumbnails-row {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            scrollbar-width: none;
+        }
+
+        .thumbnails-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .thumb {
+            min-width: 80px;
+            height: 80px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            position: relative;
+        }
+
+        .thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-smooth);
+        }
+
+        .thumb:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .thumb:hover img {
+            transform: scale(1.1);
+        }
+
+        .thumb.active {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(212,165,116,0.15);
+        }
+
+        .thumb-video {
+            min-width: 80px;
+            height: 80px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--bg-warm) 0%, var(--bg-cream) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            border: 2px dashed var(--border-light);
+        }
+
+        .thumb-video:hover {
+            border-color: var(--accent-primary);
+            background: linear-gradient(135deg, var(--bg-cream) 0%, #fff5e8 100%);
+        }
+
+        .thumb-video i {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            transition: color var(--transition-fast);
+        }
+
+        .thumb-video:hover i {
+            color: var(--accent-primary);
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            margin-top: 2.5rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .trust-badge {
+            text-align: center;
+            padding: 1.8rem 1rem;
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trust-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-tertiary));
+            opacity: 0;
+            transition: opacity var(--transition-smooth);
+        }
+
+        .trust-badge:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(212,165,116,0.1);
+        }
+
+        .trust-badge:hover::before {
+            opacity: 1;
+        }
+
+        .trust-icon-wrapper {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.8rem;
+            transition: all var(--transition-fast);
+        }
+
+        .trust-badge:hover .trust-icon-wrapper {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .trust-icon-wrapper i {
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+            transition: color var(--transition-fast);
+        }
+
+        .trust-badge:hover .trust-icon-wrapper i {
+            color: #fff;
+        }
+
+        .trust-badge-title {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .trust-badge-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .product-columns {
+                gap: 2.5rem;
+            }
+
+            .product-column,
+            .product-column-info {
+                min-width: 100%;
+                max-width: 100%;
+            }
+
+            .image-sticky {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .breadcrumb-section {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+                padding-top: 110px;
+            }
+
+            .product-section {
+                padding: 1rem 1.5rem 3rem;
+            }
+
+            .image-main-wrapper {
+                border-radius: var(--radius-md);
+            }
+
+            .trust-badges {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+
+            .trust-badge {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                text-align: left;
+                padding: 1.2rem;
+            }
+
+            .trust-icon-wrapper {
+                margin: 0;
+                flex-shrink: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .breadcrumb-nav {
+                font-size: 0.75rem;
+            }
+
+            .product-badges {
+                top: 16px;
+                left: 16px;
+            }
+
+            .wishlist-btn {
+                top: 16px;
+                right: 16px;
+                width: 42px;
+                height: 42px;
+            }
+
+            .thumb,
+            .thumb-video {
+                min-width: 65px;
+                height: 65px;
+            }
+        }
+    </style>
 </head>
 
-<body style="background: #faf8f5; font-family: 'Outfit', sans-serif; overflow-x: hidden;">
+<body>
 
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <!-- BREADCRUMB NAVIGATION -->
-    <nav class="breadcrumb-container"
-        style="padding-top: 130px; padding-bottom: 1rem; max-width: 1400px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem;">
-        <div style="display: flex; align-items: center; gap: 0.8rem; font-size: 0.85rem; color: #999; flex-wrap: wrap;">
-            <a th:href="@{/}" style="color: #999; text-decoration: none; transition: color 0.3s;">Inicio</a>
-            <i class="fas fa-chevron-right" style="font-size: 0.6rem;"></i>
-            <a th:href="@{/catalogo}" style="color: #999; text-decoration: none; transition: color 0.3s;">Catálogo</a>
-            <i class="fas fa-chevron-right" style="font-size: 0.6rem;"></i>
-            <span style="color: var(--accent-primary); font-weight: 600;" th:text="${perfume.marca}">Marca</span>
-            <i class="fas fa-chevron-right" style="font-size: 0.6rem;"></i>
-            <span style="color: #333; font-weight: 700;" th:text="${perfume.nombre}">Nombre</span>
+    <!-- BREADCRUMB -->
+    <nav class="breadcrumb-section">
+        <div class="breadcrumb-nav">
+            <a th:href="@{/}">Inicio</a>
+            <i class="fas fa-chevron-right"></i>
+            <a th:href="@{/catalogo}">Catálogo</a>
+            <i class="fas fa-chevron-right"></i>
+            <span class="breadcrumb-current" th:text="${perfume.marca}">Marca</span>
+            <i class="fas fa-chevron-right"></i>
+            <span class="breadcrumb-product" th:text="${perfume.nombre}">Nombre</span>
         </div>
     </nav>
 
-    <!-- MAIN PRODUCT SECTION -->
-    <section class="main-product-section" style="max-width: 1400px; margin: 0 auto; padding: 2rem 2rem 6rem;">
-        <div class="product-columns-wrapper" style="display: flex; gap: 5rem; flex-wrap: wrap; align-items: flex-start;">
+    <!-- MAIN PRODUCT -->
+    <section class="product-section">
+        <div class="product-columns">
 
-            <!-- IMAGE COLUMN MEJORADA -->
-            <div style="flex: 1; min-width: 400px; max-width: 600px;">
-                <div style="position: sticky; top: 100px;">
+            <!-- IMAGE COLUMN -->
+            <div class="product-column">
+                <div class="image-sticky">
 
-                    <!-- Main Image Container -->
-                    <div class="product-image-main"
-                        style="position: relative; border-radius: 32px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05); background: #fff;">
-                        <img th:src="${perfume.imagenUrl}" alt="Perfume"
-                            style="width: 100%; display: block; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);"
-                            class="main-product-img">
+                    <!-- Main Image -->
+                    <div class="image-main-wrapper animate-on-scroll">
+                        <img th:src="${perfume.imagenUrl}" alt="Perfume" class="image-main" id="main-product-img">
 
-                        <!-- Zoom Lens Overlay (aparece en hover) -->
-                        <div class="zoom-lens"
-                            style="position: absolute; inset: 0; background: rgba(0,0,0,0.02); opacity: 0; transition: opacity 0.3s; cursor: crosshair; display: flex; align-items: center; justify-content: center;">
-                            <span
-                                style="background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 0.8rem 1.5rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                                <i class="fas fa-search-plus" style="margin-right: 0.5rem;"></i>
-                                Pasa el mouse para zoom
-                            </span>
+                        <div class="zoom-overlay">
+                            <div class="zoom-hint">
+                                <i class="fas fa-search-plus"></i>
+                                <span>Pasa el mouse para zoom</span>
+                            </div>
                         </div>
 
-                        <!-- Badges flotantes -->
-                        <div
-                            style="position: absolute; top: 25px; left: 25px; display: flex; flex-direction: column; gap: 10px;">
-                            <div th:if="${false}"
-                                style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #fff; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 20px rgba(34,197,94,0.3); display: flex; align-items: center; gap: 0.4rem;">
+                        <!-- Badges -->
+                        <div class="product-badges">
+                            <div th:if="${false}" class="badge-new">
                                 <i class="fas fa-sparkles" style="font-size: 0.7rem;"></i>
                                 Nuevo
                             </div>
-                            <div th:if="${false}"
-                                style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #fff; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 20px rgba(239,68,68,0.3);">
+                            <div th:if="${false}" class="badge-discount">
                                 -<span th:text="${false}">20</span>% OFF
                             </div>
                         </div>
 
-                        <!-- Wishlist Button -->
-                        <button onclick="toggleWishlist()" class="wishlist-btn"
-                            style="position: absolute; top: 25px; right: 25px; width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.05); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #ccc; transition: all 0.3s; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">
-                            <i class="fas fa-heart"></i>
+                        <!-- Wishlist -->
+                        <button onclick="toggleWishlist()" class="wishlist-btn" id="wishlist-btn">
+                            <i class="far fa-heart"></i>
                         </button>
                     </div>
 
-                    <!-- Thumbnail Gallery -->
-                    <div
-                        style="margin-top: 1.5rem; display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem;">
-                        <div class="thumb active"
-                            style="min-width: 80px; height: 80px; border-radius: 16px; overflow: hidden; border: 2px solid var(--accent-primary); cursor: pointer; transition: all 0.3s; position: relative;">
-                            <img th:src="${perfume.imagenUrl}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <!-- Thumbnails -->
+                    <div class="thumbnails-row animate-on-scroll delay-1">
+                        <div class="thumb active" onclick="switchImage(this)">
+                            <img th:src="${perfume.imagenUrl}">
                         </div>
-                        <div class="thumb" th:if="${false}"
-                            style="min-width: 80px; height: 80px; border-radius: 16px; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: all 0.3s; opacity: 0.6;">
-                            <img th:src="${false}" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="thumb" th:if="${false}" onclick="switchImage(this)">
+                            <img th:src="${false}">
                         </div>
-                        <div class="thumb" th:if="${false}"
-                            style="min-width: 80px; height: 80px; border-radius: 16px; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: all 0.3s; opacity: 0.6;">
-                            <img th:src="${false}" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="thumb" th:if="${false}" onclick="switchImage(this)">
+                            <img th:src="${false}">
                         </div>
-                        <div class="thumb"
-                            style="min-width: 80px; height: 80px; border-radius: 16px; background: linear-gradient(135deg, #f5f5f5 0%, #eee 100%); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; border: 2px dashed #ddd;">
-                            <i class="fas fa-video" style="color: #aaa; font-size: 1.2rem;"></i>
+                        <div class="thumb-video" onclick="playVideo()">
+                            <i class="fas fa-video"></i>
                         </div>
                     </div>
 
-                    <!-- Trust Badges Grid -->
-                    <div class="trust-badges-grid" style="margin-top: 2.5rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
-                        <div class="trust-badge"
-                            style="text-align: center; padding: 1.5rem 1rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s;">
-                            <div
-                                style="width: 50px; height: 50px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.8rem;">
-                                <i class="fas fa-certificate"
-                                    style="color: var(--accent-primary); font-size: 1.2rem;"></i>
+                    <!-- Trust Badges -->
+                    <div class="trust-badges animate-on-scroll delay-2">
+                        <div class="trust-badge">
+                            <div class="trust-icon-wrapper">
+                                <i class="fas fa-certificate"></i>
                             </div>
-                            <p
-                                style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #333; letter-spacing: 1px; margin: 0;">
-                                Original</p>
-                            <p style="font-size: 0.7rem; color: #999; margin-top: 0.3rem;">100% Auténtico</p>
+                            <div>
+                                <p class="trust-badge-title">Original</p>
+                                <p class="trust-badge-desc">100% Auténtico</p>
+                            </div>
                         </div>
-                        <div class="trust-badge"
-                            style="text-align: center; padding: 1.5rem 1rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s;">
-                            <div
-                                style="width: 50px; height: 50px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.8rem;">
-                                <i class="fas fa-flask" style="color: var(--accent-primary); font-size: 1.2rem;"></i>
+                        <div class="trust-badge">
+                            <div class="trust-icon-wrapper">
+                                <i class="fas fa-flask"></i>
                             </div>
-                            <p
-                                style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #333; letter-spacing: 1px; margin: 0;">
-                                Extracto</p>
-                            <p style="font-size: 0.7rem; color: #999; margin-top: 0.3rem;">Alta Concentración</p>
+                            <div>
+                                <p class="trust-badge-title">Extracto</p>
+                                <p class="trust-badge-desc">Alta Concentración</p>
+                            </div>
                         </div>
-                        <div class="trust-badge"
-                            style="text-align: center; padding: 1.5rem 1rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.3s;">
-                            <div
-                                style="width: 50px; height: 50px; background: linear-gradient(135deg, #fff9f2 0%, #fff0e0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.8rem;">
-                                <i class="fas fa-truck-fast"
-                                    style="color: var(--accent-primary); font-size: 1.2rem;"></i>
+                        <div class="trust-badge">
+                            <div class="trust-icon-wrapper">
+                                <i class="fas fa-truck-fast"></i>
                             </div>
-                            <p
-                                style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #333; letter-spacing: 1px; margin: 0;">
-                                Express</p>
-                            <p style="font-size: 0.7rem; color: #999; margin-top: 0.3rem;">24-48 Horas</p>
+                            <div>
+                                <p class="trust-badge-title">Express</p>
+                                <p class="trust-badge-desc">24-48 Horas</p>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
-
-            <!-- INFO COLUMN MEJORADA -->
-            <div style="flex: 1; min-width: 400px; max-width: 650px;">
+                        <!-- INFO COLUMN -->
+            <div class="product-column-info">
 
                 <!-- Brand & Title -->
-                <div style="margin-bottom: 1.5rem;">
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
-                        <p style="font-size: 0.9rem; letter-spacing: 3px; color: var(--accent-primary); font-weight: 700; text-transform: uppercase; margin: 0;"
-                            th:text="${perfume.marca}">Marca</p>
-                        <div
-                            style="display: flex; align-items: center; gap: 0.3rem; background: #f8f8f8; padding: 0.3rem 0.8rem; border-radius: 50px;">
-                            <i class="fas fa-star" style="color: #fbbf24; font-size: 0.75rem;"></i>
-                            <span style="font-size: 0.8rem; font-weight: 700; color: #333;">4.9</span>
-                            <span style="font-size: 0.75rem; color: #999;">(128 reseñas)</span>
+                <div class="product-header animate-on-scroll">
+                    <div class="product-meta">
+                        <p class="product-brand" th:text="${perfume.marca}">Marca</p>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span class="rating-value">4.9</span>
+                            <span class="rating-count">(128 reseñas)</span>
                         </div>
                     </div>
 
-                    <h1 style="font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: 1rem; line-height: 1.1; color: #1a1a1a; font-weight: 700;"
-                        th:text="${perfume.nombre}">Nombre del Perfume</h1>
+                    <h1 class="product-title" th:text="${perfume.nombre}">Nombre del Perfume</h1>
 
-                    <!-- Género Badge -->
-                    <div th:if="${perfume.genero != null}"
-                        style="display: inline-flex; align-items: center; gap: 0.5rem; background: #f8f8f8; padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 1.5rem;">
-                        <i th:class="${perfume.genero == 'Hombre' ? 'fas fa-mars' : (perfume.genero == 'Mujer' ? 'fas fa-venus' : 'fas fa-venus-mars')}"
-                            style="color: var(--accent-primary);"></i>
+                    <div class="product-gender" th:if="${perfume.genero != null}">
+                        <i th:class="${perfume.genero == 'Hombre' ? 'fas fa-mars' : (perfume.genero == 'Mujer' ? 'fas fa-venus' : 'fas fa-venus-mars')}"></i>
                         <span th:text="${perfume.genero}">Género</span>
                     </div>
                 </div>
 
-                <!-- Price Section -->
-                <div style="margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid #eee;">
-                    <div style="display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap;">
-                        <p style="font-size: 2.8rem; font-weight: 700; color: #1a1a1a; margin: 0; line-height: 1;"
-                            th:text="'$' + ${perfume.precio != null ? #numbers.formatDecimal(perfume.precio, 0, 'POINT', 0, 'POINT') : '0'} + ' COP'">
-                            $0</p>
-                        <p th:if="${false}"
-                            style="font-size: 1.5rem; color: #aaa; text-decoration: line-through; margin: 0; font-weight: 500;"
-                            th:text="'$0 COP'">
-                            $0</p>
-                        <div th:if="${false}"
-                            style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: #fff; padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 700;">
+                <!-- Price -->
+                <div class="product-price-section animate-on-scroll delay-1">
+                    <div class="price-row">
+                        <p class="price-current" th:text="'$' + ${perfume.precio != null ? #numbers.formatDecimal(perfume.precio, 0, 'POINT', 0, 'POINT') : '0'} + ' COP'">$0</p>
+                        <p class="price-old" th:if="${false}" th:text="'$0 COP'">$0</p>
+                        <div class="price-save" th:if="${false}">
                             Ahorras <span>$0</span>
                         </div>
                     </div>
-                    <p
-                        style="color: #22c55e; font-size: 0.9rem; margin-top: 0.8rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
+                    <p class="price-stock">
                         <i class="fas fa-check-circle"></i>
                         Disponible en stock — Envío inmediato
                     </p>
                 </div>
 
                 <!-- Add to Cart Form -->
-                <form th:action="@{/carrito/agregar/{id}(id=${perfume.id})}" method="post" class="product-cart-form"
-                    style="margin-bottom: 3rem;">
-                    <div class="cart-buttons-container" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <!-- Quantity Selector -->
-                        <div
-                            style="display: flex; align-items: center; background: #f8f8f8; border-radius: 16px; border: 2px solid #eee; overflow: hidden;">
-                            <button type="button" onclick="updateQty(-1)"
-                                style="width: 50px; height: 56px; background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #999; transition: all 0.3s; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-minus" style="font-size: 0.7rem;"></i>
+                <form th:action="@{/carrito/agregar/{id}(id=${perfume.id})}" method="post" class="product-cart-form animate-on-scroll delay-2" id="product-cart-form">
+                    <div class="cart-row">
+                        <!-- Quantity -->
+                        <div class="qty-selector">
+                            <button type="button" class="qty-btn" onclick="updateQty(-1)">
+                                <i class="fas fa-minus"></i>
                             </button>
-                            <input type="number" name="cantidad" id="qty-input" value="1" min="1" max="10"
-                                style="width: 60px; height: 56px; border: none; background: none; text-align: center; font-weight: 700; font-size: 1.1rem; color: #333; outline: none; -moz-appearance: textfield; font-family: 'Outfit', sans-serif;">
-                            <button type="button" onclick="updateQty(1)"
-                                style="width: 50px; height: 56px; background: none; border: none; cursor: pointer; font-size: 1.2rem; color: #999; transition: all 0.3s; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-plus" style="font-size: 0.7rem;"></i>
+                            <input type="number" name="cantidad" id="qty-input" value="1" min="1" max="10">
+                            <button type="button" class="qty-btn" onclick="updateQty(1)">
+                                <i class="fas fa-plus"></i>
                             </button>
                         </div>
 
                         <!-- Add Button -->
-                        <button type="submit" class="add-to-cart-main"
-                            style="flex: 1; min-width: 250px; padding: 1rem 2rem; background: linear-gradient(135deg, var(--accent-primary) 0%, #e8890c 100%); color: #fff; border: none; border-radius: 16px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-family: 'Outfit', sans-serif; box-shadow: 0 10px 30px rgba(244,154,31,0.3); position: relative; overflow: hidden;">
-                            <i class="fas fa-shopping-bag"></i>
-                            <span>Añadir a mi bolsa</span>
+                        <button type="submit" class="btn-add-cart" id="btn-add-cart">
+                            <span class="btn-icon"><i class="fas fa-shopping-bag"></i></span>
+                            <span class="btn-text">Añadir a mi bolsa</span>
+                            <span class="btn-shine"></span>
                         </button>
                     </div>
 
-                    <!-- Shipping Info -->
-                    <div
-                        style="margin-top: 1rem; display: flex; align-items: center; gap: 0.8rem; color: #888; font-size: 0.85rem;">
-                        <i class="fas fa-truck" style="color: var(--accent-primary);"></i>
+                    <div class="shipping-info">
+                        <i class="fas fa-truck"></i>
                         <span>Envío gratis en compras superiores a $300.000 COP</span>
                     </div>
                 </form>
 
-                <!-- Descripción Comercial -->
-                <div style="margin-bottom: 2.5rem;">
-                    <p style="color: #444; font-size: 1.1rem; line-height: 1.9; margin: 0; font-weight: 300;"
-                        th:text="${perfume.descripcion}">Descripción completa del perfume...</p>
+                <!-- Description -->
+                <div class="product-description animate-on-scroll delay-3">
+                    <p th:text="${perfume.descripcion}">Descripción completa del perfume...</p>
                 </div>
 
-                <!-- Pirámide Olfativa Detallada -->
-                <div class="olfactory-pyramid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem; background: #fff; padding: 2rem; border-radius: 24px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 10px 40px rgba(0,0,0,0.02);">
-                    <div>
-                        <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-primary); font-weight: 700; margin-bottom: 1rem;"><i class="fas fa-leaf"></i> Notas de Salida</h4>
-                        <ul style="padding-left: 1.2rem; color: #555; font-size: 0.95rem; line-height: 1.8; margin: 0;" th:if="${perfume.notasSalida != null}">
-                            <li th:each="nota : ${#strings.arraySplit(perfume.notasSalida, ',')}" th:text="${#strings.trim(nota)}">Almendra</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-primary); font-weight: 700; margin-bottom: 1rem;"><i class="fas fa-heart"></i> Notas de Corazón</h4>
-                        <ul style="padding-left: 1.2rem; color: #555; font-size: 0.95rem; line-height: 1.8; margin: 0;" th:if="${perfume.notasCorazon != null}">
-                            <li th:each="nota : ${#strings.arraySplit(perfume.notasCorazon, ',')}" th:text="${#strings.trim(nota)}">Jazmín Sambac</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-primary); font-weight: 700; margin-bottom: 1rem;"><i class="fas fa-wind"></i> Notas de Fondo</h4>
-                        <ul style="padding-left: 1.2rem; color: #555; font-size: 0.95rem; line-height: 1.8; margin: 0;" th:if="${perfume.notasFondo != null}">
-                            <li th:each="nota : ${#strings.arraySplit(perfume.notasFondo, ',')}" th:text="${#strings.trim(nota)}">Haba Tonka</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Perfil Olfativo & Ideal Para Narratives -->
-                <div style="margin-bottom: 3rem; display: flex; flex-direction: column; gap: 1.5rem;" th:if="${perfume.perfilOlfativo != null or perfume.idealPara != null}">
-                    <div th:if="${perfume.perfilOlfativo != null}" style="border-left: 3px solid var(--accent-primary); padding-left: 1.5rem;">
-                        <h4 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: #1a1a1a; font-weight: 700; margin-bottom: 0.5rem;">Perfil Olfativo</h4>
-                        <p style="color: #666; font-size: 0.95rem; line-height: 1.7; margin: 0;" th:text="${perfume.perfilOlfativo}">Resumen sensorial...</p>
-                    </div>
-                    <div th:if="${perfume.idealPara != null}" style="border-left: 3px solid #333; padding-left: 1.5rem;">
-                        <h4 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: #1a1a1a; font-weight: 700; margin-bottom: 0.5rem;">Ideal para</h4>
-                        <p style="color: #666; font-size: 0.95rem; line-height: 1.7; margin: 0;" th:text="${perfume.idealPara}">Recomendado para...</p>
+                <!-- Olfactory Pyramid -->
+                <div class="pyramid-section animate-on-scroll delay-1">
+                    <div class="pyramid-card">
+                        <div class="pyramid-item">
+                            <h4><i class="fas fa-leaf"></i> Notas de Salida</h4>
+                            <ul th:if="${perfume.notasSalida != null}">
+                                <li th:each="nota : ${#strings.arraySplit(perfume.notasSalida, ',')}" th:text="${#strings.trim(nota)}">Almendra</li>
+                            </ul>
+                        </div>
+                        <div class="pyramid-item">
+                            <h4><i class="fas fa-heart"></i> Notas de Corazón</h4>
+                            <ul th:if="${perfume.notasCorazon != null}">
+                                <li th:each="nota : ${#strings.arraySplit(perfume.notasCorazon, ',')}" th:text="${#strings.trim(nota)}">Jazmín Sambac</li>
+                            </ul>
+                        </div>
+                        <div class="pyramid-item">
+                            <h4><i class="fas fa-wind"></i> Notas de Fondo</h4>
+                            <ul th:if="${perfume.notasFondo != null}">
+                                <li th:each="nota : ${#strings.arraySplit(perfume.notasFondo, ',')}" th:text="${#strings.trim(nota)}">Haba Tonka</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Information quick cards (9 Cards Grid) -->
-                <div class="info-quick-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
-                    <!-- 1. Familia Olfativa -->
-                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
-                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">🌸</span>
-                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Familia Olfativa</span>
-                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.familiaOlfativa != null ? perfume.familiaOlfativa : 'Floral'}">Familia</span>
+                <!-- Profile & Ideal -->
+                <div class="profile-section animate-on-scroll delay-2" th:if="${perfume.perfilOlfativo != null or perfume.idealPara != null}">
+                    <div class="profile-block" th:if="${perfume.perfilOlfativo != null}">
+                        <h4>Perfil Olfativo</h4>
+                        <p th:text="${perfume.perfilOlfativo}">Resumen sensorial...</p>
                     </div>
-
-                    <!-- 2. Duración -->
-                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
-                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">⏳</span>
-                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Duración</span>
-                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.duracion != null ? perfume.duracion : 'Moderada'}">Duración</span>
-                    </div>
-
-                    <!-- 3. Uso de Día -->
-                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
-                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">☀️</span>
-                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Uso de Día</span>
-                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.usoRecomendado == 'Día' or perfume.usoRecomendado == 'Ambos' ? 'Recomendado' : 'No recomendado'}">Sí</span>
-                    </div>
-
-                    <!-- 4. Uso Nocturno -->
-                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
-                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">🌙</span>
-                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Uso Nocturno</span>
-                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.usoRecomendado == 'Noche' or perfume.usoRecomendado == 'Ambos' ? 'Recomendado' : 'No recomendado'}">Sí</span>
-                    </div>
-
-                    <!-- 5. Clima Recomendado -->
-                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
-                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">❄️</span>
-                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Clima</span>
-                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.climaRecomendado != null ? perfume.climaRecomendado : 'Todos'}">Clima</span>
-                    </div>
-
-                    <!-- 6. Intensidad -->
-                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
-                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">🌿</span>
-                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Intensidad</span>
-                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.intensidad != null ? perfume.intensidad : 'Moderada'}">Intensidad</span>
-                    </div>
-
-                    <!-- 7. Concentración -->
-                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
-                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">💎</span>
-                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Concentración</span>
-                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.concentracion != null ? perfume.concentracion : 'EDP'}">EDP</span>
-                    </div>
-
-                    <!-- 8. Envío Gratis -->
-                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
-                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">🚚</span>
-                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Envío</span>
-                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.envioGratis != null && perfume.envioGratis ? 'Gratuito' : 'A cargo de cliente'}">Envío</span>
-                    </div>
-
-                    <!-- 9. Producto Original -->
-                    <div style="background: #fff; padding: 1.2rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.01);">
-                        <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">✔️</span>
-                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #999; display: block; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Garantía</span>
-                        <span style="font-size: 0.85rem; font-weight: 700; color: #333;" th:text="${perfume.autenticidad != null ? perfume.autenticidad : '100% Original'}">Original</span>
+                    <div class="profile-block profile-block-alt" th:if="${perfume.idealPara != null}">
+                        <h4>Ideal para</h4>
+                        <p th:text="${perfume.idealPara}">Recomendado para...</p>
                     </div>
                 </div>
 
-
+                <!-- Info Cards 9 Grid -->
+                <div class="info-grid animate-on-scroll delay-3">
+                    <div class="info-card">
+                        <span class="info-icon">🌸</span>
+                        <span class="info-label">Familia Olfativa</span>
+                        <span class="info-value" th:text="${perfume.familiaOlfativa != null ? perfume.familiaOlfativa : 'Floral'}">Familia</span>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">⏳</span>
+                        <span class="info-label">Duración</span>
+                        <span class="info-value" th:text="${perfume.duracion != null ? perfume.duracion : 'Moderada'}">Duración</span>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">☀️</span>
+                        <span class="info-label">Uso de Día</span>
+                        <span class="info-value" th:text="${perfume.usoRecomendado == 'Día' or perfume.usoRecomendado == 'Ambos' ? 'Recomendado' : 'No recomendado'}">Sí</span>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">🌙</span>
+                        <span class="info-label">Uso Nocturno</span>
+                        <span class="info-value" th:text="${perfume.usoRecomendado == 'Noche' or perfume.usoRecomendado == 'Ambos' ? 'Recomendado' : 'No recomendado'}">Sí</span>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">❄️</span>
+                        <span class="info-label">Clima</span>
+                        <span class="info-value" th:text="${perfume.climaRecomendado != null ? perfume.climaRecomendado : 'Todos'}">Clima</span>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">🌿</span>
+                        <span class="info-label">Intensidad</span>
+                        <span class="info-value" th:text="${perfume.intensidad != null ? perfume.intensidad : 'Moderada'}">Intensidad</span>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">💎</span>
+                        <span class="info-label">Concentración</span>
+                        <span class="info-value" th:text="${perfume.concentracion != null ? perfume.concentracion : 'EDP'}">EDP</span>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">🚚</span>
+                        <span class="info-label">Envío</span>
+                        <span class="info-value" th:text="${perfume.envioGratis != null && perfume.envioGratis ? 'Gratuito' : 'A cargo de cliente'}">Envío</span>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">✔️</span>
+                        <span class="info-label">Garantía</span>
+                        <span class="info-value" th:text="${perfume.autenticidad != null ? perfume.autenticidad : '100% Original'}">Original</span>
+                    </div>
+                </div>
 
                 <!-- Payment Methods -->
-                <div
-                    style="margin-bottom: 3rem; padding: 1.5rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04);">
-                    <p
-                        style="font-size: 0.8rem; color: #999; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 1rem;">
-                        Métodos de pago aceptados</p>
-                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                        <div
-                            style="padding: 0.5rem 1rem; background: #f8f8f8; border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: #666;">
-                            <i class="fas fa-credit-card"
-                                style="margin-right: 0.3rem; color: var(--accent-primary);"></i> Visa</div>
-                        <div
-                            style="padding: 0.5rem 1rem; background: #f8f8f8; border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: #666;">
-                            <i class="fas fa-credit-card"
-                                style="margin-right: 0.3rem; color: var(--accent-primary);"></i> Mastercard</div>
-                        <div
-                            style="padding: 0.5rem 1rem; background: #f8f8f8; border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: #666;">
-                            <i class="fas fa-money-bill-wave"
-                                style="margin-right: 0.3rem; color: var(--accent-primary);"></i> Efecty</div>
-                        <div
-                            style="padding: 0.5rem 1rem; background: #f8f8f8; border-radius: 10px; font-size: 0.85rem; font-weight: 600; color: #666;">
-                            <i class="fas fa-university"
-                                style="margin-right: 0.3rem; color: var(--accent-primary);"></i> PSE</div>
+                <div class="payment-section animate-on-scroll delay-1">
+                    <p class="payment-title">Métodos de pago aceptados</p>
+                    <div class="payment-methods">
+                        <div class="payment-method">
+                            <i class="fas fa-credit-card"></i> Visa
+                        </div>
+                        <div class="payment-method">
+                            <i class="fas fa-credit-card"></i> Mastercard
+                        </div>
+                        <div class="payment-method">
+                            <i class="fas fa-money-bill-wave"></i> Efecty
+                        </div>
+                        <div class="payment-method">
+                            <i class="fas fa-university"></i> PSE
+                        </div>
                     </div>
                 </div>
 
-                <!-- The Ritual Section -->
-                <div
-                    style="margin-bottom: 3rem; padding: 2.5rem; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 28px; color: #fff; position: relative; overflow: hidden;">
-                    <div
-                        style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(244,154,31,0.15) 0%, transparent 70%); border-radius: 50%;">
-                    </div>
-
-                    <h3
-                        style="font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
-                        <i class="fas fa-magic" style="color: var(--accent-primary);"></i>
-                        El Ritual
-                    </h3>
-                    <p style="color: #aaa; line-height: 1.8; margin-bottom: 2rem; font-size: 0.95rem;">Para una
-                        experiencia óptima en Cartagena, aplica sobre la piel hidratada en los puntos de pulso. Evita
-                        frotar las muñecas para mantener la integridad de las notas de salida.</p>
-
-                    <div class="ritual-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s;"
-                            class="ritual-card">
-                            <div
-                                style="width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.8rem;">
-                                <i class="fas fa-wind" style="color: #fff; font-size: 0.8rem;"></i>
+                <!-- The Ritual -->
+                <div class="ritual-section animate-on-scroll delay-2">
+                    <div class="ritual-orb ritual-orb-1"></div>
+                    <div class="ritual-orb ritual-orb-2"></div>
+                    
+                    <div class="ritual-content">
+                        <h3>
+                            <i class="fas fa-magic"></i>
+                            El Ritual
+                        </h3>
+                        <p>Para una experiencia óptima en Cartagena, aplica sobre la piel hidratada en los puntos de pulso. Evita frotar las muñecas para mantener la integridad de las notas de salida.</p>
+                        
+                        <div class="ritual-grid">
+                            <div class="ritual-card">
+                                <div class="ritual-icon">
+                                    <i class="fas fa-wind"></i>
+                                </div>
+                                <h5>Salida</h5>
+                                <p>Lo que sientes al primer contacto. Notas frescas y vibrantes.</p>
                             </div>
-                            <h5
-                                style="color: var(--accent-primary); margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px;">
-                                Salida</h5>
-                            <p style="font-size: 0.85rem; margin: 0; color: #ccc; line-height: 1.5;">Lo que sientes al
-                                primer contacto. Notas frescas y vibrantes.</p>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s;"
-                            class="ritual-card">
-                            <div
-                                style="width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.8rem;">
-                                <i class="fas fa-heart" style="color: #fff; font-size: 0.8rem;"></i>
+                            <div class="ritual-card">
+                                <div class="ritual-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <h5>Corazón</h5>
+                                <p>El alma de la fragancia que perdura en tu piel.</p>
                             </div>
-                            <h5
-                                style="color: var(--accent-primary); margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px;">
-                                Corazón</h5>
-                            <p style="font-size: 0.85rem; margin: 0; color: #ccc; line-height: 1.5;">El alma de la
-                                fragancia que perdura en tu piel.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Guarantee Section -->
-                <div class="guarantee-section" style="display: flex; gap: 2rem; padding-top: 2rem; border-top: 1px solid #eee; flex-wrap: wrap;">
-                    <div style="text-align: center; flex: 1; min-width: 120px; padding: 1.5rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); transition: all 0.3s;"
-                        class="guarantee-item">
-                        <div
-                            style="width: 50px; height: 50px; background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
-                            <i class="fas fa-shield-halved" style="color: #16a34a; font-size: 1.2rem;"></i>
+                <!-- Guarantees -->
+                <div class="guarantees-section animate-on-scroll delay-3">
+                    <div class="guarantee-item">
+                        <div class="guarantee-icon" style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);">
+                            <i class="fas fa-shield-halved" style="color: #16a34a;"></i>
                         </div>
-                        <p
-                            style="font-size: 0.8rem; color: #333; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin: 0;">
-                            Garantía</p>
-                        <p style="font-size: 0.75rem; color: #999; margin-top: 0.3rem;">30 días</p>
+                        <div>
+                            <p class="guarantee-title">Garantía</p>
+                            <p class="guarantee-desc">30 días</p>
+                        </div>
                     </div>
-                    <div style="text-align: center; flex: 1; min-width: 120px; padding: 1.5rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); transition: all 0.3s;"
-                        class="guarantee-item">
-                        <div
-                            style="width: 50px; height: 50px; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
-                            <i class="fas fa-rotate-left" style="color: #2563eb; font-size: 1.2rem;"></i>
+                    <div class="guarantee-item">
+                        <div class="guarantee-icon" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
+                            <i class="fas fa-rotate-left" style="color: #2563eb;"></i>
                         </div>
-                        <p
-                            style="font-size: 0.8rem; color: #333; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin: 0;">
-                            Devolución</p>
-                        <p style="font-size: 0.75rem; color: #999; margin-top: 0.3rem;">Fácil y rápida</p>
+                        <div>
+                            <p class="guarantee-title">Devolución</p>
+                            <p class="guarantee-desc">Fácil y rápida</p>
+                        </div>
                     </div>
-                    <div style="text-align: center; flex: 1; min-width: 120px; padding: 1.5rem; background: #fff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); transition: all 0.3s;"
-                        class="guarantee-item">
-                        <div
-                            style="width: 50px; height: 50px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
-                            <i class="fab fa-whatsapp" style="color: #22c55e; font-size: 1.2rem;"></i>
+                    <div class="guarantee-item">
+                        <div class="guarantee-icon" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
+                            <i class="fab fa-whatsapp" style="color: #22c55e;"></i>
                         </div>
-                        <p
-                            style="font-size: 0.8rem; color: #333; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin: 0;">
-                            Soporte</p>
-                        <p style="font-size: 0.75rem; color: #999; margin-top: 0.3rem;">WhatsApp 24/7</p>
+                        <div>
+                            <p class="guarantee-title">Soporte</p>
+                            <p class="guarantee-desc">WhatsApp 24/7</p>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
 
-    <!-- FRAGANCIA EN ACCIÓN / VIDEO SECTION -->
-    <section class="sensory-experience-section"
-        style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 6rem 2rem; position: relative; overflow: hidden;">
-        <div
-            style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(244,154,31,0.3), transparent);">
-        </div>
-        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
-            <div
-                style="display: inline-flex; align-items: center; gap: 0.8rem; background: rgba(255,255,255,0.05); padding: 0.6rem 1.2rem; border-radius: 50px; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.1);">
-                <span
-                    style="width: 8px; height: 8px; background: var(--accent-primary); border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
-                <span
-                    style="font-size: 0.8rem; color: var(--accent-primary); font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Experiencia
-                    Sensorial</span>
-            </div>
-            <h2
-                style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); color: #fff; margin-bottom: 1.5rem;">
-                La Esencia de la Elegancia</h2>
-            <p style="color: #888; max-width: 600px; margin: 0 auto 3rem; line-height: 1.8; font-size: 1.05rem;">Cada
-                gota cuenta una historia. Descubre cómo esta fragancia transforma momentos ordinarios en recuerdos
-                inolvidables.</p>
+    <style>
+        /* ===== PRODUCT HEADER ===== */
+        .product-header {
+            margin-bottom: 1.5rem;
+        }
 
-            <div
-                style="position: relative; max-width: 900px; margin: 0 auto; border-radius: 24px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.4);">
-                <div
-                    style="aspect-ratio: 16/9; background: linear-gradient(135deg, #333 0%, #1a1a1a 100%); display: flex; align-items: center; justify-content: center;">
-                    <button
-                        style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(244,154,31,0.4); transition: all 0.3s; color: #fff; font-size: 1.5rem;">
-                        <i class="fas fa-play" style="margin-left: 4px;"></i>
+        .product-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .product-brand {
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            color: var(--accent-primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: var(--bg-warm);
+            padding: 0.3rem 0.9rem;
+            border-radius: 50px;
+        }
+
+        .product-rating i {
+            color: #fbbf24;
+            font-size: 0.75rem;
+        }
+
+        .rating-value {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .rating-count {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            color: var(--text-dark);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .product-gender {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-warm);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-medium);
+        }
+
+        .product-gender i {
+            color: var(--accent-primary);
+        }
+
+        /* ===== PRICE SECTION ===== */
+        .product-price-section {
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.8rem;
+        }
+
+        .price-current {
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+            line-height: 1;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .price-old {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            text-decoration: line-through;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .price-save {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: #fff;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .price-stock {
+            color: #16a34a;
+            font-size: 0.9rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .price-stock i {
+            font-size: 1rem;
+        }
+
+        /* ===== CART FORM ===== */
+        .product-cart-form {
+            margin-bottom: 3rem;
+        }
+
+        .cart-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .qty-selector {
+            display: flex;
+            align-items: center;
+            background: var(--bg-warm);
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-light);
+            overflow: hidden;
+            transition: border-color var(--transition-fast);
+        }
+
+        .qty-selector:focus-within {
+            border-color: var(--accent-primary);
+        }
+
+        .qty-btn {
+            width: 50px;
+            height: 56px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            color: var(--accent-primary);
+            background: rgba(212,165,116,0.05);
+        }
+
+        .qty-btn:active {
+            transform: scale(0.9);
+        }
+
+        .qty-selector input {
+            width: 60px;
+            height: 56px;
+            border: none;
+            background: none;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            outline: none;
+            font-family: 'Outfit', sans-serif;
+            -moz-appearance: textfield;
+        }
+
+        .qty-selector input::-webkit-inner-spin-button,
+        .qty-selector input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .btn-add-cart {
+            flex: 1;
+            min-width: 250px;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Outfit', sans-serif;
+            box-shadow: var(--shadow-accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-add-cart .btn-shine {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn-add-cart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(212,165,116,0.35);
+        }
+
+        .btn-add-cart:hover .btn-shine {
+            transform: translateX(100%);
+        }
+
+        .btn-add-cart:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .btn-add-cart .btn-icon {
+            transition: transform var(--transition-fast);
+        }
+
+        .btn-add-cart:hover .btn-icon {
+            transform: translateX(-2px);
+        }
+
+        .shipping-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .shipping-info i {
+            color: var(--accent-primary);
+        }
+
+        /* ===== DESCRIPTION ===== */
+        .product-description {
+            margin-bottom: 2.5rem;
+        }
+
+        .product-description p {
+            color: var(--text-medium);
+            font-size: 1.05rem;
+            line-height: 1.9;
+            margin: 0;
+            font-weight: 300;
+        }
+
+        /* ===== PYRAMID ===== */
+        .pyramid-section {
+            margin-bottom: 3rem;
+        }
+
+        .pyramid-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            background: var(--bg-white);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pyramid-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-tertiary));
+            opacity: 0.5;
+        }
+
+        .pyramid-item h4 {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-primary);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pyramid-item h4 i {
+            font-size: 0.9rem;
+        }
+
+        .pyramid-item ul {
+            padding-left: 1.2rem;
+            color: var(--text-medium);
+            font-size: 0.92rem;
+            line-height: 1.9;
+            margin: 0;
+        }
+
+        .pyramid-item ul li {
+            margin-bottom: 0.2rem;
+        }
+
+        /* ===== PROFILE SECTION ===== */
+        .profile-section {
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .profile-block {
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .profile-block-alt {
+            border-left-color: var(--text-dark);
+        }
+
+        .profile-block h4 {
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+        }
+
+        .profile-block p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        /* ===== INFO GRID ===== */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .info-card {
+            background: var(--bg-white);
+            padding: 1.5rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(0,0,0,0.04);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-tertiary));
+            opacity: 0;
+            transition: opacity var(--transition-smooth);
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(212,165,116,0.1);
+        }
+
+        .info-card:hover::before {
+            opacity: 1;
+        }
+
+        .info-icon {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 0.6rem;
+        }
+
+        .info-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            display: block;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-value {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* ===== PAYMENT ===== */
+        .payment-section {
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .payment-title {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .payment-method {
+            padding: 0.6rem 1.2rem;
+            background: var(--bg-warm);
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-medium);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all var(--transition-fast);
+        }
+
+        .payment-method:hover {
+            background: var(--bg-cream);
+            border-color: rgba(212,165,116,0.2);
+            transform: translateY(-2px);
+        }
+
+        .payment-method i {
+            color: var(--accent-primary);
+            font-size: 0.9rem;
+        }
+
+        /* ===== RITUAL SECTION ===== */
+        .ritual-section {
+            margin-bottom: 3rem;
+            padding: 2.5rem;
+            background: linear-gradient(135deg, var(--text-dark) 0%, #2d2d2d 100%);
+            border-radius: var(--radius-lg);
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ritual-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .ritual-orb-1 {
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(212,165,116,0.12) 0%, transparent 70%);
+            animation: float 12s ease-in-out infinite;
+        }
+
+        .ritual-orb-2 {
+            bottom: -20px;
+            left: -20px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(212,165,116,0.08) 0%, transparent 70%);
+            animation: float-reverse 16s ease-in-out infinite;
+        }
+
+        .ritual-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .ritual-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 700;
+        }
+
+        .ritual-content h3 i {
+            color: var(--accent-primary);
+        }
+
+        .ritual-content > p {
+            color: #aaa;
+            line-height: 1.9;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        .ritual-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .ritual-card {
+            background: rgba(255,255,255,0.04);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: all var(--transition-smooth);
+        }
+
+        .ritual-card:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-3px);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .ritual-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .ritual-icon i {
+            color: #fff;
+            font-size: 0.8rem;
+        }
+
+        .ritual-card h5 {
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .ritual-card p {
+            font-size: 0.85rem;
+            margin: 0;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* ===== GUARANTEES ===== */
+        .guarantees-section {
+            display: flex;
+            gap: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-light);
+            flex-wrap: wrap;
+        }
+
+        .guarantee-item {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+            padding: 1.8rem 1rem;
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: all var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .guarantee-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(212,165,116,0.1);
+        }
+
+        .guarantee-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .guarantee-icon i {
+            font-size: 1.2rem;
+        }
+
+        .guarantee-title {
+            font-size: 0.78rem;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .guarantee-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .product-meta {
+                gap: 0.8rem;
+            }
+
+            .product-title {
+                font-size: clamp(1.8rem, 6vw, 2.5rem);
+            }
+
+            .price-current {
+                font-size: 2rem;
+            }
+
+            .cart-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-add-cart {
+                min-width: unset;
+                width: 100%;
+            }
+
+            .qty-selector {
+                justify-content: center;
+            }
+
+            .pyramid-card {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+
+            .info-card {
+                padding: 1.2rem 0.8rem;
+            }
+
+            .payment-methods {
+                gap: 0.6rem;
+            }
+
+            .payment-method {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .ritual-section {
+                padding: 1.8rem;
+            }
+
+            .ritual-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .guarantees-section {
+                gap: 1rem;
+            }
+
+            .guarantee-item {
+                min-width: 100%;
+                flex-direction: row;
+                text-align: left;
+                padding: 1.2rem;
+                gap: 1rem;
+            }
+
+            .guarantee-icon {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-description p {
+                font-size: 0.95rem;
+            }
+
+            .profile-block {
+                padding-left: 1rem;
+            }
+        }
+    </style>
+        <!-- ===== VIDEO / SENSORY EXPERIENCE ===== -->
+    <section class="video-section">
+        <div class="video-orb video-orb-1"></div>
+        <div class="video-orb video-orb-2"></div>
+        
+        <div class="video-container">
+            <div class="video-header animate-on-scroll">
+                <div class="video-badge">
+                    <span class="video-badge-dot"></span>
+                    <span>Experiencia Sensorial</span>
+                </div>
+                <h2 class="video-title">La Esencia de la Elegancia</h2>
+                <p class="video-subtitle">Cada gota cuenta una historia. Descubre cómo esta fragancia transforma momentos ordinarios en recuerdos inolvidables.</p>
+            </div>
+
+            <div class="video-player-wrapper animate-on-scroll delay-1">
+                <div class="video-player">
+                    <button class="video-play-btn" onclick="playVideo()">
+                        <i class="fas fa-play"></i>
                     </button>
                 </div>
+                <div class="video-glow"></div>
             </div>
         </div>
     </section>
 
-    <!-- RECOMENDACIONES MEJORADAS -->
-    <section style="background: #fff; padding: 6rem 2rem; border-top: 1px solid #f0f0f0;">
-        <div style="max-width: 1400px; margin: 0 auto;">
-            <div style="text-align: center; margin-bottom: 4rem;">
-                <div
-                    style="display: inline-flex; align-items: center; gap: 0.8rem; background: #fff9f2; padding: 0.6rem 1.2rem; border-radius: 50px; margin-bottom: 1.5rem;">
-                    <i class="fas fa-sparkles" style="color: var(--accent-primary); font-size: 0.8rem;"></i>
-                    <span
-                        style="font-size: 0.8rem; color: var(--accent-primary); font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Descubre
-                        Más</span>
+    <!-- ===== RECOMMENDATIONS ===== -->
+    <section class="recommendations-section">
+        <div class="recommendations-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-badge">
+                    <i class="fas fa-sparkles"></i>
+                    <span>Descubre Más</span>
                 </div>
-                <h2
-                    style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 1rem; color: #1a1a1a;">
-                    Podría Interesarte</h2>
-                <p style="color: #888; max-width: 500px; margin: 0 auto; line-height: 1.7;">Fragancias con perfiles
-                    similares seleccionadas especialmente para ti.</p>
+                <h2 class="section-title">Podría Interesarte</h2>
+                <p class="section-subtitle">Fragancias con perfiles similares seleccionadas especialmente para ti.</p>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2.5rem;">
-                <div th:each="p : ${recomendados}" class="recommendation-card"
-                    style="background: #fff; border-radius: 28px; overflow: hidden; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 10px 40px rgba(0,0,0,0.04); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; position: relative;"
-                    th:data-url="@{/producto/{id}(id=${p.id})}" onclick="location.href=this.getAttribute('data-url')">
-
-                    <div style="position: relative; height: 320px; overflow: hidden;">
-                        <div th:style="'background-image: url(\'' + ${p.imagenUrl} + '\'); width: 100%; height: 100%; background-size: cover; background-position: center; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);'"
-                            class="rec-image"></div>
-                        <div
-                            style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%); opacity: 0; transition: opacity 0.4s;">
-                        </div>
-
-                        <!-- Quick Add Button -->
-                        <div style="position: absolute; bottom: 20px; right: 20px; z-index: 10;">
-                            <form th:action="@{/carrito/agregar/{id}(id=${p.id})}" method="post"
-                                class="ajax-cart-form-rec" style="margin: 0;" onclick="event.stopPropagation();">
-                                <button type="submit"
-                                    style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(244,154,31,0.4); color: #fff; font-size: 1rem; transition: all 0.3s;">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </form>
-                        </div>
+            <div class="recommendations-grid">
+                <div th:each="p, iterStat : ${recomendados}" class="rec-card animate-on-scroll" th:classappend="'delay-' + ${iterStat.index % 4 + 1}" th:data-url="@{/producto/{id}(id=${p.id})}" onclick="location.href=this.getAttribute('data-url')">
+                    <div class="rec-image-wrapper">
+                        <div th:style="'background-image: url(\'' + ${p.imagenUrl} + '\');'" class="rec-image"></div>
+                        <div class="rec-image-overlay"></div>
+                        
+                        <form th:action="@{/carrito/agregar/{id}(id=${p.id})}" method="post" class="rec-cart-form" onclick="event.stopPropagation();">
+                            <button type="submit" class="rec-cart-btn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </form>
                     </div>
 
-                    <div style="padding: 1.8rem;">
-                        <p style="color: var(--accent-primary); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 2px; margin-bottom: 0.5rem;"
-                            th:text="${p.marca}">Marca</p>
-                        <h4 style="font-size: 1.15rem; margin-bottom: 0.8rem; color: #1a1a1a; font-family: 'Playfair Display', serif; font-weight: 700;"
-                            th:text="${p.nombre}">Nombre</h4>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <p style="font-weight: 700; color: #1a1a1a; font-size: 1.2rem; margin: 0;"
-                                th:text="'$' + ${#numbers.formatDecimal(p.precio, 0, 'POINT', 0, 'POINT')} + ' COP'">$0
-                            </p>
-                            <span
-                                style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Ver
-                                más <i class="fas fa-arrow-right"
-                                    style="font-size: 0.6rem; margin-left: 0.3rem;"></i></span>
+                    <div class="rec-body">
+                        <p class="rec-brand" th:text="${p.marca}">Marca</p>
+                        <h4 class="rec-name" th:text="${p.nombre}">Nombre</h4>
+                        <div class="rec-footer">
+                            <p class="rec-price" th:text="'$' + ${#numbers.formatDecimal(p.precio, 0, 'POINT', 0, 'POINT')} + ' COP'">$0</p>
+                            <span class="rec-link">Ver más <i class="fas fa-arrow-right"></i></span>
                         </div>
                     </div>
                 </div>
@@ -538,310 +1711,565 @@
         </div>
     </section>
 
-    <!-- NEWSLETTER STICKY BAR -->
-    <div style="position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 1rem 2rem; z-index: 100; transform: translateY(100%); transition: transform 0.4s ease;"
-        id="sticky-bar">
-        <div class="sticky-bar-content"
-            style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div
-                    style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-percent" style="color: #fff;"></i>
+    <!-- ===== STICKY BAR ===== -->
+    <div class="sticky-bar" id="sticky-bar">
+        <div class="sticky-bar-inner">
+            <div class="sticky-bar-content">
+                <div class="sticky-bar-icon">
+                    <i class="fas fa-percent"></i>
                 </div>
-                <div>
-                    <p style="color: #fff; font-weight: 700; margin: 0; font-size: 0.95rem;">¿Primera vez comprando?</p>
-                    <p style="color: #888; margin: 0; font-size: 0.8rem;">Obtén 15% de descuento con el código <span
-                            style="color: var(--accent-primary); font-weight: 700;">BIENVENIDO15</span></p>
+                <div class="sticky-bar-text">
+                    <p class="sticky-bar-title">¿Primera vez comprando?</p>
+                    <p class="sticky-bar-desc">Obtén 15% de descuento con el código <span>BIENVENIDO15</span></p>
                 </div>
             </div>
-            <button onclick="document.getElementById('sticky-bar').style.transform='translateY(100%)'"
-                style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 0.6rem 1.2rem; border-radius: 12px; cursor: pointer; font-size: 0.85rem; transition: all 0.3s;">
+            <button class="sticky-bar-close" onclick="closeStickyBar()">
                 <i class="fas fa-times"></i>
             </button>
         </div>
     </div>
 
-    <!-- STYLES -->
     <style>
-        :root {
-            --accent-primary: #f49a1f;
-            --accent-secondary: #e8890c;
-            --text-dark: #1a1a1a;
+        /* ===== VIDEO SECTION ===== */
+        .video-section {
+            background: linear-gradient(135deg, var(--text-dark) 0%, #2d2d2d 100%);
+            padding: 7rem 2rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(244, 154, 31, 0.4);
-            }
-
-            50% {
-                opacity: 0.8;
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(244, 154, 31, 0);
-            }
+        .video-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212,165,116,0.3), transparent);
         }
 
-        @keyframes shimmer {
-            0% {
-                background-position: -1000px 0;
-            }
-
-            100% {
-                background-position: 1000px 0;
-            }
+        .video-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .video-orb-1 {
+            top: -15%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212,165,116,0.06) 0%, transparent 70%);
+            animation: float 18s ease-in-out infinite;
         }
 
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .video-orb-2 {
+            bottom: -20%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212,165,116,0.04) 0%, transparent 70%);
+            animation: float-reverse 22s ease-in-out infinite;
         }
 
-        @keyframes bounceIn {
-            0% {
-                transform: scale(0);
-                opacity: 0;
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
-
-            70% {
-                transform: scale(0.98);
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
+        .video-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
 
-        /* Product Image Hover Zoom */
-        .product-image-main:hover .main-product-img {
-            transform: scale(1.05);
+        .video-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
         }
 
-        .product-image-main:hover .zoom-lens {
+        .video-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(255,255,255,0.05);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            margin-bottom: 1.2rem;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .video-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            animation: pulse-glow 2s infinite;
+        }
+
+        .video-badge span {
+            font-size: 0.78rem;
+            color: var(--accent-primary);
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .video-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: #fff;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .video-subtitle {
+            color: #888;
+            max-width: 550px;
+            margin: 0 auto;
+            line-height: 1.9;
+            font-size: 1.05rem;
+            font-weight: 300;
+        }
+
+        .video-player-wrapper {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .video-player {
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .video-play-btn {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 60px rgba(212,165,116,0.3), 0 10px 40px rgba(0,0,0,0.3);
+            transition: all var(--transition-smooth);
+            color: #fff;
+            font-size: 1.8rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-play-btn::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid rgba(212,165,116,0.3);
+            animation: pulse-glow 2s infinite;
+        }
+
+        .video-play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 80px rgba(212,165,116,0.4), 0 15px 50px rgba(0,0,0,0.4);
+        }
+
+        .video-play-btn:active {
+            transform: scale(0.95);
+        }
+
+        .video-play-btn i {
+            margin-left: 4px;
+        }
+
+        .video-glow {
+            position: absolute;
+            inset: -30px;
+            background: radial-gradient(circle at center, rgba(212,165,116,0.08) 0%, transparent 60%);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity var(--transition-smooth);
+        }
+
+        .video-player-wrapper:hover .video-glow {
             opacity: 1;
         }
 
-        /* Wishlist Button */
-        .wishlist-btn:hover {
-            color: #ef4444 !important;
-            transform: scale(1.1) !important;
-            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.2) !important;
+        /* ===== RECOMMENDATIONS ===== */
+        .recommendations-section {
+            background: var(--bg-white);
+            padding: 7rem 2rem;
+            position: relative;
         }
 
-        .wishlist-btn.active {
-            color: #ef4444 !important;
-            background: #fef2f2 !important;
+        .recommendations-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-light), transparent);
         }
 
-        /* Thumbnails */
-        .thumb {
-            transition: all 0.3s;
+        .recommendations-container {
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .thumb:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: linear-gradient(135deg, #fff9f2 0%, #fff5e8 100%);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            margin-bottom: 1.2rem;
+            border: 1px solid rgba(212,165,116,0.15);
         }
 
-        .thumb.active {
-            box-shadow: 0 0 0 3px rgba(244, 154, 31, 0.2);
+        .section-badge i {
+            color: var(--accent-primary);
+            font-size: 0.8rem;
         }
 
-        /* Trust Badges */
-        .trust-badge:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08) !important;
-            border-color: rgba(244, 154, 31, 0.1) !important;
+        .section-badge span {
+            font-size: 0.78rem;
+            color: var(--accent-primary);
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
 
-        /* Tech Items */
-        .tech-item:hover {
-            background: rgba(255, 255, 255, 0.9) !important;
-            transform: translateX(5px);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2.5rem;
         }
 
-        /* Add to Cart Main Button */
-        .add-to-cart-main:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(244, 154, 31, 0.4) !important;
+        .rec-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-smooth);
+            cursor: pointer;
+            position: relative;
         }
 
-        .add-to-cart-main:active {
-            transform: scale(0.98);
+        .rec-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-lg);
+            border: 1px solid transparent;
+            transition: border-color var(--transition-smooth);
+            pointer-events: none;
+            z-index: 10;
         }
 
-        /* Quantity Buttons */
-        button[onclick^="updateQty"]:hover {
-            color: var(--accent-primary) !important;
-            background: rgba(244, 154, 31, 0.05) !important;
-        }
-
-        /* Ritual Cards */
-        .ritual-card:hover {
-            background: rgba(255, 255, 255, 0.08) !important;
-            transform: translateY(-3px);
-        }
-
-        /* Guarantee Items */
-        .guarantee-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06) !important;
-        }
-
-        /* Recommendation Cards */
-        .recommendation-card:hover {
+        .rec-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1) !important;
+            box-shadow: var(--shadow-xl);
         }
 
-        .recommendation-card:hover .rec-image {
+        .rec-card:hover::after {
+            border-color: rgba(212,165,116,0.15);
+        }
+
+        .rec-image-wrapper {
+            position: relative;
+            height: 320px;
+            overflow: hidden;
+        }
+
+        .rec-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .rec-card:hover .rec-image {
             transform: scale(1.1);
         }
 
-        .recommendation-card:hover [style*="position: absolute; inset: 0; background: linear-gradient"] {
-            opacity: 1 !important;
+        .rec-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity var(--transition-smooth);
         }
 
-        /* Sticky Bar Show */
-        .show-sticky {
-            transform: translateY(0) !important;
+        .rec-card:hover .rec-image-overlay {
+            opacity: 1;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f5f5f5;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
-            border-radius: 4px;
-        }
-
-        /* Input number hide arrows */
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
+        .rec-cart-form {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
             margin: 0;
         }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .product-columns-wrapper {
-                gap: 2.5rem !important;
-            }
-            .product-columns-wrapper > div {
-                min-width: 100% !important;
-                max-width: 100% !important;
-            }
+        .rec-cart-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(212,165,116,0.4);
+            color: #fff;
+            font-size: 1rem;
+            transition: all var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
         }
 
+        .rec-cart-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .rec-cart-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 35px rgba(212,165,116,0.5);
+        }
+
+        .rec-cart-btn:hover::after {
+            transform: translateX(100%);
+        }
+
+        .rec-cart-btn:active {
+            transform: scale(0.95);
+        }
+
+        .rec-body {
+            padding: 1.8rem;
+        }
+
+        .rec-brand {
+            color: var(--accent-primary);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .rec-name {
+            font-size: 1.15rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        .rec-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rec-price {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1.15rem;
+            margin: 0;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .rec-link {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            transition: color var(--transition-fast);
+        }
+
+        .rec-card:hover .rec-link {
+            color: var(--accent-primary);
+        }
+
+        .rec-link i {
+            font-size: 0.6rem;
+            margin-left: 0.3rem;
+            transition: transform var(--transition-fast);
+        }
+
+        .rec-card:hover .rec-link i {
+            transform: translateX(3px);
+        }
+
+        /* ===== STICKY BAR ===== */
+        .sticky-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--text-dark) 0%, #2d2d2d 100%);
+            padding: 1.2rem 2rem;
+            z-index: 100;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+        }
+
+        .sticky-bar.show {
+            transform: translateY(0);
+        }
+
+        .sticky-bar-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .sticky-bar-content {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .sticky-bar-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .sticky-bar-icon i {
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .sticky-bar-title {
+            color: #fff;
+            font-weight: 700;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .sticky-bar-desc {
+            color: #888;
+            margin: 0.15rem 0 0;
+            font-size: 0.82rem;
+        }
+
+        .sticky-bar-desc span {
+            color: var(--accent-primary);
+            font-weight: 700;
+        }
+
+        .sticky-bar-close {
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .sticky-bar-close:hover {
+            background: rgba(255,255,255,0.15);
+            transform: rotate(90deg);
+        }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .breadcrumb-container {
-                padding-left: 1rem !important;
-                padding-right: 1rem !important;
-                padding-top: 100px !important;
+            .video-section {
+                padding: 4rem 1.5rem;
             }
-            .main-product-section {
-                padding: 1rem 1rem 3rem !important;
-            }
-            .product-image-main {
-                border-radius: 20px !important;
-            }
-            .sensory-experience-section {
-                padding: 3rem 1rem !important;
-            }
-            #sticky-bar {
-                padding: 1rem !important;
-            }
-            .sticky-bar-content {
-                flex-direction: column !important;
-                text-align: center !important;
-                align-items: center !important;
-            }
-        }
 
-        @media (max-width: 576px) {
-            .info-quick-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 0.8rem !important;
+            .video-title {
+                font-size: 1.8rem;
             }
-            .cart-buttons-container {
-                flex-direction: column !important;
-                align-items: stretch !important;
+
+            .video-play-btn {
+                width: 70px;
+                height: 70px;
+                font-size: 1.4rem;
             }
-            .cart-buttons-container > div {
-                justify-content: center !important;
+
+            .recommendations-section {
+                padding: 4rem 1.5rem;
             }
-            .add-to-cart-main {
-                width: 100% !important;
-                min-width: unset !important;
+
+            .recommendations-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
-            .ritual-grid {
-                grid-template-columns: 1fr !important;
-                gap: 1rem !important;
+
+            .rec-image-wrapper {
+                height: 260px;
             }
-            .guarantee-section {
-                gap: 1rem !important;
+
+            .sticky-bar {
+                padding: 1rem 1.5rem;
             }
-            .guarantee-item {
-                min-width: 100% !important;
+
+            .sticky-bar-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .sticky-bar-content {
+                flex-direction: column;
+                gap: 0.8rem;
             }
         }
 
         @media (max-width: 480px) {
-            .trust-badges-grid {
-                grid-template-columns: 1fr !important;
-                gap: 0.8rem !important;
+            .video-subtitle {
+                font-size: 0.95rem;
             }
-            .olfactory-pyramid {
-                padding: 1.2rem !important;
-                gap: 1.5rem !important;
-            }
-        }
 
-        @media (max-width: 360px) {
-            .info-quick-grid {
-                grid-template-columns: 1fr !important;
+            .rec-body {
+                padding: 1.5rem;
+            }
+
+            .rec-name {
+                font-size: 1.05rem;
             }
         }
     </style>
 
-    <!-- SCRIPTS -->
+    <!-- ===== SCRIPTS ===== -->
     <script>
-        // Quantity Selector
+        // ===== Quantity Selector =====
         function updateQty(change) {
             const input = document.getElementById('qty-input');
             let val = parseInt(input.value) + change;
@@ -849,79 +2277,80 @@
             if (val > 10) val = 10;
             input.value = val;
 
-            // Animación sutil
-            input.style.transform = 'scale(1.1)';
+            input.style.transform = 'scale(1.15)';
             setTimeout(() => input.style.transform = 'scale(1)', 150);
         }
 
-        // Wishlist Toggle
+        // ===== Wishlist Toggle =====
         function toggleWishlist() {
-            const btn = document.querySelector('.wishlist-btn');
-            btn.classList.toggle('active');
-            const isActive = btn.classList.contains('active');
+            const btn = document.getElementById('wishlist-btn');
+            const isActive = btn.classList.toggle('active');
             btn.innerHTML = isActive ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
 
-            // Toast
             if (typeof showToast === 'function') {
                 showToast(isActive ? 'Añadido a favoritos ❤️' : 'Eliminado de favoritos', isActive ? 'success' : 'info');
             }
         }
 
-        // Thumbnail Switch
-        document.querySelectorAll('.thumb').forEach(thumb => {
-            thumb.addEventListener('click', function () {
-                document.querySelectorAll('.thumb').forEach(t => {
-                    t.classList.remove('active');
-                    t.style.opacity = '0.6';
-                    t.style.borderColor = 'transparent';
-                });
-                this.classList.add('active');
-                this.style.opacity = '1';
-                this.style.borderColor = 'var(--accent-primary)';
-
-                const img = this.querySelector('img');
-                if (img) {
-                    const mainImg = document.querySelector('.main-product-img');
-                    mainImg.style.opacity = '0';
-                    setTimeout(() => {
-                        mainImg.src = img.src;
-                        mainImg.style.opacity = '1';
-                    }, 200);
-                }
+        // ===== Image Switch =====
+        function switchImage(thumb) {
+            document.querySelectorAll('.thumb').forEach(t => {
+                t.classList.remove('active');
             });
-        });
+            thumb.classList.add('active');
 
-        // Sticky Bar
+            const img = thumb.querySelector('img');
+            if (img) {
+                const mainImg = document.getElementById('main-product-img');
+                mainImg.style.opacity = '0';
+                mainImg.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    mainImg.src = img.src;
+                    mainImg.style.opacity = '1';
+                    mainImg.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+
+        // ===== Video Play =====
+        function playVideo() {
+            if (typeof showToast === 'function') {
+                showToast('Reproduciendo video... 🎬', 'info');
+            }
+        }
+
+        // ===== Sticky Bar =====
+        function closeStickyBar() {
+            document.getElementById('sticky-bar').classList.remove('show');
+        }
+
         setTimeout(() => {
-            document.getElementById('sticky-bar').style.transform = 'translateY(0)';
-        }, 3000);
+            document.getElementById('sticky-bar').classList.add('show');
+        }, 4000);
 
-        // AJAX Add to Cart
-        const productForm = document.querySelector('.product-cart-form');
+        // ===== AJAX Add to Cart - Main Product =====
+        const productForm = document.getElementById('product-cart-form');
         if (productForm) {
             productForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const formData = new FormData(productForm);
-                const url = productForm.action;
-                const button = productForm.querySelector('.add-to-cart-main');
+                const button = document.getElementById('btn-add-cart');
                 const originalContent = button.innerHTML;
 
                 button.disabled = true;
-                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Agregando...</span>';
-                button.style.opacity = '0.8';
+                button.innerHTML = '<span class="btn-icon"><i class="fas fa-spinner fa-spin"></i></span><span class="btn-text">Agregando...</span><span class="btn-shine"></span>';
+                button.style.opacity = '0.85';
 
                 try {
-                    const response = await fetch(url, {
+                    const formData = new FormData(productForm);
+                    const response = await fetch(productForm.action, {
                         method: 'POST',
                         body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
                     });
                     const data = await response.json();
 
                     if (data.success) {
-                        button.innerHTML = '<i class="fas fa-check"></i> <span>¡Añadido!</span>';
+                        button.innerHTML = '<span class="btn-icon"><i class="fas fa-check"></i></span><span class="btn-text">¡Añadido!</span><span class="btn-shine"></span>';
                         button.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
 
                         setTimeout(() => {
@@ -931,15 +2360,11 @@
                             button.disabled = false;
                         }, 2000);
 
-                        if (typeof updateCartCount === 'function') {
-                            updateCartCount(data.cartCount);
-                        }
-                        if (typeof showToast === 'function') {
-                            showToast('¡Fragancia añadida con éxito! 🎉', 'success');
-                        }
+                        if (typeof updateCartCount === 'function') updateCartCount(data.cartCount);
+                        if (typeof showToast === 'function') showToast('¡Fragancia añadida con éxito! 🎉', 'success');
                     }
                 } catch (error) {
-                    button.innerHTML = '<i class="fas fa-exclamation"></i> <span>Error</span>';
+                    button.innerHTML = '<span class="btn-icon"><i class="fas fa-exclamation"></i></span><span class="btn-text">Error</span><span class="btn-shine"></span>';
                     button.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
 
                     setTimeout(() => {
@@ -949,20 +2374,18 @@
                         button.disabled = false;
                     }, 2000);
 
-                    if (typeof showToast === 'function') {
-                        showToast('Error al añadir al carrito', 'error');
-                    }
+                    if (typeof showToast === 'function') showToast('Error al añadir al carrito', 'error');
                 }
             });
         }
 
-        // AJAX para recomendaciones
-        document.querySelectorAll('.ajax-cart-form-rec').forEach(form => {
+        // ===== AJAX Add to Cart - Recommendations =====
+        document.querySelectorAll('.rec-cart-form').forEach(form => {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 e.stopPropagation();
 
-                const button = form.querySelector('button');
+                const button = form.querySelector('.rec-cart-btn');
                 const originalContent = button.innerHTML;
 
                 button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
@@ -970,9 +2393,7 @@
                 try {
                     const response = await fetch(form.action, {
                         method: 'POST',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
                     });
                     const data = await response.json();
 
@@ -985,12 +2406,8 @@
                             button.style.background = '';
                         }, 1500);
 
-                        if (typeof updateCartCount === 'function') {
-                            updateCartCount(data.cartCount);
-                        }
-                        if (typeof showToast === 'function') {
-                            showToast('Añadido desde recomendaciones', 'success');
-                        }
+                        if (typeof updateCartCount === 'function') updateCartCount(data.cartCount);
+                        if (typeof showToast === 'function') showToast('Añadido desde recomendaciones', 'success');
                     }
                 } catch (error) {
                     button.innerHTML = '<i class="fas fa-exclamation"></i>';
@@ -1001,41 +2418,38 @@
             });
         });
 
-        // Scroll animations
+        // ===== Scroll Animations =====
         const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            threshold: 0.08,
+            rootMargin: '0px 0px -60px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
 
-        // Animar elementos al cargar
         document.addEventListener('DOMContentLoaded', () => {
-            // Animar secciones
-            document.querySelectorAll('.trust-badge, .tech-item, .guarantee-item, .ritual-card').forEach((el, i) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = `all 0.5s ease ${i * 0.1}s`;
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
                 observer.observe(el);
             });
+        });
 
-            // Animar recommendation cards
-            document.querySelectorAll('.recommendation-card').forEach((card, i) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
-                card.style.transition = `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${i * 0.1}s`;
-                observer.observe(card);
+        // ===== Smooth Scroll =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             });
         });
     </script>
 
 </body>
-
 </html>
