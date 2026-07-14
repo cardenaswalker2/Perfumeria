@@ -6,82 +6,829 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${title}">Asesor Inteligente | Profumi</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --accent-primary: #d4a574;
+            --accent-secondary: #c4956a;
+            --accent-tertiary: #e8c9a0;
+            --text-dark: #111111;
+            --text-medium: #333333;
+            --text-light: #4f4f4f;
+            --text-muted: #767676;
+            --bg-cream: #faf8f5;
+            --bg-warm: #f5f0eb;
+            --bg-white: #ffffff;
+            --border-light: #e8e0d8;
+            --border-medium: #d4ccc4;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08);
+            --shadow-xl: 0 30px 80px rgba(0, 0, 0, 0.12);
+            --shadow-accent: 0 12px 40px rgba(212, 165, 116, 0.25);
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 28px;
+            --radius-xl: 40px;
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --transition-slow: 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: var(--bg-cream);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(2deg);
+            }
+        }
+
+        @keyframes float-reverse {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(15px) rotate(-2deg);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 0 0 rgba(212, 165, 116, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 12px rgba(212, 165, 116, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(212, 165, 116, 0);
+            }
+        }
+
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scale-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slide-in-right {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .delay-3 {
+            transition-delay: 0.3s;
+        }
+
+        .delay-4 {
+            transition-delay: 0.4s;
+        }
+
+        /* ===== BACKGROUND ORBS ===== */
+        .bg-orb {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-orb-1 {
+            position: absolute;
+            top: -10%;
+            right: -5%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(212, 165, 116, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 14s ease-in-out infinite;
+        }
+
+        .bg-orb-2 {
+            position: absolute;
+            bottom: -10%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139, 90, 43, 0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float-reverse 18s ease-in-out infinite;
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-container {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(20px);
+            padding: 1.2rem 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            display: none;
+            transition: all var(--transition-smooth);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-inner {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.6rem;
+        }
+
+        .progress-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .progress-percent {
+            font-size: 0.8rem;
+            color: var(--accent-primary);
+            font-weight: 700;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .progress-track {
+            height: 5px;
+            background: var(--bg-warm);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .main-wrapper {
+            min-height: 100vh;
+            padding-top: 160px;
+            padding-bottom: 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ===== WIZARD STEPS ===== */
+        .quiz-step {
+            display: none;
+            animation: fade-up 0.6s ease-out;
+        }
+
+        .quiz-step.active {
+            display: block;
+        }
+
+        /* ===== HERO / STEP 0 ===== */
+        .hero-wizard {
+            text-align: center;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: linear-gradient(135deg, #fff9f2 0%, #fff5e8 100%);
+            padding: 0.7rem 1.8rem;
+            border-radius: 50px;
+            margin-bottom: 2.5rem;
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            box-shadow: 0 4px 20px rgba(212, 165, 116, 0.08);
+            animation: fade-up 0.5s ease-out;
+        }
+
+        .hero-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            animation: pulse-glow 2s infinite;
+        }
+
+        .hero-badge-text {
+            font-size: 0.78rem;
+            color: var(--accent-primary);
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            margin-bottom: 1.5rem;
+            line-height: 1.05;
+            color: var(--text-dark);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            animation: fade-up 0.6s ease-out 0.1s both;
+        }
+
+        .hero-title-accent {
+            color: var(--accent-primary);
+            position: relative;
+            display: inline-block;
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .hero-title-accent::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), transparent);
+            opacity: 0.3;
+            border-radius: 2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-light);
+            max-width: 620px;
+            margin: 0 auto 3rem;
+            line-height: 1.9;
+            font-weight: 300;
+            animation: fade-up 0.6s ease-out 0.2s both;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: #fff;
+            padding: 1.2rem 3rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            box-shadow: var(--shadow-accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border: none;
+            font-family: 'Outfit', sans-serif;
+            animation: fade-up 0.6s ease-out 0.3s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.15) 50%, transparent 60%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(212, 165, 116, 0.35);
+        }
+
+        .btn-primary:hover::after {
+            transform: translateX(100%);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary i {
+            transition: transform var(--transition-fast);
+        }
+
+        .btn-primary:hover i {
+            transform: translateX(3px);
+        }
+
+        .btn-secondary {
+            background: var(--text-dark);
+            color: #fff;
+            padding: 1rem 2.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-outline {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline:hover {
+            background: #fff;
+            color: var(--text-dark);
+            border-color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline.gold {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .btn-outline.gold:hover {
+            background: var(--accent-primary);
+            color: #fff;
+        }
+
+        .btn-outline.green {
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .btn-outline.green:hover {
+            background: #22c55e;
+            color: #fff;
+        }
+
+        /* ===== BENEFIT TAGS ===== */
+        .benefits-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.2rem;
+            margin-top: 4rem;
+            animation: fade-up 0.6s ease-out 0.4s both;
+        }
+
+        .benefit-tag {
+            background: var(--bg-white);
+            padding: 0.9rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-medium);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            text-align: center;
+            transition: all var(--transition-fast);
+        }
+
+        .benefit-tag:hover {
+            border-color: rgba(212, 165, 116, 0.2);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ===== WIZARD HEADER ===== */
+        .wizard-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+            animation: fade-up 0.5s ease-out;
+        }
+
+        .step-num {
+            display: inline-block;
+            background: rgba(212, 165, 116, 0.1);
+            color: var(--accent-primary);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .wizard-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            color: var(--text-dark);
+            margin: 0 0 0.8rem 0;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .wizard-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 300;
+        }
+
+        /* ===== OPTIONS GRID ===== */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            animation: fade-up 0.6s ease-out 0.15s both;
+        }
+
+        .options-grid.cols-3 {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+
+        .options-grid.cols-4 {
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        }
+
+        .option-card {
+            background: var(--bg-white);
+            border: 2px solid transparent;
+            padding: 2.5rem 2rem;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            text-align: center;
+            transition: all var(--transition-smooth);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-tertiary));
+            opacity: 0;
+            transition: opacity var(--transition-smooth);
+        }
+
+        .option-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(212, 165, 116, 0.3);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .option-card:hover::before {
+            opacity: 1;
+        }
+
+        .option-card:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        .option-card.compact {
+            padding: 2rem 1.5rem;
+        }
+
+        .option-icon {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: 1.2rem;
+            line-height: 1;
+            transition: transform var(--transition-smooth);
+        }
+
+        .option-card:hover .option-icon {
+            transform: scale(1.1);
+        }
+
+        .option-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0 0 0.5rem 0;
+        }
+
+        .option-card p {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin: 0;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* ===== SECTION HEADERS ===== */
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            color: var(--accent-primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .section-label::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 2px;
+            background: var(--accent-primary);
+            margin: 0.8rem auto 0;
+            border-radius: 1px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            max-width: 550px;
+            margin: 0 auto;
+            font-size: 1.05rem;
+            font-weight: 300;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-wrapper {
+                padding-top: 130px;
+                padding-bottom: 60px;
+            }
+
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .hero-title {
+                font-size: clamp(2.2rem, 8vw, 3.5rem);
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .benefits-row {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+                margin-top: 3rem;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            .option-card {
+                padding: 2rem 1.5rem !important;
+            }
+
+            .progress-container {
+                padding: 1rem 1.5rem;
+            }
+
+            .wizard-header {
+                margin-bottom: 2.5rem;
+            }
+
+            .wizard-header h2 {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-badge {
+                padding: 0.5rem 1.2rem;
+            }
+
+            .hero-badge-text {
+                font-size: 0.7rem;
+                letter-spacing: 1.5px;
+            }
+
+            .btn-primary {
+                padding: 1rem 2rem;
+                font-size: 0.85rem;
+            }
+
+            .option-icon {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
 </head>
 
-<body style="background: #faf8f5; font-family: 'Outfit', sans-serif; overflow-x: hidden;">
+<body>
 
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <!-- BACKGROUND ELEMENTS -->
-    <div style="position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;">
-        <div
-            style="position: absolute; top: -10%; right: -5%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(244,154,31,0.06) 0%, transparent 70%); border-radius: 50%; animation: float 10s ease-in-out infinite;">
-        </div>
-        <div
-            style="position: absolute; bottom: -10%; left: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(139,90,43,0.04) 0%, transparent 70%); border-radius: 50%; animation: float-reverse 12s ease-in-out infinite;">
-        </div>
+    <!-- BACKGROUND ORBS -->
+    <div class="bg-orb">
+        <div class="bg-orb-1"></div>
+        <div class="bg-orb-2"></div>
     </div>
 
     <!-- PROGRESS BAR -->
-    <div id="prog-cont"
-        style="position: fixed; top: 80px; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 1rem 2rem; border-bottom: 1px solid rgba(0,0,0,0.05); display: none; transition: all 0.3s;">
-        <div style="max-width: 600px; margin: 0 auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <span style="font-size: 0.75rem; color: #999; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Progreso de tu Asesoría</span>
-                <span id="prog-text" style="font-size: 0.75rem; color: var(--accent-primary); font-weight: 700;">0%</span>
+    <div class="progress-container" id="prog-cont">
+        <div class="progress-inner">
+            <div class="progress-header">
+                <span class="progress-label">Progreso de tu Asesoría</span>
+                <span class="progress-percent" id="prog-text">0%</span>
             </div>
-            <div style="height: 5px; background: #f0f0f0; border-radius: 10px; overflow: hidden;">
-                <div id="prog-bar"
-                    style="height: 100%; background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary)); width: 0%; transition: 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); border-radius: 10px;">
-                </div>
+            <div class="progress-track">
+                <div class="progress-bar" id="prog-bar"></div>
             </div>
         </div>
     </div>
 
     <!-- MAIN WRAPPER -->
-    <main style="min-height: 100vh; padding-top: 140px; padding-bottom: 100px; position: relative; z-index: 1;">
-        <div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem;">
+    <main class="main-wrapper">
+        <div class="container">
 
-            <!-- STEP 0: HERO INTRO -->
-            <div class="quiz-step active" id="step-0" style="text-align: center;">
-                <div style="display: inline-flex; align-items: center; gap: 0.8rem; background: linear-gradient(135deg, #fff9f2 0%, #fff5e8 100%); padding: 0.6rem 1.5rem; border-radius: 50px; margin-bottom: 2rem; border: 1px solid rgba(244,154,31,0.15); box-shadow: 0 4px 15px rgba(244,154,31,0.08);">
-                    <span style="width: 8px; height: 8px; background: var(--accent-primary); border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
-                    <span style="font-size: 0.8rem; color: var(--accent-primary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Asesor de Lujo</span>
-                </div>
+            <!-- ===== STEP 0: HERO INTRO ===== -->
+            <div class="quiz-step active" id="step-0">
+                <div class="hero-wizard">
+                    <div class="hero-badge">
+                        <span class="hero-badge-dot"></span>
+                        <span class="hero-badge-text">Asesor de Lujo</span>
+                    </div>
 
-                <h1 style="font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 4.2rem); margin-bottom: 1.5rem; line-height: 1.1; color: #1a1a1a; font-weight: 700;">
-                    Encuentra el perfume<br>
-                    <span style="color: var(--accent-primary); position: relative; display: inline-block;">
-                        perfecto para ti.
-                        <svg style="position: absolute; bottom: -8px; left: 0; width: 100%; height: 10px;" viewBox="0 0 200 10" preserveAspectRatio="none">
-                            <path d="M0,6 Q50,0 100,6 T200,6" stroke="var(--accent-primary)" stroke-width="2.5" fill="none" opacity="0.25" />
-                        </svg>
-                    </span>
-                </h1>
+                    <h1 class="hero-title">
+                        Encuentra el perfume<br>
+                        <span class="hero-title-accent">perfecto para ti.</span>
+                    </h1>
 
-                <p style="font-size: 1.2rem; color: #666; max-width: 680px; margin: 0 auto 3.5rem; line-height: 1.8; font-weight: 300;">
-                    Responde unas sencillas preguntas y descubre qué fragancias combinan mejor con tu personalidad, estilo y ocasión. Sentirás la asesoría de un perfumista profesional.
-                </p>
+                    <p class="hero-subtitle">
+                        Responde unas sencillas preguntas y descubre qué fragancias combinan mejor con tu personalidad,
+                        estilo y ocasión. Sentirás la asesoría de un perfumista profesional.
+                    </p>
 
-                <button onclick="startWizard()" class="cta-primary-btn">
-                    <i class="fas fa-magic"></i>
-                    <span>Comenzar diagnóstico</span>
-                </button>
+                    <button onclick="startWizard()" class="btn-primary">
+                        <i class="fas fa-magic"></i>
+                        <span>Comenzar diagnóstico</span>
+                    </button>
 
-                <!-- Beneficios rápidos -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 5rem;">
-                    <div class="benefit-tag">✨ Aroma Personalizado</div>
-                    <div class="benefit-tag">🛍️ Ahorra tiempo y dinero</div>
-                    <div class="benefit-tag">🔒 Compra segura y guiada</div>
+                    <!-- Benefits -->
+                    <div class="benefits-row">
+                        <div class="benefit-tag">✨ Aroma Personalizado</div>
+                        <div class="benefit-tag">🛍️ Ahorra tiempo y dinero</div>
+                        <div class="benefit-tag">🔒 Compra segura y guiada</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- STEP 1: GÉNERO -->
-            <div class="quiz-step" id="step-1" style="display: none;">
+            <!-- ===== STEP 1: GÉNERO ===== -->
+            <div class="quiz-step" id="step-1">
                 <div class="wizard-header">
                     <span class="step-num">Paso 1 de 6</span>
                     <h2>¿Para quién buscas el perfume?</h2>
@@ -106,8 +853,8 @@
                 </div>
             </div>
 
-            <!-- STEP 2: TIPO DE AROMA -->
-            <div class="quiz-step" id="step-2" style="display: none;">
+            <!-- ===== STEP 2: TIPO DE AROMA ===== -->
+            <div class="quiz-step" id="step-2">
                 <div class="wizard-header">
                     <span class="step-num">Paso 2 de 6</span>
                     <h2>¿Qué tipo de aroma prefieres?</h2>
@@ -149,8 +896,8 @@
                 </div>
             </div>
 
-            <!-- STEP 3: MOMENTO -->
-            <div class="quiz-step" id="step-3" style="display: none;">
+            <!-- ===== STEP 3: MOMENTO ===== -->
+            <div class="quiz-step" id="step-3">
                 <div class="wizard-header">
                     <span class="step-num">Paso 3 de 6</span>
                     <h2>¿En qué momento lo usarás?</h2>
@@ -183,9 +930,8 @@
                     </div>
                 </div>
             </div>
-
-            <!-- STEP 4: INTENSIDAD -->
-            <div class="quiz-step" id="step-4" style="display: none;">
+            <!-- ===== STEP 4: INTENSIDAD ===== -->
+            <div class="quiz-step" id="step-4">
                 <div class="wizard-header">
                     <span class="step-num">Paso 4 de 6</span>
                     <h2>¿Qué tan intensa te gusta la fragancia?</h2>
@@ -210,8 +956,8 @@
                 </div>
             </div>
 
-            <!-- STEP 5: DURACIÓN -->
-            <div class="quiz-step" id="step-5" style="display: none;">
+            <!-- ===== STEP 5: DURACIÓN ===== -->
+            <div class="quiz-step" id="step-5">
                 <div class="wizard-header">
                     <span class="step-num">Paso 5 de 6</span>
                     <h2>¿Cuánto tiempo esperas que dure?</h2>
@@ -236,8 +982,8 @@
                 </div>
             </div>
 
-            <!-- STEP 6: PRESUPUESTO -->
-            <div class="quiz-step" id="step-6" style="display: none;">
+            <!-- ===== STEP 6: PRESUPUESTO ===== -->
+            <div class="quiz-step" id="step-6">
                 <div class="wizard-header">
                     <span class="step-num">Paso 6 de 6</span>
                     <h2>¿Qué rango de presupuesto tienes?</h2>
@@ -262,42 +1008,43 @@
                 </div>
             </div>
 
-            <!-- STEP 7: RESULTS (DYNAMICALLY GENERATED IN JS) -->
-            <div class="quiz-step" id="step-results" style="display: none;">
-                <div style="text-align: center; margin-bottom: 4rem;">
-                    <div style="display: inline-flex; align-items: center; gap: 0.6rem; background: #faf0e6; padding: 0.4rem 1.2rem; border-radius: 50px; margin-bottom: 1rem;">
-                        <span style="color: var(--accent-primary); font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">Resultados Listos</span>
+            <!-- ===== STEP 7: RESULTS ===== -->
+            <div class="quiz-step" id="step-results">
+                <div class="results-header animate-on-scroll">
+                    <div class="results-badge">
+                        <span>Resultados Listos</span>
                     </div>
-                    <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3rem); color: #1a1a1a; margin-bottom: 1rem;">Tu Perfume Ideal es...</h2>
-                    <p style="color: #666; max-width: 600px; margin: 0 auto;">Según tu perfil y preferencias, un experto perfumista te sugiere probar las siguientes fragancias:</p>
+                    <h2 class="results-title">Tu Perfume Ideal es...</h2>
+                    <p class="results-subtitle">Según tu perfil y preferencias, un experto perfumista te sugiere probar
+                        las siguientes fragancias:</p>
                 </div>
 
                 <!-- Matches container -->
-                <div id="results-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 5rem;">
-                    <!-- Cards will be populated here -->
+                <div class="results-grid" id="results-container">
+                    <!-- Cards populated by JS -->
                 </div>
 
                 <!-- Comparison Table -->
-                <div style="background: #fff; padding: 2.5rem; border-radius: 28px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 10px 40px rgba(0,0,0,0.02); margin-bottom: 5rem;">
-                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; color: #1a1a1a;">Comparativa de tus Recomendaciones</h3>
-                    <div style="overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; min-width: 600px;" id="comparison-table">
-                            <!-- Populated in JS -->
+                <div class="comparison-table-wrapper animate-on-scroll">
+                    <h3 class="comparison-table-title">Comparativa de tus Recomendaciones</h3>
+                    <div class="comparison-table-scroll">
+                        <table class="comparison-table" id="comparison-table">
+                            <!-- Populated by JS -->
                         </table>
                     </div>
                 </div>
 
-                <!-- Also might like -->
-                <div style="margin-bottom: 5rem;">
-                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #1a1a1a; margin-bottom: 2rem; text-align: center;">También te pueden gustar</h3>
-                    <div id="alternative-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
-                        <!-- Alternatives populated here -->
+                <!-- Alternatives -->
+                <div class="alternatives-section animate-on-scroll">
+                    <h3 class="alternatives-title">También te pueden gustar</h3>
+                    <div class="alternatives-grid" id="alternative-container">
+                        <!-- Alternatives populated by JS -->
                     </div>
                 </div>
 
-                <!-- Restart button -->
-                <div style="text-align: center;">
-                    <button onclick="restartWizard()" class="cta-secondary-btn">
+                <!-- Restart -->
+                <div class="restart-section">
+                    <button onclick="restartWizard()" class="btn-secondary">
                         <i class="fas fa-undo"></i>
                         <span>Repetir Diagnóstico</span>
                     </button>
@@ -307,348 +1054,127 @@
         </div>
     </main>
 
-    <!-- BENEFITS SECTION -->
-    <section style="background: #fff; padding: 6rem 2rem; border-top: 1px solid #f0e6da; border-bottom: 1px solid #f0e6da;">
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <div style="text-align: center; margin-bottom: 4rem;">
-                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 2.8rem); color: #1a1a1a; margin-bottom: 1rem;">¿Por qué confiar en nuestro Asesor?</h2>
-                <p style="color: #777;">Diseñamos esta experiencia pensando en optimizar tu satisfacción.</p>
+    <!-- ===== BENEFITS SECTION ===== -->
+    <section class="benefits-section">
+        <div class="benefits-container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-label">Experiencia Profesional</span>
+                <h2 class="section-title">¿Por qué confiar en nuestro Asesor?</h2>
+                <p class="section-subtitle">Diseñamos esta experiencia pensando en optimizar tu satisfacción.</p>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; text-align: center;">
-                <div class="benefit-card">
-                    <span style="font-size: 2.2rem; display: block; margin-bottom: 1rem;">🎯</span>
-                    <h4 style="font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem;">Perfume Ideal</h4>
-                    <p style="color: #666; font-size: 0.9rem; margin: 0;">Filtración científica que garantiza la compatibilidad con tu estilo.</p>
+            <div class="benefits-grid">
+                <div class="benefit-card animate-on-scroll delay-1">
+                    <div class="benefit-card-icon">🎯</div>
+                    <h4>Perfume Ideal</h4>
+                    <p>Filtración científica que garantiza la compatibilidad con tu estilo.</p>
                 </div>
-                <div class="benefit-card">
-                    <span style="font-size: 2.2rem; display: block; margin-bottom: 1rem;">🔍</span>
-                    <h4 style="font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem;">Descubre Aromas</h4>
-                    <p style="color: #666; font-size: 0.9rem; margin: 0;">Abre tu abanico olfativo a nuevas marcas exclusivas.</p>
+                <div class="benefit-card animate-on-scroll delay-2">
+                    <div class="benefit-card-icon">🔍</div>
+                    <h4>Descubre Aromas</h4>
+                    <p>Abre tu abanico olfativo a nuevas marcas exclusivas.</p>
                 </div>
-                <div class="benefit-card">
-                    <span style="font-size: 2.2rem; display: block; margin-bottom: 1rem;">🤝</span>
-                    <h4 style="font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem;">Compra con Confianza</h4>
-                    <p style="color: #666; font-size: 0.9rem; margin: 0;">Menor índice de error y devoluciones.</p>
+                <div class="benefit-card animate-on-scroll delay-3">
+                    <div class="benefit-card-icon">🤝</div>
+                    <h4>Compra con Confianza</h4>
+                    <p>Menor índice de error y devoluciones.</p>
                 </div>
-                <div class="benefit-card">
-                    <span style="font-size: 2.2rem; display: block; margin-bottom: 1rem;">⏱️</span>
-                    <h4 style="font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem;">Ahorra Tiempo</h4>
-                    <p style="color: #666; font-size: 0.9rem; margin: 0;">Encuentra tu fragancia en menos de un minuto.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- TESTIMONIALS -->
-    <section style="background: #faf8f5; padding: 7rem 2rem;">
-        <div style="max-width: 1200px; margin: 0 auto;">
-            <div style="text-align: center; margin-bottom: 4rem;">
-                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 2.8rem); color: #1a1a1a; margin-bottom: 1rem;">Testimonios de Clientes</h2>
-                <p style="color: #777;">Opiniones reales de usuarios que encontraron su fragancia perfecta.</p>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
-                <div class="testimonial-card">
-                    <div style="display: flex; gap: 0.2rem; margin-bottom: 1rem;">
-                        <i class="fas fa-star" style="color: #fbbf24; font-size: 0.9rem;"></i>
-                        <i class="fas fa-star" style="color: #fbbf24; font-size: 0.9rem;"></i>
-                        <i class="fas fa-star" style="color: #fbbf24; font-size: 0.9rem;"></i>
-                        <i class="fas fa-star" style="color: #fbbf24; font-size: 0.9rem;"></i>
-                        <i class="fas fa-star" style="color: #fbbf24; font-size: 0.9rem;"></i>
-                    </div>
-                    <p style="color: #555; line-height: 1.7; font-style: italic; font-size: 0.92rem; margin-bottom: 1.5rem;">
-                        "Hice las preguntas y el asesor inteligente me recomendó Versace Bright Crystal. Llegó en perfectas condiciones y huele exactamente a lo que buscaba. ¡Gran sistema!"
-                    </p>
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="width: 40px; height: 40px; background: var(--accent-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 0.9rem;">AM</div>
-                        <div>
-                            <p style="font-weight: 700; color: #1a1a1a; margin: 0; font-size: 0.85rem;">Ana María Restrepo</p>
-                            <p style="color: #999; margin: 0; font-size: 0.75rem;">Medellín, Colombia</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonial-card">
-                    <div style="display: flex; gap: 0.2rem; margin-bottom: 1rem;">
-                        <i class="fas fa-star" style="color: #fbbf24; font-size: 0.9rem;"></i>
-                        <i class="fas fa-star" style="color: #fbbf24; font-size: 0.9rem;"></i>
-                        <i class="fas fa-star" style="color: #fbbf24; font-size: 0.9rem;"></i>
-                        <i class="fas fa-star" style="color: #fbbf24; font-size: 0.9rem;"></i>
-                        <i class="fas fa-star" style="color: #fbbf24; font-size: 0.9rem;"></i>
-                    </div>
-                    <p style="color: #555; line-height: 1.7; font-style: italic; font-size: 0.92rem; margin-bottom: 1.5rem;">
-                        "Buscaba un perfume para regalar a mi novio sin saber mucho del tema. El test me arrojó Bleu de Chanel y fue un acierto rotundo. Excelente herramienta de asesoría."
-                    </p>
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <div style="width: 40px; height: 40px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 0.9rem;">FG</div>
-                        <div>
-                            <p style="font-weight: 700; color: #1a1a1a; margin: 0; font-size: 0.85rem;">Felipe Gómez</p>
-                            <p style="color: #999; margin: 0; font-size: 0.75rem;">Bogotá, Colombia</p>
-                        </div>
-                    </div>
+                <div class="benefit-card animate-on-scroll delay-4">
+                    <div class="benefit-card-icon">⏱️</div>
+                    <h4>Ahorra Tiempo</h4>
+                    <p>Encuentra tu fragancia en menos de un minuto.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ -->
-    <section style="background: #fff; padding: 6rem 2rem;">
-        <div style="max-width: 800px; margin: 0 auto;">
-            <div style="text-align: center; margin-bottom: 4rem;">
-                <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 2.8rem); color: #1a1a1a; margin-bottom: 1rem;">Preguntas Frecuentes</h2>
-                <p style="color: #777;">Respuestas rápidas a las dudas comunes.</p>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <div class="faq-item">
-                    <button onclick="toggleFaq(this)" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; background: none; border: none; cursor: pointer; text-align: left;">
-                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.05rem;">¿El diagnóstico tiene costo?</span>
-                        <i class="fas fa-chevron-down" style="color: var(--accent-primary); transition: transform 0.3s;"></i>
-                    </button>
-                    <div style="max-height: 0; overflow: hidden; transition: all 0.3s ease;">
-                        <div style="padding: 0 2rem 1.5rem; color: #666; line-height: 1.7;">
-                            No, nuestro test y recomendación inteligente es 100% gratuito y lo puedes usar las veces que desees.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <button onclick="toggleFaq(this)" style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; background: none; border: none; cursor: pointer; text-align: left;">
-                        <span style="font-weight: 700; color: #1a1a1a; font-size: 1.05rem;">¿Puedo repetir el test?</span>
-                        <i class="fas fa-chevron-down" style="color: var(--accent-primary); transition: transform 0.3s;"></i>
-                    </button>
-                    <div style="max-height: 0; overflow: hidden; transition: all 0.3s ease;">
-                        <div style="padding: 0 2rem 1.5rem; color: #666; line-height: 1.7;">
-                            ¡Por supuesto! Puedes realizarlo tantas veces como desees para encontrar fragancias adecuadas para diferentes climas u ocasiones.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FINAL CALL TO ACTION -->
-    <section style="background: #1a1a1a; padding: 7rem 2rem; color: #fff; text-align: center;">
-        <div style="max-width: 800px; margin: 0 auto;">
-            <h2 style="font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1.5rem; color: #fff;">¿Listo para descubrir tu fragancia?</h2>
-            <p style="color: #aaa; margin-bottom: 3rem; font-size: 1.1rem; max-width: 600px; margin-left: auto; margin-right: auto;">Explora todo nuestro catálogo exclusivo o prueba uno de nuestros kits curados.</p>
-            <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
-                <a href="/catalogo" class="cta-outline-btn">Ver Catálogo</a>
-                <a href="/kits" class="cta-outline-btn gold">Explorar Kits</a>
-                <a href="https://wa.me/573000000000" target="_blank" class="cta-outline-btn green"><i class="fab fa-whatsapp"></i> Hablar con Asesor</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- STYLES -->
     <style>
-        :root {
-            --accent-primary: #f49a1f;
-            --accent-secondary: #e8890c;
-            --text-dark: #1a1a1a;
+        /* ===== RESULTS SECTION ===== */
+        .results-header {
+            text-align: center;
+            margin-bottom: 4rem;
         }
 
-        .cta-primary-btn {
+        .results-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.8rem;
-            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-            color: #fff;
-            padding: 1.3rem 3rem;
-            border-radius: 16px;
+            gap: 0.6rem;
+            background: linear-gradient(135deg, #fff9f2 0%, #fff5e8 100%);
+            padding: 0.5rem 1.4rem;
+            border-radius: 50px;
+            margin-bottom: 1.2rem;
+            border: 1px solid rgba(212, 165, 116, 0.15);
+        }
+
+        .results-badge span {
+            color: var(--accent-primary);
             font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 15px 40px rgba(244,154,31,0.3);
+            font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            border: none;
-            font-family: 'Outfit', sans-serif;
         }
 
-        .cta-primary-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 45px rgba(244,154,31,0.45);
-        }
-
-        .cta-secondary-btn {
-            background: #1a1a1a;
-            color: #fff;
-            padding: 1rem 2.5rem;
-            border-radius: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .cta-secondary-btn:hover {
-            background: #333;
-        }
-
-        .cta-outline-btn {
-            border: 2px solid rgba(255,255,255,0.2);
-            color: #fff;
-            padding: 1rem 2rem;
-            border-radius: 14px;
-            text-decoration: none;
-            font-weight: 700;
-            transition: all 0.3s;
-            display: inline-block;
-        }
-
-        .cta-outline-btn:hover {
-            background: #fff;
-            color: #1a1a1a;
-            border-color: #fff;
-        }
-
-        .cta-outline-btn.gold {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-        }
-
-        .cta-outline-btn.gold:hover {
-            background: var(--accent-primary);
-            color: #fff;
-        }
-
-        .cta-outline-btn.green {
-            border-color: #22c55e;
-            color: #22c55e;
-        }
-
-        .cta-outline-btn.green:hover {
-            background: #22c55e;
-            color: #fff;
-        }
-
-        .benefit-tag {
-            background: #fff;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #555;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-
-        .wizard-header {
-            text-align: center;
-            margin-bottom: 3.5rem;
-        }
-
-        .step-num {
-            display: inline-block;
-            background: rgba(244,154,31,0.1);
-            color: var(--accent-primary);
-            padding: 0.4rem 1.2rem;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-        }
-
-        .wizard-header h2 {
+        .results-title {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(1.8rem, 4vw, 2.6rem);
-            color: #1a1a1a;
-            margin: 0 0 0.8rem 0;
-        }
-
-        .wizard-header p {
-            color: #777;
-            font-size: 1rem;
-            margin: 0;
-        }
-
-        /* Option cards styling */
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 2rem;
-        }
-
-        .options-grid.cols-3 {
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        }
-
-        .options-grid.cols-4 {
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        }
-
-        .option-card {
-            background: #fff;
-            border: 2px solid rgba(0,0,0,0.04);
-            padding: 3rem 2rem;
-            border-radius: 28px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.02);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .option-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-primary);
-            box-shadow: 0 20px 45px rgba(244,154,31,0.08);
-        }
-
-        .option-card.compact {
-            padding: 2rem 1.5rem;
-        }
-
-        .option-icon {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 1.5rem;
-        }
-
-        .option-card h3 {
-            font-size: 1.25rem;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--text-dark);
+            margin-bottom: 1rem;
             font-weight: 700;
-            color: #1a1a1a;
-            margin: 0 0 0.5rem 0;
+            letter-spacing: -0.01em;
         }
 
-        .option-card p {
-            color: #888;
-            font-size: 0.88rem;
-            margin: 0;
-            line-height: 1.5;
+        .results-subtitle {
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.05rem;
+            font-weight: 300;
+            line-height: 1.7;
         }
 
-        /* Match Results Card styling */
+        /* ===== MATCH CARDS ===== */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+            margin-bottom: 5rem;
+        }
+
         .match-card {
-            background: #fff;
-            border-radius: 28px;
-            border: 1px solid rgba(0,0,0,0.04);
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0, 0, 0, 0.04);
             overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.02);
-            transition: all 0.4s;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-smooth);
             display: flex;
             flex-direction: column;
+            position: relative;
+        }
+
+        .match-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-lg);
+            border: 1px solid transparent;
+            transition: border-color var(--transition-smooth);
+            pointer-events: none;
+            z-index: 10;
         }
 
         .match-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.07);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .match-card:hover::after {
+            border-color: rgba(212, 165, 116, 0.2);
         }
 
         .match-img-box {
-            height: 250px;
+            height: 260px;
             overflow: hidden;
-            background: #f8f8f8;
+            background: var(--bg-warm);
             position: relative;
         }
 
@@ -656,10 +1182,30 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .match-card:hover .match-img {
+            transform: scale(1.08);
+        }
+
+        .match-compatibility {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--accent-primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            z-index: 3;
         }
 
         .match-body {
-            padding: 2.2rem;
+            padding: 2rem;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -668,150 +1214,934 @@
         .match-brand {
             color: var(--accent-primary);
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             margin-bottom: 0.4rem;
         }
 
         .match-title {
             font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: #1a1a1a;
+            font-size: 1.4rem;
+            color: var(--text-dark);
             margin: 0 0 1rem 0;
             font-weight: 700;
+        }
+
+        .match-reasons {
+            margin-bottom: 1.2rem;
+            background: #f0fdf4;
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(22, 163, 74, 0.08);
+        }
+
+        .match-reasons-header {
+            font-size: 0.72rem;
+            color: #16a34a;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .match-reason {
+            font-size: 0.8rem;
+            color: #15803d;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
         .match-details-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.8rem;
-            color: #666;
-            background: #faf8f5;
+            gap: 0.7rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.82rem;
+            color: var(--text-medium);
+            background: var(--bg-cream);
             padding: 1rem;
-            border-radius: 16px;
+            border-radius: var(--radius-sm);
+        }
+
+        .match-details-grid div strong {
+            color: var(--text-dark);
+            font-weight: 600;
         }
 
         .match-desc {
-            font-size: 0.9rem;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 1.8rem;
+            font-size: 0.88rem;
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
             flex: 1;
         }
 
         .match-price {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: #1a1a1a;
+            color: var(--text-dark);
             margin-bottom: 1.5rem;
+            font-family: 'DM Sans', sans-serif;
         }
 
         .match-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            gap: 0.8rem;
         }
 
         .match-btn-view {
-            padding: 0.9rem;
-            border-radius: 12px;
-            border: 2px solid #eee;
-            color: #555;
+            padding: 0.85rem;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border-light);
+            color: var(--text-medium);
             text-align: center;
             font-weight: 600;
             text-decoration: none;
-            font-size: 0.88rem;
-            transition: all 0.3s;
+            font-size: 0.85rem;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .match-btn-view:hover {
-            border-color: #333;
-            color: #1a1a1a;
+            border-color: var(--text-dark);
+            color: var(--text-dark);
+            background: var(--bg-white);
         }
 
         .match-btn-cart {
-            padding: 0.9rem;
-            border-radius: 12px;
+            padding: 0.85rem;
+            border-radius: var(--radius-sm);
             border: none;
-            background: #1a1a1a;
+            background: var(--text-dark);
             color: #fff;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 0.88rem;
-            transition: all 0.3s;
+            font-size: 0.85rem;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .match-btn-cart:hover {
             background: var(--accent-primary);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(212, 165, 116, 0.25);
         }
 
-        /* FAQ accordion style */
-        .faq-item {
-            background: #fff;
-            border-radius: 18px;
-            border: 1px solid rgba(0,0,0,0.03);
+        /* ===== COMPARISON TABLE ===== */
+        .comparison-table-wrapper {
+            background: var(--bg-white);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 5rem;
+        }
+
+        .comparison-table-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .comparison-table-scroll {
+            overflow-x: auto;
+            border-radius: var(--radius-sm);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+            font-size: 0.88rem;
+        }
+
+        .comparison-table th {
+            background: var(--bg-cream);
+            padding: 1.2rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--text-dark);
+            border-bottom: 2px solid var(--border-light);
+            white-space: nowrap;
+        }
+
+        .comparison-table td {
+            padding: 1.2rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-medium);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(212, 165, 116, 0.02);
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== ALTERNATIVES ===== */
+        .alternatives-section {
+            margin-bottom: 5rem;
+        }
+
+        .alternatives-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .alternatives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .alternative-card {
+            background: var(--bg-white);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            display: flex;
+            gap: 1.2rem;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-smooth);
+            text-decoration: none;
+        }
+
+        .alternative-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
+            border-color: rgba(212, 165, 116, 0.15);
+        }
+
+        .alternative-img {
+            width: 75px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            flex-shrink: 0;
+        }
+
+        .alternative-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .alternative-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .alternative-price {
+            color: var(--accent-primary);
+            font-weight: 600;
+            font-size: 0.88rem;
+            margin: 0.2rem 0 0;
+        }
+
+        .alternative-link {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-decoration: underline;
+            display: inline-block;
+            margin-top: 0.3rem;
+            transition: color var(--transition-fast);
+        }
+
+        .alternative-card:hover .alternative-link {
+            color: var(--accent-primary);
+        }
+
+        /* ===== RESTART SECTION ===== */
+        .restart-section {
+            text-align: center;
+        }
+
+        /* ===== BENEFITS SECTION ===== */
+        .benefits-section {
+            background: var(--bg-white);
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .benefits-section::before,
+        .benefits-section::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+        }
+
+        .benefits-section::before {
+            top: 0;
+        }
+
+        .benefits-section::after {
+            bottom: 0;
+        }
+
+        .benefits-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .benefit-card {
+            padding: 2.5rem 2rem;
+            border-radius: var(--radius-lg);
+            background: var(--bg-cream);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            transition: all var(--transition-smooth);
+            position: relative;
             overflow: hidden;
         }
 
-        /* Table styles */
-        #comparison-table th, #comparison-table td {
-            padding: 1.2rem;
-            text-align: left;
-            border-bottom: 1px solid #f5f5f5;
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-tertiary));
+            opacity: 0;
+            transition: opacity var(--transition-smooth);
         }
 
-        #comparison-table th {
-            background: #faf8f5;
+        .benefit-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(212, 165, 116, 0.1);
+        }
+
+        .benefit-card:hover::before {
+            opacity: 1;
+        }
+
+        .benefit-card-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 1.2rem;
+            line-height: 1;
+        }
+
+        .benefit-card h4 {
             font-weight: 700;
-            color: #1a1a1a;
+            color: var(--text-dark);
+            margin-bottom: 0.6rem;
+            font-size: 1.05rem;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+        .benefit-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin: 0;
+            line-height: 1.6;
         }
 
-        @keyframes float-reverse {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(12px); }
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(244,154,31,0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(244,154,31,0); }
-            100% { box-shadow: 0 0 0 0 rgba(244,154,31,0); }
-        }
-
-        /* Testimoniales card */
-        .testimonial-card {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 24px;
-            border: 1px solid rgba(0,0,0,0.03);
-        }
-
-        /* Responsive adjustments */
+        /* ===== RESPONSIVE ADJUSTMENTS ===== */
         @media (max-width: 768px) {
-            .options-grid {
-                grid-template-columns: 1fr !important;
-                gap: 1.2rem !important;
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
-            .option-card {
-                padding: 2rem 1.5rem !important;
+
+            .match-img-box {
+                height: 220px;
             }
+
+            .match-body {
+                padding: 1.5rem;
+            }
+
             .match-buttons {
-                grid-template-columns: 1fr !important;
+                grid-template-columns: 1fr;
             }
-            #prog-cont {
-                padding: 1rem !important;
+
+            .comparison-table-wrapper {
+                padding: 1.5rem;
+                margin-bottom: 3rem;
+            }
+
+            .comparison-table-title {
+                font-size: 1.2rem;
+            }
+
+            .alternatives-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .alternatives-section {
+                margin-bottom: 3rem;
+            }
+
+            .benefits-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .benefit-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .results-title {
+                font-size: 1.6rem;
+            }
+
+            .match-title {
+                font-size: 1.2rem;
+            }
+
+            .match-price {
+                font-size: 1.2rem;
+            }
+
+            .alternative-card {
+                padding: 1.2rem;
+            }
+
+            .alternative-img {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+    <!-- ===== TESTIMONIALS SECTION ===== -->
+    <section class="testimonials-section">
+        <div class="testimonials-container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-label">Opiniones Verificadas</span>
+                <h2 class="section-title">Testimonios de Clientes</h2>
+                <p class="section-subtitle">Opiniones reales de usuarios que encontraron su fragancia perfecta.</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card animate-on-scroll delay-1">
+                    <div class="testimonial-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="testimonial-quote">
+                        <i class="fas fa-quote-left testimonial-quote-icon"></i>
+                        <p>Hice las preguntas y el asesor inteligente me recomendó Versace Bright Crystal. Llegó en
+                            perfectas condiciones y huele exactamente a lo que buscaba. ¡Gran sistema!</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar"
+                            style="background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));">
+                            AM</div>
+                        <div class="testimonial-author-info">
+                            <p class="testimonial-name">Ana María Restrepo</p>
+                            <p class="testimonial-location"><i class="fas fa-map-marker-alt"></i> Medellín, Colombia</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card animate-on-scroll delay-2">
+                    <div class="testimonial-stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="testimonial-quote">
+                        <i class="fas fa-quote-left testimonial-quote-icon"></i>
+                        <p>Buscaba un perfume para regalar a mi novio sin saber mucho del tema. El test me arrojó Bleu
+                            de Chanel y fue un acierto rotundo. Excelente herramienta de asesoría.</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                            FG</div>
+                        <div class="testimonial-author-info">
+                            <p class="testimonial-name">Felipe Gómez</p>
+                            <p class="testimonial-location"><i class="fas fa-map-marker-alt"></i> Bogotá, Colombia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FAQ SECTION ===== -->
+    <section class="faq-section">
+        <div class="faq-container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-label">Resolvemos Tus Dudas</span>
+                <h2 class="section-title">Preguntas Frecuentes</h2>
+                <p class="section-subtitle">Respuestas rápidas a las dudas comunes.</p>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item animate-on-scroll delay-1">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-question-text">¿El diagnóstico tiene costo?</span>
+                        <span class="faq-icon">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            No, nuestro test y recomendación inteligente es 100% gratuito y lo puedes usar las veces que
+                            desees.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item animate-on-scroll delay-2">
+                    <button class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-question-text">¿Puedo repetir el test?</span>
+                        <span class="faq-icon">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            ¡Por supuesto! Puedes realizarlo tantas veces como desees para encontrar fragancias
+                            adecuadas para diferentes climas u ocasiones.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FINAL CTA ===== -->
+    <section class="final-cta">
+        <div class="final-cta-orb final-cta-orb-1"></div>
+        <div class="final-cta-orb final-cta-orb-2"></div>
+        <div class="final-cta-content">
+            <h2 class="final-cta-title">¿Listo para descubrir tu fragancia?</h2>
+            <p class="final-cta-subtitle">Explora todo nuestro catálogo exclusivo o prueba uno de nuestros kits curados.
+            </p>
+            <div class="final-cta-buttons">
+                <a href="/catalogo" class="btn-outline">Ver Catálogo</a>
+                <a href="/kits" class="btn-outline gold">Explorar Kits</a>
+                <a href="https://wa.me/573000000000" target="_blank" class="btn-outline green"><i
+                        class="fab fa-whatsapp"></i> Hablar con Asesor</a>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* ===== TESTIMONIALS SECTION ===== */
+        .testimonials-section {
+            background: var(--bg-cream);
+            padding: 7rem 2rem;
+            position: relative;
+        }
+
+        .testimonials-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: linear-gradient(180deg, var(--bg-white) 0%, var(--bg-cream) 100%);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all var(--transition-smooth);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .testimonial-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-6px);
+            border-color: rgba(212, 165, 116, 0.1);
+        }
+
+        .testimonial-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 2.5rem;
+            right: 2.5rem;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-tertiary));
+            border-radius: 0 0 3px 3px;
+            opacity: 0;
+            transition: opacity var(--transition-smooth);
+        }
+
+        .testimonial-card:hover::before {
+            opacity: 1;
+        }
+
+        .testimonial-stars {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .testimonial-stars i {
+            color: #fbbf24;
+            font-size: 0.9rem;
+        }
+
+        .testimonial-quote {
+            position: relative;
+            margin-bottom: 1.5rem;
+            flex: 1;
+        }
+
+        .testimonial-quote-icon {
+            position: absolute;
+            top: -10px;
+            left: -8px;
+            font-size: 2rem;
+            color: var(--accent-primary);
+            opacity: 0.12;
+        }
+
+        .testimonial-quote p {
+            color: var(--text-medium);
+            line-height: 1.85;
+            font-size: 0.95rem;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-top: 1px solid var(--border-light);
+            padding-top: 1.2rem;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .testimonial-author-info {
+            flex: 1;
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+            font-size: 0.92rem;
+        }
+
+        .testimonial-location {
+            color: var(--text-muted);
+            margin: 0.15rem 0 0;
+            font-size: 0.78rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .testimonial-location i {
+            font-size: 0.7rem;
+            color: var(--accent-primary);
+        }
+
+        /* ===== FAQ SECTION ===== */
+        .faq-section {
+            background: var(--bg-white);
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .faq-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: var(--bg-cream);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            transition: all var(--transition-smooth);
+        }
+
+        .faq-item:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+            border-color: rgba(212, 165, 116, 0.1);
+        }
+
+        .faq-item.active {
+            border-color: rgba(212, 165, 116, 0.15);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+            background: var(--bg-white);
+        }
+
+        .faq-question {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            transition: all var(--transition-fast);
+        }
+
+        .faq-question-text {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1.05rem;
+            padding-right: 1rem;
+            transition: color var(--transition-fast);
+        }
+
+        .faq-item.active .faq-question-text {
+            color: var(--accent-primary);
+        }
+
+        .faq-icon {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 10px;
+            background: var(--bg-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-primary);
+            font-size: 0.85rem;
+            transition: all var(--transition-smooth);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .faq-item.active .faq-icon {
+            background: var(--accent-primary);
+            color: #fff;
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .faq-answer-inner {
+            padding: 0 2rem 1.8rem;
+            color: var(--text-light);
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        /* ===== FINAL CTA ===== */
+        .final-cta {
+            background: var(--text-dark);
+            padding: 8rem 2rem;
+            color: #fff;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .final-cta-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .final-cta-orb-1 {
+            top: -20%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212, 165, 116, 0.08) 0%, transparent 70%);
+            animation: float 16s ease-in-out infinite;
+        }
+
+        .final-cta-orb-2 {
+            bottom: -25%;
+            left: -10%;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(212, 165, 116, 0.05) 0%, transparent 70%);
+            animation: float-reverse 20s ease-in-out infinite;
+        }
+
+        .final-cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .final-cta-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1.5rem;
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            animation: fade-up 0.6s ease-out;
+        }
+
+        .final-cta-subtitle {
+            color: #aaa;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 300;
+            animation: fade-up 0.6s ease-out 0.1s both;
+        }
+
+        .final-cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            animation: fade-up 0.6s ease-out 0.2s both;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .testimonials-section {
+                padding: 5rem 1.5rem;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .testimonial-card {
+                padding: 2rem;
+            }
+
+            .faq-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .faq-question {
+                padding: 1.3rem 1.5rem;
+            }
+
+            .faq-question-text {
+                font-size: 0.95rem;
+            }
+
+            .faq-answer-inner {
+                padding: 0 1.5rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .final-cta {
+                padding: 5rem 1.5rem;
+            }
+
+            .final-cta-title {
+                font-size: 1.8rem;
+            }
+
+            .final-cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-outline {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .testimonial-quote p {
+                font-size: 0.9rem;
+            }
+
+            .final-cta-title {
+                font-size: 1.6rem;
             }
         }
     </style>
 
-    <!-- SCRIPTS -->
+    <!-- ===== SCRIPTS ===== -->
     <script th:inline="javascript">
         let dbPerfumes = [];
 
@@ -824,7 +2154,27 @@
             } catch (e) {
                 console.error("Asesor: Error al cargar perfumes:", e);
             }
+
+            // Initialize scroll animations
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
         });
+
+        // Scroll animations observer
+        const observerOptions = {
+            threshold: 0.08,
+            rootMargin: '0px 0px -60px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
 
         // Wizard responses state
         let userResponses = {
@@ -855,10 +2205,10 @@
 
         function selectOption(key, value) {
             userResponses[key] = value;
-            
+
             // Advance to next step
             document.getElementById('step-' + currentStep).style.display = 'none';
-            
+
             if (currentStep < totalSteps) {
                 currentStep++;
                 document.getElementById('step-' + currentStep).style.display = 'block';
@@ -915,7 +2265,7 @@
             const userMom = userResponses.momento.toLowerCase();
             const perfIdeal = (p.idealPara || '').toLowerCase();
             let momMatch = false;
-            
+
             if (userMom === 'diario' && (perfIdeal.includes('diario') || perfIdeal.includes('día') || perfIdeal.includes('frescura') || perfIdeal.includes('universidad') || perfIdeal.includes('oficina'))) {
                 momMatch = true;
             } else if (userMom === 'oficina' && (perfIdeal.includes('oficina') || perfIdeal.includes('trabajo') || perfIdeal.includes('universidad'))) {
@@ -963,12 +2313,9 @@
                 perfDur = '4-6';
             }
 
-            let durText = userDur === '4-6' ? '4-6 horas' : (userDur === '6-8' ? '6-8 horas' : 'Más de 8 horas');
-            let perfDurText = perfDur === '4-6' ? '4-6 horas' : (perfDur === '6-8' ? '6-8 horas' : 'Más de 8 horas');
-
             if (userDur === perfDur) {
                 score += 10;
-                matches.push("Fijación ideal (" + perfDurText + ")");
+                matches.push("Fijación ideal");
             } else if (userDur === '6-8' || perfDur === '6-8') {
                 score += 5;
             }
@@ -985,7 +2332,7 @@
                 return;
             }
 
-            // Calculate compatibility for each perfume in the catalog
+            // Calculate compatibility for each perfume
             let scoredPerfumes = dbPerfumes.map(p => {
                 const compat = calculateCompatibility(p);
                 return {
@@ -998,7 +2345,7 @@
             // Sort by compatibility descending
             scoredPerfumes.sort((a, b) => b.compatibility - a.compatibility);
 
-            // Top matches: 3 to 6 perfumes
+            // Top matches: 5 perfumes
             let topMatches = scoredPerfumes.slice(0, 5);
 
             // Populate cards
@@ -1011,26 +2358,23 @@
                 const mockDuration = p.perfilOlfativo.toLowerCase().includes('duradero') || p.perfilOlfativo.toLowerCase().includes('fijación') ? '8+ horas' : '6 a 8 horas';
                 const imageSrc = (p.imagenUrl === 'Sin imagen' || !p.imagenUrl) ? 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop' : p.imagenUrl;
 
-                // Match reason checks
                 let reasonsHtml = '';
                 item.matches.slice(0, 4).forEach(m => {
-                    reasonsHtml += `<div style="font-size: 0.8rem; color: #16a34a; margin-top: 0.2rem;"><i class="fas fa-check-circle"></i> ${m}</div>`;
+                    reasonsHtml += `<div class="match-reason"><i class="fas fa-check-circle"></i> ${m}</div>`;
                 });
 
                 const cardHtml = `
                     <div class="match-card">
                         <div class="match-img-box">
                             <img src="${imageSrc}" class="match-img" alt="${p.nombre}">
-                            <div style="position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.9); padding: 0.4rem 0.8rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem; color: var(--accent-primary);">
-                                ${item.compatibility}% Compatible
-                            </div>
+                            <div class="match-compatibility">${item.compatibility}% Compatible</div>
                         </div>
                         <div class="match-body">
                             <span class="match-brand">${p.marca}</span>
                             <h3 class="match-title">${p.nombre}</h3>
                             
-                            <div style="margin-bottom: 1.2rem; background: #f0fdf4; padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(22,163,74,0.1);">
-                                <strong style="font-size: 0.8rem; color: #16a34a; text-transform: uppercase;">Coincidencias:</strong>
+                            <div class="match-reasons">
+                                <div class="match-reasons-header"><i class="fas fa-check-circle"></i> Coincidencias</div>
                                 ${reasonsHtml}
                             </div>
 
@@ -1054,10 +2398,7 @@
 
             // Build comparison table
             const table = document.getElementById('comparison-table');
-            let tableHeader = `
-                <tr>
-                    <th>Característica</th>
-            `;
+            let tableHeader = `<tr><th>Característica</th>`;
             topMatches.forEach(item => {
                 tableHeader += `<th>${item.perfume.nombre}</th>`;
             });
@@ -1082,16 +2423,9 @@
                 rowGender += `<td>${p.genero}</td>`;
             });
 
-            rowPrice += '</tr>';
-            rowIntensity += '</tr>';
-            rowDuration += '</tr>';
-            rowFamily += '</tr>';
-            rowOccasion += '</tr>';
-            rowGender += '</tr>';
+            table.innerHTML = tableHeader + rowPrice + rowIntensity + rowDuration + rowFamily + rowOccasion + rowGender + '</tr>';
 
-            table.innerHTML = tableHeader + rowPrice + rowIntensity + rowDuration + rowFamily + rowOccasion + rowGender;
-
-            // Alternatives container (ranks 6 to 9)
+            // Alternatives
             const alternatives = document.getElementById('alternative-container');
             alternatives.innerHTML = '';
             let altMatches = scoredPerfumes.slice(5, 9);
@@ -1103,20 +2437,21 @@
                 const p = item.perfume;
                 const imageSrc = (p.imagenUrl === 'Sin imagen' || !p.imagenUrl) ? 'https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=800&auto=format&fit=crop' : p.imagenUrl;
                 const cardHtml = `
-                    <div style="background: #fff; padding: 1.5rem; border-radius: 20px; border: 1px solid rgba(0,0,0,0.03); display: flex; gap: 1rem; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.01);">
-                        <img src="${imageSrc}" style="width: 75px; height: 75px; object-fit: cover; border-radius: 12px;" alt="${p.nombre}">
-                        <div>
-                            <h4 style="font-weight: 700; color: #1a1a1a; margin: 0; font-size: 0.95rem;">${p.nombre}</h4>
-                            <p style="color: var(--accent-primary); font-weight: 600; font-size: 0.85rem; margin: 0.2rem 0 0 0;">$${(p.precio || 1000000).toLocaleString('es-CO')} COP</p>
-                            <a href="/producto/${p.id}" style="font-size: 0.8rem; color: #888; text-decoration: underline; display: inline-block; margin-top: 0.3rem;">Ver Detalle</a>
+                    <a href="/producto/${p.id}" class="alternative-card">
+                        <img src="${imageSrc}" class="alternative-img" alt="${p.nombre}">
+                        <div class="alternative-info">
+                            <p class="alternative-name">${p.nombre}</p>
+                            <p class="alternative-price">$${(p.precio || 1000000).toLocaleString('es-CO')} COP</p>
+                            <span class="alternative-link">Ver Detalle</span>
                         </div>
-                    </div>
+                    </a>
                 `;
                 alternatives.innerHTML += cardHtml;
             });
         }
 
         function restartWizard() {
+            userResponses = { genero: '', aroma: '', momento: '', intensidad: '', duracion: '', presupuesto: '' };
             document.getElementById('step-results').style.display = 'none';
             document.getElementById('step-1').style.display = 'block';
             document.getElementById('prog-cont').style.display = 'block';
@@ -1140,22 +2475,38 @@
             }
         }
 
+        // ===== FAQ Toggle =====
         function toggleFaq(button) {
             const item = button.parentElement;
-            const content = button.nextElementSibling;
-            const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('.faq-icon i');
 
+            const isOpen = item.classList.contains('active');
+
+            // Close all others
             document.querySelectorAll('.faq-item').forEach(faq => {
-                faq.querySelector('div').style.maxHeight = '0px';
-                faq.querySelector('i').style.transform = 'rotate(0deg)';
+                faq.classList.remove('active');
+                faq.querySelector('.faq-answer').style.maxHeight = '0px';
             });
 
             if (!isOpen) {
-                content.style.maxHeight = content.scrollHeight + 'px';
-                button.querySelector('i').style.transform = 'rotate(180deg)';
+                item.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + 'px';
             }
         }
+
+        // ===== Smooth scroll for anchor links =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
     </script>
+
 </body>
 
 </html>
