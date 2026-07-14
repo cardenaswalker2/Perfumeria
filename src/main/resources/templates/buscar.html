@@ -5,208 +5,448 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${title}">Centro de Búsqueda Inteligente | Profumi</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
-        rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        /* ═══════════════════════════════════════════════════════════════
+           PROFUMI CENTRO DE BÚSQUEDA - ULTRA PREMIUM 2026
+           ═══════════════════════════════════════════════════════════════ */
+        
         :root {
-            --color-primary: #e8913a;
-            --color-primary-light: #f4a261;
-            --color-primary-dark: #d4802f;
-            --color-bg-warm: #faf6f1;
-            --color-text: #1a1a1a;
-            --color-text-light: #555;
+            --color-primary: #C9A96E;
+            --color-primary-light: #E5D5B0;
+            --color-primary-dark: #A0824A;
+            --color-primary-glow: rgba(201, 169, 110, 0.12);
+            --color-bg-warm: #FAF8F5;
+            --color-bg-cream: #F5F0EB;
+            --color-white: #FFFFFF;
+            --color-text: #1A1A1A;
+            --color-text-secondary: #4A4A4A;
+            --color-text-light: #8A8A8A;
+            --color-text-muted: #B0B0B0;
+            --color-border: rgba(0, 0, 0, 0.06);
+            --color-border-hover: rgba(201, 169, 110, 0.3);
             --font-serif: 'Playfair Display', serif;
+            --font-serif-alt: 'Cormorant Garamond', serif;
             --font-sans: 'Outfit', sans-serif;
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --shadow-gold: 0 10px 40px rgba(201, 169, 110, 0.15);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
 
         body {
             background: var(--color-bg-warm);
             font-family: var(--font-sans);
             color: var(--color-text);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Hero */
+        /* ─── Scrollbar ─── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--color-bg-warm); }
+        ::-webkit-scrollbar-thumb { background: var(--color-border-hover); border-radius: 3px; }
+
+        /* ─── HERO SECTION ─── */
         .search-hero {
-            padding: 160px 2rem 80px;
-            background: linear-gradient(180deg, #fff 0%, #fffbf6 50%, var(--color-bg-warm) 100%);
+            padding: 140px 2rem 100px;
+            background: linear-gradient(180deg, var(--color-white) 0%, #FFFDF9 40%, var(--color-bg-warm) 100%);
             text-align: center;
             position: relative;
+            overflow: hidden;
+        }
+
+        .search-hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 600px;
+            background: radial-gradient(ellipse, rgba(201, 169, 110, 0.08) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .search-hero-decor {
             position: absolute;
-            top: 10%;
+            top: 5%;
             left: 50%;
             transform: translateX(-50%);
-            width: 80%;
-            height: 300px;
-            background: radial-gradient(circle, rgba(232, 145, 58, 0.05) 0%, transparent 80%);
+            width: 100%;
+            height: 400px;
+            background: radial-gradient(circle, rgba(201, 169, 110, 0.04) 0%, transparent 60%);
             z-index: 0;
             pointer-events: none;
         }
 
-        /* Buscador principal */
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: linear-gradient(135deg, #FFF9F2 0%, #FFF5E8 100%);
+            padding: 0.5rem 1.4rem;
+            border-radius: 50px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(201, 169, 110, 0.15);
+            transition: var(--transition-smooth);
+        }
+
+        .hero-badge:hover {
+            border-color: var(--color-border-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .hero-badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        .hero-badge-text {
+            font-size: 0.75rem;
+            color: var(--color-primary);
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            color: var(--color-text);
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-title em {
+            font-family: var(--font-serif-alt);
+            font-style: italic;
+            color: var(--color-primary);
+            font-weight: 400;
+            position: relative;
+        }
+
+        .hero-title em::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--color-primary), transparent);
+            opacity: 0.4;
+        }
+
+        .hero-subtitle {
+            color: var(--color-text-light);
+            font-size: 1.1rem;
+            max-width: 550px;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        /* ─── Search Bar ─── */
         .search-bar-wrapper {
             position: relative;
-            max-width: 700px;
+            max-width: 650px;
             margin: 0 auto 1.5rem;
             z-index: 10;
         }
 
         .search-input-main {
             width: 100%;
-            padding: 1.2rem 3.5rem 1.2rem 2rem;
+            padding: 1.2rem 3.5rem 1.2rem 1.8rem;
             border-radius: 50px;
-            border: 2px solid #ebdcd0;
-            background: #fff;
-            font-size: 1.1rem;
+            border: 2px solid #EBDCD0;
+            background: var(--color-white);
+            font-size: 1rem;
             font-family: var(--font-sans);
             outline: none;
-            box-shadow: 0 10px 30px rgba(232, 145, 58, 0.05);
-            transition: all 0.3s;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-smooth);
+            color: var(--color-text);
         }
 
         .search-input-main:focus {
             border-color: var(--color-primary);
-            box-shadow: 0 15px 45px rgba(232, 145, 58, 0.12);
+            box-shadow: 0 15px 45px rgba(201, 169, 110, 0.12);
+        }
+
+        .search-input-main::placeholder {
+            color: var(--color-text-muted);
+            font-weight: 300;
         }
 
         .search-icon-btn {
             position: absolute;
-            right: 25px;
+            right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            background: none;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
             border: none;
-            color: var(--color-primary);
-            font-size: 1.25rem;
+            color: var(--color-white);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1rem;
             cursor: pointer;
+            transition: var(--transition-bounce);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(201, 169, 110, 0.3);
         }
 
-        /* Autocomplete results dropdown */
+        .search-icon-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(201, 169, 110, 0.4);
+        }
+
+        /* ─── Autocomplete Dropdown ─── */
         .autocomplete-dropdown {
             position: absolute;
-            top: 100%;
+            top: calc(100% + 8px);
             left: 0;
             right: 0;
-            background: #fff;
-            border-radius: 24px;
-            border: 1px solid rgba(0,0,0,0.06);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-            margin-top: 0.5rem;
+            background: var(--color-white);
+            border-radius: 20px;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-medium);
             max-height: 400px;
             overflow-y: auto;
             display: none;
             z-index: 1000;
             text-align: left;
+            padding: 0.5rem;
         }
 
         .autocomplete-item {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 1rem;
-            border-bottom: 1px solid #f5f5f5;
+            padding: 0.9rem 1rem;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: var(--transition-smooth);
+            margin-bottom: 0.3rem;
+        }
+
+        .autocomplete-item:last-child {
+            margin-bottom: 0;
         }
 
         .autocomplete-item:hover {
-            background: #faf6f1;
+            background: var(--color-bg-warm);
+            transform: translateX(5px);
         }
 
         .autocomplete-item img {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
         }
 
-        /* Chips */
+        .autocomplete-item-info {
+            flex: 1;
+        }
+
+        .autocomplete-item-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--color-text);
+            margin-bottom: 2px;
+        }
+
+        .autocomplete-item-meta {
+            font-size: 0.78rem;
+            color: var(--color-text-light);
+        }
+
+        .autocomplete-item-price {
+            color: var(--color-primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        /* ─── History ─── */
+        .history-container {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-top: 1.2rem;
+        }
+
+        .history-container.active {
+            display: flex;
+        }
+
+        .history-label {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .history-chips {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .history-clear {
+            background: none;
+            border: none;
+            color: var(--color-text-light);
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: var(--transition-smooth);
+            font-weight: 500;
+        }
+
+        .history-clear:hover {
+            color: var(--color-primary);
+        }
+
+        /* ─── Chips ─── */
         .chip-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.6rem;
+            gap: 0.7rem;
             justify-content: center;
             margin-bottom: 2rem;
         }
 
         .chip-btn {
-            background: #fff;
-            border: 1px solid #ebdcd0;
-            padding: 0.5rem 1.2rem;
+            background: var(--color-white);
+            border: 1.5px solid #EBDCD0;
+            padding: 0.6rem 1.4rem;
             border-radius: 50px;
             font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition-smooth);
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
+            color: var(--color-text-secondary);
+            font-family: var(--font-sans);
         }
 
         .chip-btn:hover {
             border-color: var(--color-primary);
             color: var(--color-primary);
-            background: #fffcf8;
+            background: var(--color-primary-glow);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-soft);
         }
 
         .chip-btn.active {
-            background: var(--color-primary);
-            color: #fff;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: var(--color-white);
             border-color: var(--color-primary);
+            box-shadow: var(--shadow-gold);
         }
 
-        /* Sections common spacing */
+        /* ─── Section Common ─── */
         .search-section {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 4rem 2rem;
+            padding: 5rem 2rem;
         }
 
         .section-header-title {
             font-family: var(--font-serif);
-            font-size: 1.8rem;
-            color: #1a1a1a;
-            margin-bottom: 1.8rem;
+            font-size: 1.6rem;
+            color: var(--color-text);
+            margin-bottom: 2rem;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
 
-        /* Products Grid */
+        .section-header-title.centered {
+            justify-content: center;
+            text-align: center;
+        }
+
+        .section-header-title .icon {
+            font-size: 1.2rem;
+        }
+
+        /* ─── Product Cards ─── */
         .search-results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
             gap: 2rem;
         }
 
-        /* Product Card */
         .perfume-card {
-            background: #fff;
-            border-radius: 24px;
-            border: 1px solid rgba(0,0,0,0.03);
+            background: var(--color-white);
+            border-radius: 20px;
+            border: 1px solid var(--color-border);
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.01);
-            transition: all 0.4s;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-smooth);
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .perfume-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(232,145,58,0.06);
-            border-color: rgba(232,145,58,0.1);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-gold);
+            border-color: var(--color-border-hover);
         }
 
         .perfume-img-box {
-            height: 220px;
+            height: 240px;
             overflow: hidden;
-            background: #fdfbf7;
+            background: linear-gradient(135deg, #FDFBF7 0%, #F8F5F0 100%);
             position: relative;
         }
 
@@ -214,10 +454,46 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .perfume-card:hover .perfume-img-box img {
+            transform: scale(1.08);
+        }
+
+        .compare-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            border: none;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--color-text);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+            font-size: 0.85rem;
+            transition: var(--transition-bounce);
+            backdrop-filter: blur(10px);
+        }
+
+        .compare-btn:hover {
+            transform: scale(1.15);
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .compare-btn.active {
+            background: var(--color-primary);
+            color: var(--color-white);
         }
 
         .perfume-body {
-            padding: 1.5rem;
+            padding: 1.6rem;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -225,261 +501,589 @@
 
         .perfume-brand {
             color: var(--color-primary);
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 0.3rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.4rem;
         }
 
         .perfume-title {
             font-family: var(--font-serif);
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 0.4rem;
+            line-height: 1.2;
+        }
+
+        .perfume-family {
+            font-size: 0.8rem;
+            color: var(--color-text-light);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
         .perfume-price {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            color: #1a1a1a;
+            color: var(--color-text);
             margin-bottom: 1.2rem;
+            margin-top: auto;
+            font-family: var(--font-sans);
+            letter-spacing: -0.5px;
+        }
+
+        .perfume-price span {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            font-weight: 400;
         }
 
         .card-btn-view {
-            padding: 0.8rem;
+            padding: 0.75rem;
             border-radius: 12px;
-            border: 1.5px solid #eee;
-            color: #555;
+            border: 1.5px solid #EBDCD0;
+            color: var(--color-text-secondary);
             text-align: center;
             font-weight: 600;
             text-decoration: none;
-            font-size: 0.85rem;
-            transition: all 0.3s;
+            font-size: 0.82rem;
+            transition: var(--transition-smooth);
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .card-btn-view:hover {
-            border-color: #333;
-            color: #1a1a1a;
+            border-color: var(--color-text);
+            color: var(--color-text);
+            background: var(--color-bg-warm);
         }
 
         .card-btn-cart {
             width: 100%;
-            padding: 0.8rem;
+            padding: 0.85rem;
             border-radius: 12px;
             border: none;
-            background: #1a1a1a;
-            color: #fff;
+            background: linear-gradient(135deg, var(--color-text) 0%, #333 100%);
+            color: var(--color-white);
             font-weight: 700;
             cursor: pointer;
             font-size: 0.85rem;
-            transition: all 0.3s;
+            transition: var(--transition-smooth);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
         }
 
         .card-btn-cart:hover {
-            background: var(--color-primary);
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-gold);
         }
 
-        /* Large Categories Cards */
-        .cat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 1.5rem;
+        /* ─── Results Section ─── */
+        #results-section {
+            display: none;
+            animation: fadeInUp 0.6s ease;
         }
 
-        .cat-card {
-            background: #fff;
-            padding: 2rem 1rem;
-            border-radius: 20px;
-            border: 1px solid rgba(0,0,0,0.03);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.01);
-        }
-
-        .cat-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--color-primary);
-            box-shadow: 0 10px 25px rgba(232,145,58,0.05);
-        }
-
-        .cat-icon {
-            font-size: 2.2rem;
+        #results-section.active {
             display: block;
-            margin-bottom: 0.8rem;
         }
 
-        .cat-card h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #1a1a1a;
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); filter: blur(4px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
-        /* Families Grid */
-        .families-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1.2rem;
+        .similar-section {
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--color-border);
         }
 
-        .family-item {
-            background: #fff;
-            padding: 1.5rem 1rem;
-            border-radius: 16px;
-            border: 1px solid rgba(0,0,0,0.03);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
+        .similar-title {
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            color: var(--color-text);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
         }
 
-        .family-item:hover {
-            transform: translateY(-3px);
-            border-color: var(--color-primary);
-        }
-
-        .family-item.active {
-            background: var(--color-primary);
-            color: #fff;
-            border-color: var(--color-primary);
-        }
-
-        /* Table Spec Comparer */
-        .comp-table th, .comp-table td {
-            padding: 1rem 1.2rem;
-            text-align: left;
-            border-bottom: 1px solid #f5f5f5;
-        }
-
-        .comp-table th {
-            background: #faf6f1;
-            font-weight: 700;
-        }
-
-        /* Double slider styling */
-        .slider-box {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 24px;
-            border: 1px solid rgba(0,0,0,0.03);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Responsive */
+        /* ─── Responsive ─── */
         @media (max-width: 768px) {
-            .search-results-grid {
-                grid-template-columns: 1fr !important;
-            }
-            .cat-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
-            .search-hero {
-                padding: 140px 1rem 60px;
-            }
+            .search-hero { padding: 120px 1.5rem 60px; }
+            .hero-title { font-size: 2rem; }
+            .search-results-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+            .search-section { padding: 3rem 1.5rem; }
+            .perfume-img-box { height: 180px; }
+            .perfume-body { padding: 1.2rem; }
+        }
+
+        @media (max-width: 480px) {
+            .search-results-grid { grid-template-columns: 1fr; }
+            .hero-title { font-size: 1.8rem; }
+            .search-input-main { padding: 1rem 3rem 1rem 1.2rem; font-size: 0.9rem; }
+            .chip-btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
         }
     </style>
 </head>
 
-<body style="background: #faf8f5;">
+<body>
 
     <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <!-- HERO SECTION -->
+    <!-- ═══════════════════════════════════════════════════════════════
+         HERO SECTION
+         ═══════════════════════════════════════════════════════════════ -->
     <section class="search-hero">
         <div class="search-hero-decor"></div>
-        <div style="max-width: 800px; margin: 0 auto; position: relative; z-index: 10;">
-            <div
-                style="display: inline-flex; align-items: center; gap: 0.8rem; background: linear-gradient(135deg, #fff9f2 0%, #fff5e8 100%); padding: 0.5rem 1.4rem; border-radius: 50px; margin-bottom: 2rem; border: 1px solid rgba(232,145,58,0.15);">
-                <span style="width: 6px; height: 6px; background: var(--color-primary); border-radius: 50%; display: inline-block;"></span>
-                <span style="font-size: 0.8rem; color: var(--color-primary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">Descubre tu Aroma</span>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                <span class="hero-badge-text">Descubre tu Aroma</span>
             </div>
 
-            <h1 style="font-family: var(--font-serif); font-size: clamp(2rem, 5vw, 3.8rem); color: #1a1a1a; margin-bottom: 1.2rem; font-weight: 700; line-height: 1.1;">
-                Búsqueda Inteligente de Perfumes
+            <h1 class="hero-title">
+                Búsqueda <em>Inteligente</em><br>de Perfumes
             </h1>
 
-            <p style="color: #666; font-size: 1.1rem; max-width: 600px; margin: 0 auto 3rem; font-weight: 300;">
-                Explora el catálogo, selecciona tus preferencias o habla con nuestra concierge.
+            <p class="hero-subtitle">
+                Explora el catálogo, selecciona tus preferencias o habla con nuestra concierge personalizada.
             </p>
 
-            <!-- BUSCADOR -->
+            <!-- Search Bar -->
             <div class="search-bar-wrapper">
                 <input type="text" id="search-input" class="search-input-main" placeholder="Buscar por marca, nombre, familia olfativa..." oninput="onSearchInput()">
-                <button class="search-icon-btn"><i class="fas fa-search"></i></button>
+                <button class="search-icon-btn" onclick="triggerSearchFromInput()">
+                    <i class="fas fa-search"></i>
+                </button>
 
-                <!-- dropdown results -->
                 <div class="autocomplete-dropdown" id="dropdown-results"></div>
             </div>
 
-            <!-- HISTORIAL DE BÚSQUEDA -->
-            <div id="history-box" style="display: none; justify-content: center; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-top: 1rem;">
-                <span style="font-size: 0.8rem; color: #888; font-weight: 600;">Historial:</span>
-                <div id="history-chips" style="display: flex; gap: 0.5rem; flex-wrap: wrap;"></div>
-                <button onclick="clearSearchHistory()" style="background: none; border: none; color: #ef4444; font-size: 0.75rem; cursor: pointer; text-decoration: underline;">Limpiar</button>
+            <!-- History -->
+            <div class="history-container" id="history-box">
+                <span class="history-label">Historial:</span>
+                <div class="history-chips" id="history-chips"></div>
+                <button class="history-clear" onclick="clearSearchHistory()">Limpiar</button>
             </div>
         </div>
     </section>
 
-    <!-- LIVE SEARCH RESULTS OR TENDENCIAS -->
-    <section class="search-section" id="results-section" style="display: none;">
+    <!-- ═══════════════════════════════════════════════════════════════
+         LIVE SEARCH RESULTS
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="search-section" id="results-section">
         <h2 class="section-header-title" id="results-header-title">Resultados de tu búsqueda</h2>
         <div class="search-results-grid" id="search-results-container"></div>
 
-        <!-- SIMILAR / ALSO MIGHT LIKE SECTION -->
-        <div id="similar-section" style="display: none; margin-top: 5rem;">
-            <h3 style="font-family: var(--font-serif); font-size: 1.5rem; color: #1a1a1a; margin-bottom: 1.5rem;">También te podrían gustar</h3>
+        <div class="similar-section" id="similar-section" style="display: none;">
+            <h3 class="similar-title">También te podrían gustar</h3>
             <div class="search-results-grid" id="similar-results-container"></div>
         </div>
     </section>
 
-    <!-- LOS MÁS BUSCADOS / TENDENCIAS -->
+    <!-- ═══════════════════════════════════════════════════════════════
+         TENDENCIAS
+         ═══════════════════════════════════════════════════════════════ -->
     <section class="search-section">
-        <h2 class="section-header-title">🔥 Tendencias de la Semana</h2>
+        <h2 class="section-header-title">
+            <span class="icon">🔥</span> Tendencias de la Semana
+        </h2>
         <div class="search-results-grid" id="trending-container"></div>
     </section>
-
-    <!-- CATEGORIES -->
-    <section class="search-section" style="background: #fff; border-top: 1px solid #f2e9e1; border-bottom: 1px solid #f2e9e1;">
-        <h2 class="section-header-title" style="justify-content: center;">Buscar por categoría</h2>
+        <!-- ═══════════════════════════════════════════════════════════════
+         CATEGORÍAS
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="search-section" style="background: var(--color-white); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+        <h2 class="section-header-title centered">Buscar por categoría</h2>
         <div class="cat-grid">
             <div class="cat-card" onclick="filterByField('genero', 'Hombre')">
                 <span class="cat-icon">👨</span>
                 <h3>Hombre</h3>
+                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.3rem;">Masculino</p>
             </div>
             <div class="cat-card" onclick="filterByField('genero', 'Mujer')">
                 <span class="cat-icon">👩</span>
                 <h3>Mujer</h3>
+                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.3rem;">Femenino</p>
             </div>
             <div class="cat-card" onclick="filterByField('genero', 'Uniséx')">
                 <span class="cat-icon">🎁</span>
                 <h3>Regalos / Unisex</h3>
+                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.3rem;">Para todos</p>
             </div>
             <div class="cat-card" onclick="filterByField('tipo', 'Decant')">
                 <span class="cat-icon">🧪</span>
                 <h3>Decants</h3>
+                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.3rem;">Muestras</p>
             </div>
             <div class="cat-card" onclick="filterByField('tipo', 'Kit')">
                 <span class="cat-icon">📦</span>
                 <h3>Kits</h3>
+                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.3rem;">Sets</p>
             </div>
             <div class="cat-card" onclick="filterByField('tipo', 'Novedad')">
                 <span class="cat-icon">🌟</span>
                 <h3>Novedades</h3>
+                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.3rem;">Lo nuevo</p>
             </div>
             <div class="cat-card" onclick="filterByField('tipo', 'Best')">
                 <span class="cat-icon">❤️</span>
                 <h3>Más vendidos</h3>
+                <p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.3rem;">Top ventas</p>
             </div>
         </div>
     </section>
 
-    <!-- FAMILIA OLFATIVA -->
+    <style>
+        /* ─── Category Cards ─── */
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .cat-card {
+            background: var(--color-bg-warm);
+            padding: 2rem 1rem;
+            border-radius: 20px;
+            border: 1.5px solid transparent;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .cat-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--color-border-hover);
+            box-shadow: var(--shadow-gold);
+            background: var(--color-white);
+        }
+
+        .cat-card:hover::before {
+            opacity: 1;
+        }
+
+        .cat-icon {
+            font-size: 2.4rem;
+            display: block;
+            margin-bottom: 0.8rem;
+            transition: var(--transition-bounce);
+        }
+
+        .cat-card:hover .cat-icon {
+            transform: scale(1.2);
+        }
+
+        .cat-card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        /* ─── Family Items ─── */
+        .families-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1rem;
+        }
+
+        .family-item {
+            background: var(--color-white);
+            padding: 1.4rem 1rem;
+            border-radius: 16px;
+            border: 1.5px solid var(--color-border);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+        }
+
+        .family-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-soft);
+            color: var(--color-primary);
+            background: var(--color-primary-glow);
+        }
+
+        .family-item.active {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-gold);
+        }
+
+        /* ─── Comparer Table ─── */
+        .comparer-container {
+            background: var(--color-white);
+            padding: 2.5rem;
+            border-radius: 28px;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-soft);
+            overflow-x: auto;
+            transition: var(--transition-smooth);
+        }
+
+        .comparer-container:hover {
+            border-color: var(--color-border-hover);
+        }
+
+        .comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .comp-table th {
+            padding: 1.2rem;
+            background: var(--color-bg-warm);
+            font-weight: 700;
+            color: var(--color-text);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .comp-table td {
+            padding: 1.2rem;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .comp-table td:first-child {
+            font-weight: 600;
+            color: var(--color-text);
+            background: var(--color-bg-warm);
+            width: 180px;
+        }
+
+        .comp-table tr:hover td {
+            background: var(--color-bg-warm);
+        }
+
+        .comp-table tr:hover td:first-child {
+            background: var(--color-bg-cream);
+        }
+
+        /* ─── Slider ─── */
+        .slider-box {
+            background: var(--color-white);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid var(--color-border);
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .slider-label {
+            font-weight: 600;
+            color: var(--color-text);
+            font-size: 0.9rem;
+        }
+
+        .slider-value {
+            color: var(--color-primary);
+            font-size: 1.3rem;
+            font-weight: 700;
+            font-family: var(--font-sans);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) var(--value, 50%), #EBDCD0 var(--value, 50%), #EBDCD0 100%);
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(201, 169, 110, 0.4);
+            border: 3px solid var(--color-white);
+            transition: var(--transition-bounce);
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(201, 169, 110, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            cursor: pointer;
+            border: 3px solid var(--color-white);
+            box-shadow: 0 4px 12px rgba(201, 169, 110, 0.4);
+        }
+
+        /* ─── Nova AI Section ─── */
+        .nova-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border-radius: 32px;
+            padding: 4rem 3rem;
+            color: var(--color-white);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .nova-section::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(201, 169, 110, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .nova-section::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(201, 169, 110, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .nova-icon {
+            font-size: 3.5rem;
+            display: block;
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .nova-title {
+            font-family: var(--font-serif);
+            font-size: 2.4rem;
+            color: var(--color-white);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .nova-subtitle {
+            color: var(--color-primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .nova-desc {
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 550px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.8;
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        .nova-btn {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: var(--color-white);
+            padding: 1.1rem 3rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 10px 30px rgba(201, 169, 110, 0.3);
+            display: inline-block;
+            transition: var(--transition-smooth);
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .nova-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(201, 169, 110, 0.4);
+        }
+
+        /* ─── Responsive additions ─── */
+        @media (max-width: 768px) {
+            .cat-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 1rem; }
+            .families-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .comparer-container { padding: 1.5rem; border-radius: 20px; }
+            .slider-box { padding: 1.5rem; }
+            .nova-section { padding: 3rem 1.5rem; border-radius: 24px; }
+            .nova-title { font-size: 1.8rem; }
+            .nova-icon { font-size: 2.5rem; }
+            .chip-container { gap: 0.5rem; }
+            .chip-btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
+        }
+
+        @media (max-width: 480px) {
+            .cat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .cat-card { padding: 1.5rem 0.8rem; }
+            .cat-icon { font-size: 2rem; }
+            .nova-title { font-size: 1.6rem; }
+        }
+    </style>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         FAMILIA OLFATIVA
+         ═══════════════════════════════════════════════════════════════ -->
     <section class="search-section">
-        <h2 class="section-header-title" style="justify-content: center;">Buscar por familia olfativa</h2>
+        <h2 class="section-header-title centered">Buscar por familia olfativa</h2>
         <div class="families-grid">
             <div class="family-item" onclick="filterByAroma('Floral')">🌸 Floral</div>
             <div class="family-item" onclick="filterByAroma('Citrico')">🍊 Cítrico</div>
@@ -492,9 +1096,11 @@
         </div>
     </section>
 
-    <!-- FILTRAR POR OCASIÓN -->
-    <section class="search-section" style="background: #fff; border-top: 1px solid #f2e9e1; border-bottom: 1px solid #f2e9e1;">
-        <h2 class="section-header-title" style="justify-content: center;">Buscar por ocasión</h2>
+    <!-- ═══════════════════════════════════════════════════════════════
+         OCASIÓN
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="search-section" style="background: var(--color-white); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+        <h2 class="section-header-title centered">Buscar por ocasión</h2>
         <div class="chip-container">
             <button class="chip-btn" onclick="filterByOccasion('diario')">☀️ Uso diario</button>
             <button class="chip-btn" onclick="filterByOccasion('trabajo')">💼 Trabajo</button>
@@ -508,52 +1114,69 @@
         </div>
     </section>
 
-    <!-- COMPARADOR RÁPIDO DE ESPECIFICACIONES -->
+    <!-- ═══════════════════════════════════════════════════════════════
+         COMPARADOR RÁPIDO
+         ═══════════════════════════════════════════════════════════════ -->
     <section class="search-section">
-        <h2 class="section-header-title" style="justify-content: center;">Comparador Rápido (Hasta 3)</h2>
-        <p style="text-align: center; color: #666; margin-bottom: 2rem;">Selecciona fragancias desde los resultados de búsqueda para compararlas en tiempo real.</p>
-        <div style="background: #fff; padding: 2rem; border-radius: 28px; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 8px 30px rgba(0,0,0,0.01); overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; min-width: 600px;" class="comp-table" id="comparer-table">
+        <h2 class="section-header-title centered">Comparador Rápido <span style="font-size: 0.85rem; color: var(--color-text-muted); font-weight: 400; text-transform: none; letter-spacing: 0;">(Hasta 3)</span></h2>
+        <p style="text-align: center; color: var(--color-text-light); margin-bottom: 2rem; font-size: 0.95rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+            Selecciona fragancias desde los resultados de búsqueda para compararlas en tiempo real.
+        </p>
+        <div class="comparer-container">
+            <table class="comp-table" id="comparer-table">
                 <tr>
-                    <td colspan="4" style="text-align: center; color: #999; padding: 3rem;">Añade perfumes de la lista para comparar sus propiedades.</td>
+                    <td colspan="4" style="text-align: center; color: var(--color-text-muted); padding: 3rem; font-style: italic;">
+                        <i class="fas fa-balance-scale" style="display: block; font-size: 2rem; margin-bottom: 1rem; color: var(--color-border-hover);"></i>
+                        Añade perfumes de la lista para comparar sus propiedades.
+                    </td>
                 </tr>
             </table>
         </div>
     </section>
 
-    <!-- PRECIO SLIDER Y DURACIÓN -->
-    <section class="search-section" style="background: #fff; border-top: 1px solid #f2e9e1; border-bottom: 1px solid #f2e9e1;">
-        <h2 class="section-header-title" style="justify-content: center;">Filtrar por rango de precio</h2>
+    <!-- ═══════════════════════════════════════════════════════════════
+         PRECIO SLIDER
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="search-section" style="background: var(--color-white); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+        <h2 class="section-header-title centered">Filtrar por rango de precio</h2>
         <div class="slider-box">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-weight: 700;">
-                <span>Hasta:</span>
-                <span id="price-val" style="color: var(--color-primary); font-size: 1.2rem;">$1.200.000 COP</span>
+            <div class="slider-header">
+                <span class="slider-label">Precio máximo</span>
+                <span class="slider-value" id="price-val">$2.500.000 COP</span>
             </div>
-            <input type="range" id="price-slider" min="100000" max="2500000" step="50000" value="2500000" style="width: 100%; accent-color: var(--color-primary);" oninput="onPriceSliderChange()">
+            <input type="range" id="price-slider" min="100000" max="2500000" step="50000" value="2500000" oninput="onPriceSliderChange()">
+            <div style="display: flex; justify-content: space-between; margin-top: 0.8rem; font-size: 0.75rem; color: var(--color-text-muted);">
+                <span>$100.000</span>
+                <span>$2.500.000</span>
+            </div>
         </div>
     </section>
 
-    <!-- PREMIUM NOVA AI CONCIERGE -->
+    <!-- ═══════════════════════════════════════════════════════════════
+         NOVA AI CONCIERGE
+         ═══════════════════════════════════════════════════════════════ -->
     <section class="search-section">
-        <div style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-radius: 32px; padding: 4rem; color: #fff; text-align: center; position: relative; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.3);">
-            <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(232, 145, 58, 0.15) 0%, transparent 70%); border-radius: 50%;"></div>
-            <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🤖</span>
-            <h2 style="font-family: var(--font-serif); font-size: 2.2rem; color: #fff; margin-bottom: 1rem;">Nova AI</h2>
-            <p style="color: var(--color-primary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; margin-bottom: 1.5rem;">Tu Asistente Experto en Perfumes</p>
-            <p style="color: #ccc; max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.8;">
+        <div class="nova-section">
+            <span class="nova-icon">🤖</span>
+            <h2 class="nova-title">Nova AI</h2>
+            <span class="nova-subtitle">Tu Asistente Experto en Perfumes</span>
+            <p class="nova-desc">
                 Pregúntame lo que quieras. Puedo sugerirte combinaciones, explicarte familias aromáticas y encontrar tu perfume ideal según tu personalidad, edad, gusto y presupuesto.
             </p>
-            <a href="/diagnostico" style="background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%); color: #fff; padding: 1.1rem 2.8rem; border-radius: 14px; text-decoration: none; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; box-shadow: 0 10px 30px rgba(232,145,58,0.3); display: inline-block;">Hablar con Nova</a>
+            <a href="/diagnostico" class="nova-btn">
+                <i class="fas fa-sparkles" style="margin-right: 8px;"></i> Hablar con Nova
+            </a>
         </div>
     </section>
 
-    <!-- SCRIPTS -->
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCRIPTS
+         ═══════════════════════════════════════════════════════════════ -->
     <script th:inline="javascript">
         /*<![CDATA[*/
         const dbPerfumes = /*[[${perfumes}]]*/ [];
         /*]]>*/
 
-        // Unified search engine state
         let activeFilters = {
             texto: '',
             categoria: '',
@@ -567,23 +1190,25 @@
         let compareList = [];
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Load history
             const stored = localStorage.getItem('profumi_search_history');
             if (stored) {
                 searchHistory = JSON.parse(stored);
                 renderHistory();
             }
-
-            // Render trending (Real database trending: destacado or topVentas)
             renderTrending();
 
-            // Setup Enter key on search input
             document.getElementById('search-input').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     const text = e.target.value.trim();
-                    if (text) {
-                        triggerSearchText(text);
-                    }
+                    if (text) triggerSearchText(text);
+                }
+            });
+
+            // Close dropdown on outside click
+            document.addEventListener('click', (e) => {
+                const wrapper = document.querySelector('.search-bar-wrapper');
+                if (!wrapper.contains(e.target)) {
+                    document.getElementById('dropdown-results').style.display = 'none';
                 }
             });
         });
@@ -591,40 +1216,41 @@
         function renderTrending() {
             const container = document.getElementById('trending-container');
             container.innerHTML = '';
-            // Display perfumes where destacado or topVentas is true, fallback to first 4
             let trending = dbPerfumes.filter(p => p.destacado || p.topVentas);
             if (trending.length === 0) trending = dbPerfumes.slice(0, 4);
-
-            trending.forEach(p => {
-                container.innerHTML += buildCardHtml(p);
-            });
+            trending.forEach(p => container.innerHTML += buildCardHtml(p));
         }
 
         function buildCardHtml(p) {
-            const imageSrc = (p.imagenUrl === 'Sin imagen' || !p.imagenUrl) ? 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop' : p.imagenUrl;
+            const imageSrc = (p.imagenUrl === 'Sin imagen' || !p.imagenUrl) 
+                ? 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop' 
+                : p.imagenUrl;
             const isComparing = compareList.includes(p.id);
 
             return `
                 <div class="perfume-card">
                     <div class="perfume-img-box">
-                        <img src="${imageSrc}" alt="${p.nombre}">
-                        <button onclick="toggleCompare('${p.id}')" style="position: absolute; top: 15px; right: 15px; border: none; background: ${isComparing ? 'var(--color-primary)' : 'rgba(255,255,255,0.9)'}; color: ${isComparing ? '#fff' : '#333'}; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 0.8rem;" title="Comparar">
+                        <img src="${imageSrc}" alt="${p.nombre}" loading="lazy">
+                        <button onclick="toggleCompare('${p.id}')" 
+                                class="compare-btn ${isComparing ? 'active' : ''}" 
+                                title="${isComparing ? 'Remover del comparador' : 'Comparar'}">
                             <i class="fas fa-balance-scale"></i>
                         </button>
                     </div>
                     <div class="perfume-body">
                         <span class="perfume-brand">${p.marca}</span>
                         <h3 class="perfume-title">${p.nombre}</h3>
-                        <p style="font-size: 0.8rem; color: #888; margin-bottom: 0.8rem;">🌸 ${p.familiaOlfativa || 'Esencia de lujo'}</p>
-                        <div class="perfume-price">$${(p.precio || 0).toLocaleString('es-CO')} COP</div>
+                        <p class="perfume-family">🌸 ${p.familiaOlfativa || 'Esencia de lujo'}</p>
+                        <div class="perfume-price">$${(p.precio || 0).toLocaleString('es-CO')} <span>COP</span></div>
                         <a href="/producto/${p.id}" class="card-btn-view">Ver Producto</a>
-                        <button onclick="addToCart('${p.id}')" class="card-btn-cart"><i class="fas fa-shopping-bag"></i> Agregar</button>
+                        <button onclick="addToCart('${p.id}')" class="card-btn-cart">
+                            <i class="fas fa-shopping-bag"></i> Agregar
+                        </button>
                     </div>
                 </div>
             `;
         }
 
-        // Live autocomplete search dropdown
         function onSearchInput() {
             const query = document.getElementById('search-input').value.trim().toLowerCase();
             const dropdown = document.getElementById('dropdown-results');
@@ -634,7 +1260,6 @@
                 return;
             }
 
-            // Filter
             const matches = dbPerfumes.filter(p => {
                 const notesMatch = (p.notasOlfativas || []).some(n => n.toLowerCase().includes(query));
                 return p.nombre.toLowerCase().includes(query) ||
@@ -645,23 +1270,30 @@
 
             dropdown.innerHTML = '';
             if (matches.length === 0) {
-                dropdown.innerHTML = `<div style="padding: 1.5rem; color: #999; text-align: center;">No encontramos resultados.</div>`;
+                dropdown.innerHTML = `<div style="padding: 2rem; color: var(--color-text-muted); text-align: center; font-style: italic;">No encontramos resultados para "${query}"</div>`;
             } else {
                 matches.slice(0, 5).forEach(p => {
-                    const imageSrc = (p.imagenUrl === 'Sin imagen' || !p.imagenUrl) ? 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop' : p.imagenUrl;
+                    const imageSrc = (p.imagenUrl === 'Sin imagen' || !p.imagenUrl) 
+                        ? 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800&auto=format&fit=crop' 
+                        : p.imagenUrl;
                     dropdown.innerHTML += `
                         <div class="autocomplete-item" onclick="triggerSearchText('${p.nombre}')">
-                            <img src="${imageSrc}">
-                            <div style="flex: 1;">
-                                <strong style="font-size: 0.95rem; color: #1a1a1a;">${p.nombre}</strong>
-                                <span style="display: block; font-size: 0.75rem; color: #888;">${p.marca} - ${p.familiaOlfativa}</span>
+                            <img src="${imageSrc}" alt="${p.nombre}">
+                            <div class="autocomplete-item-info">
+                                <div class="autocomplete-item-name">${p.nombre}</div>
+                                <div class="autocomplete-item-meta">${p.marca} · ${p.familiaOlfativa || 'Fragancia'}</div>
                             </div>
-                            <strong style="color: var(--color-primary); font-size: 0.9rem;">$${(p.precio || 0).toLocaleString('es-CO')}</strong>
+                            <span class="autocomplete-item-price">$${(p.precio || 0).toLocaleString('es-CO')}</span>
                         </div>
                     `;
                 });
             }
             dropdown.style.display = 'block';
+        }
+
+        function triggerSearchFromInput() {
+            const text = document.getElementById('search-input').value.trim();
+            if (text) triggerSearchText(text);
         }
 
         function triggerSearchText(text) {
@@ -672,7 +1304,6 @@
             buscarPerfumes();
         }
 
-        // Save and manage search history
         function saveHistory(query) {
             if (!query || searchHistory.includes(query)) return;
             searchHistory.unshift(query);
@@ -685,15 +1316,15 @@
             const container = document.getElementById('history-chips');
             const box = document.getElementById('history-box');
             if (searchHistory.length === 0) {
-                box.style.display = 'none';
+                box.classList.remove('active');
                 return;
             }
-            box.style.display = 'flex';
+            box.classList.add('active');
             container.innerHTML = '';
             searchHistory.forEach(q => {
                 container.innerHTML += `
                     <button class="chip-btn" onclick="triggerSearchText('${q}')">
-                        <i class="fas fa-history"></i> ${q}
+                        <i class="fas fa-history" style="font-size: 0.7rem;"></i> ${q}
                     </button>
                 `;
             });
@@ -705,10 +1336,8 @@
             renderHistory();
         }
 
-        // UNIFIED SEARCH ENGINE
         function buscarPerfumes() {
             let results = dbPerfumes.filter(p => {
-                // 1. Text Search
                 if (activeFilters.texto) {
                     const q = activeFilters.texto.toLowerCase();
                     const notesMatch = (p.notasOlfativas || []).some(n => n.toLowerCase().includes(q));
@@ -720,13 +1349,12 @@
                     if (!textMatch) return false;
                 }
 
-                // 2. Categoria
                 if (activeFilters.categoria) {
                     const cat = activeFilters.categoria;
                     if (cat === 'Hombre' || cat === 'Mujer' || cat === 'Uniséx') {
                         if (p.genero !== cat) return false;
                     } else if (cat === 'Decant') {
-                        if (p.sku && p.sku.startsWith("KIT-")) return false; // Kits are not decants
+                        if (p.sku && p.sku.startsWith("KIT-")) return false;
                     } else if (cat === 'Kit') {
                         if (!p.sku || !p.sku.startsWith("KIT-")) return false;
                     } else if (cat === 'Novedad') {
@@ -736,7 +1364,6 @@
                     }
                 }
 
-                // 3. Aroma
                 if (activeFilters.aroma) {
                     const ar = activeFilters.aroma.toLowerCase();
                     const family = (p.familiaOlfativa || '').toLowerCase();
@@ -745,15 +1372,12 @@
                     if (!aromaMatch) return false;
                 }
 
-                // 4. Occasion
                 if (activeFilters.ocasion) {
                     const oc = activeFilters.ocasion.toLowerCase();
                     const ideal = (p.idealPara || '').toLowerCase();
-                    const ocMatch = ideal.includes(oc);
-                    if (!ocMatch) return false;
+                    if (!ideal.includes(oc)) return false;
                 }
 
-                // 5. Price
                 if ((p.precio || 0) > activeFilters.maxPrecio) return false;
 
                 return true;
@@ -765,17 +1389,13 @@
             const similarContainer = document.getElementById('similar-results-container');
 
             container.innerHTML = '';
-            resultsSection.style.display = 'block';
+            resultsSection.classList.add('active');
 
             if (results.length === 0) {
-                document.getElementById('results-header-title').innerHTML = `💔 No encontramos coincidencias exactas para tu selección`;
-                // Fallback: show highly-rated or best sellers
+                document.getElementById('results-header-title').innerHTML = `💔 No encontramos coincidencias exactas`;
                 let fallbackList = dbPerfumes.filter(p => p.topVentas || p.destacado);
                 if (fallbackList.length === 0) fallbackList = dbPerfumes.slice(0, 4);
-
-                fallbackList.forEach(p => {
-                    container.innerHTML += buildCardHtml(p);
-                });
+                fallbackList.forEach(p => container.innerHTML += buildCardHtml(p));
                 similarSection.style.display = 'none';
             } else {
                 let filterLabel = "Resultados";
@@ -784,23 +1404,17 @@
                 if (activeFilters.aroma) filterLabel += ` [Familia: ${activeFilters.aroma}]`;
 
                 document.getElementById('results-header-title').textContent = `${filterLabel} (${results.length})`;
-                results.forEach(p => {
-                    container.innerHTML += buildCardHtml(p);
-                });
+                results.forEach(p => container.innerHTML += buildCardHtml(p));
 
-                // Calculate similar products based on the first result
                 const pivot = results[0];
                 let similarList = dbPerfumes.filter(p => p.id !== pivot.id).map(p => {
                     let score = 0;
                     if (p.marca === pivot.marca) score += 3;
                     if (p.genero === pivot.genero) score += 2;
                     if (p.familiaOlfativa === pivot.familiaOlfativa) score += 3;
-                    // Check overlapping notes
                     const pivotNotes = pivot.notasOlfativas || [];
                     const pNotes = p.notasOlfativas || [];
-                    pivotNotes.forEach(n => {
-                        if (pNotes.includes(n)) score += 1;
-                    });
+                    pivotNotes.forEach(n => { if (pNotes.includes(n)) score += 1; });
                     return { perfume: p, score: score };
                 }).filter(item => item.score > 0)
                   .sort((a, b) => b.score - a.score)
@@ -810,81 +1424,58 @@
                 if (similarList.length > 0) {
                     similarSection.style.display = 'block';
                     similarContainer.innerHTML = '';
-                    similarList.forEach(p => {
-                        similarContainer.innerHTML += buildCardHtml(p);
-                    });
+                    similarList.forEach(p => similarContainer.innerHTML += buildCardHtml(p));
                 } else {
                     similarSection.style.display = 'none';
                 }
             }
 
-            document.querySelector('#results-section').scrollIntoView({ behavior: 'smooth' });
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function filterByField(field, value) {
-            // Reset filters to avoid overlap unless desired
-            activeFilters = {
-                texto: '',
-                categoria: '',
-                aroma: '',
-                ocasion: '',
-                duracion: '',
-                maxPrecio: 2500000
-            };
+            activeFilters = { texto: '', categoria: '', aroma: '', ocasion: '', duracion: '', maxPrecio: activeFilters.maxPrecio };
             activeFilters.categoria = value;
             buscarPerfumes();
         }
 
         function filterByAroma(aroma) {
-            activeFilters = {
-                texto: '',
-                categoria: '',
-                aroma: '',
-                ocasion: '',
-                duracion: '',
-                maxPrecio: 2500000
-            };
+            activeFilters = { texto: '', categoria: '', aroma: '', ocasion: '', duracion: '', maxPrecio: activeFilters.maxPrecio };
             activeFilters.aroma = aroma;
             buscarPerfumes();
         }
 
         function filterByOccasion(occasion) {
-            activeFilters = {
-                texto: '',
-                categoria: '',
-                aroma: '',
-                ocasion: '',
-                duracion: '',
-                maxPrecio: 2500000
-            };
+            activeFilters = { texto: '', categoria: '', aroma: '', ocasion: '', duracion: '', maxPrecio: activeFilters.maxPrecio };
             activeFilters.ocasion = occasion;
             buscarPerfumes();
         }
 
-        // Price slider filter
         function onPriceSliderChange() {
-            const maxVal = parseInt(document.getElementById('price-slider').value);
+            const slider = document.getElementById('price-slider');
+            const maxVal = parseInt(slider.value);
+            const percentage = ((maxVal - slider.min) / (slider.max - slider.min)) * 100;
+            slider.style.setProperty('--value', percentage + '%');
             document.getElementById('price-val').textContent = `$${maxVal.toLocaleString('es-CO')} COP`;
             activeFilters.maxPrecio = maxVal;
             buscarPerfumes();
         }
 
-        // Compare logic
         function toggleCompare(id) {
             if (compareList.includes(id)) {
                 compareList = compareList.filter(item => item !== id);
-                if (typeof showToast === 'function') showToast('Perfume removido del comparador', 'info');
+                showToast('Perfume removido del comparador');
             } else {
                 if (compareList.length >= 3) {
-                    if (typeof showToast === 'function') showToast('Solo puedes comparar hasta 3 perfumes', 'warning');
+                    showToast('Solo puedes comparar hasta 3 perfumes', 'warning');
                     return;
                 }
                 compareList.push(id);
-                if (typeof showToast === 'function') showToast('Perfume agregado al comparador', 'success');
+                showToast('Perfume agregado al comparador');
             }
-
             renderComparer();
-            buscarPerfumes(); // Refresh results to update check states
+            renderTrending();
+            buscarPerfumes();
         }
 
         function renderComparer() {
@@ -892,44 +1483,44 @@
             if (compareList.length === 0) {
                 table.innerHTML = `
                     <tr>
-                        <td colspan="4" style="text-align: center; color: #999; padding: 3rem;">Añade perfumes de la lista para comparar sus propiedades.</td>
+                        <td colspan="4" style="text-align: center; color: var(--color-text-muted); padding: 3rem; font-style: italic;">
+                            <i class="fas fa-balance-scale" style="display: block; font-size: 2rem; margin-bottom: 1rem; color: var(--color-border-hover);"></i>
+                            Añade perfumes de la lista para comparar sus propiedades.
+                        </td>
                     </tr>
                 `;
                 return;
             }
 
             const perfumesToCompare = dbPerfumes.filter(p => compareList.includes(p.id));
-
-            let header = `<tr><th>Propiedad</th>`;
+            let header = `<tr><th style="width: 180px;">Propiedad</th>`;
             perfumesToCompare.forEach(p => {
                 header += `<th>${p.nombre}</th>`;
             });
             header += `</tr>`;
 
-            let rowBrand = `<tr><td><strong>Marca</strong></td>`;
-            let rowPrice = `<tr><td><strong>Precio</strong></td>`;
-            let rowFamily = `<tr><td><strong>Familia Olfativa</strong></td>`;
-            let rowNotes = `<tr><td><strong>Notas principales</strong></td>`;
-            let rowConcentration = `<tr><td><strong>Concentración</strong></td>`;
-            let rowOccasion = `<tr><td><strong>Ideal Para</strong></td>`;
+            const rows = [
+                { label: 'Marca', key: 'marca' },
+                { label: 'Precio', key: 'precio', format: v => `$${(v || 0).toLocaleString('es-CO')} COP` },
+                { label: 'Familia Olfativa', key: 'familiaOlfativa', fallback: 'Esencia de lujo' },
+                { label: 'Notas principales', key: 'notasOlfativas', format: v => (v || []).join(', ') || 'N/A' },
+                { label: 'Concentración', key: 'concentracion', fallback: 'EDP' },
+                { label: 'Ideal Para', key: 'idealPara', fallback: 'Uso diario' }
+            ];
 
-            perfumesToCompare.forEach(p => {
-                rowBrand += `<td>${p.marca}</td>`;
-                rowPrice += `<td>$${(p.precio || 0).toLocaleString('es-CO')} COP</td>`;
-                rowFamily += `<td>${p.familiaOlfativa || 'Esencia de lujo'}</td>`;
-                rowNotes += `<td>${(p.notasOlfativas || []).join(', ') || 'N/A'}</td>`;
-                rowConcentration += `<td>${p.concentracion || 'EDP'}</td>`;
-                rowOccasion += `<td>${p.idealPara || 'Uso diario'}</td>`;
+            let body = '';
+            rows.forEach(row => {
+                body += `<tr><td><strong>${row.label}</strong></td>`;
+                perfumesToCompare.forEach(p => {
+                    let val = p[row.key];
+                    if (row.format) val = row.format(val);
+                    else if (!val && row.fallback) val = row.fallback;
+                    body += `<td>${val || 'N/A'}</td>`;
+                });
+                body += `</tr>`;
             });
 
-            rowBrand += '</tr>';
-            rowPrice += '</tr>';
-            rowFamily += '</tr>';
-            rowNotes += '</tr>';
-            rowConcentration += '</tr>';
-            rowOccasion += '</tr>';
-
-            table.innerHTML = header + rowBrand + rowPrice + rowFamily + rowNotes + rowConcentration + rowOccasion;
+            table.innerHTML = header + body;
         }
 
         async function addToCart(id) {
@@ -941,13 +1532,71 @@
                 const data = await response.json();
                 if (data.success) {
                     if (typeof updateCartCount === 'function') updateCartCount(data.cartCount);
-                    if (typeof showToast === 'function') showToast('¡Fragancia añadida con éxito! 🎉', 'success');
+                    showToast('¡Fragancia añadida con éxito! 🎉');
                 }
             } catch (error) {
-                if (typeof showToast === 'function') showToast('Error al agregar al carrito', 'error');
+                showToast('Error al agregar al carrito', 'error');
             }
         }
+
+        // Toast system
+        function showToast(message, type = 'success') {
+            const existing = document.querySelector('.search-toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'search-toast';
+            const colors = {
+                success: 'var(--success)',
+                warning: 'var(--warning)',
+                error: 'var(--danger)'
+            };
+            const icons = {
+                success: 'fa-check-circle',
+                warning: 'fa-exclamation-triangle',
+                error: 'fa-times-circle'
+            };
+
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                background: var(--color-white);
+                color: var(--color-text);
+                padding: 1rem 1.5rem;
+                border-radius: 14px;
+                border: 1px solid var(--color-border);
+                box-shadow: var(--shadow-gold);
+                font-size: 0.9rem;
+                font-weight: 500;
+                z-index: 9999;
+                animation: slideInRight 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            `;
+            toast.innerHTML = `<i class="fas ${icons[type]}" style="color: ${colors[type]}; font-size: 1.1rem;"></i> ${message}`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Add toast animations
+        const toastStyle = document.createElement('style');
+        toastStyle.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(toastStyle);
     </script>
 </body>
-
 </html>
