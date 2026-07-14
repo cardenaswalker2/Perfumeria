@@ -1,642 +1,1341 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${title}">Dashboard Asesor | Profumi</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
-        :root { 
-            --accent: #2563eb; /* Royal blue */
-            --accent-hover: #1d4ed8;
-            --bg: #f8fafc; /* Slate/grey background */
-            --bg-card: #ffffff;
-            --border: rgba(0, 0, 0, 0.08); 
-            --text: #0f172a;
-            --text-muted: #64748b;
+        /* ═══════════════════════════════════════════════════════════════
+           PROFUMI ASSESOR VIP DASHBOARD - ULTRA PREMIUM 2026
+           ═══════════════════════════════════════════════════════════════ */
+
+        :root {
+            --gold: #C9A96E;
+            --gold-light: #E5D5B0;
+            --gold-dark: #A0824A;
+            --gold-glow: rgba(201, 169, 110, 0.15);
+            --bg: #0A0A0F;
+            --bg-elevated: #12121A;
+            --bg-card: #181822;
+            --bg-card-hover: #1E1E2A;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(201, 169, 110, 0.2);
+            --text: #F0F0F5;
+            --text-secondary: #A0A0B8;
+            --text-muted: #6B6B80;
+            --success: #4ADE80;
+            --success-bg: rgba(74, 222, 128, 0.1);
+            --danger: #F87171;
+            --danger-bg: rgba(248, 113, 113, 0.1);
+            --warning: #FBBF24;
+            --warning-bg: rgba(251, 191, 36, 0.1);
+            --info: #60A5FA;
+            --info-bg: rgba(96, 165, 250, 0.1);
+            --whatsapp: #25D366;
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --shadow-gold: 0 8px 30px rgba(201, 169, 110, 0.15);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
-        
-        /* Sidebar styling */
-        .admin-sidebar { 
-            width: 280px; 
-            background: #ffffff; 
-            border-right: 1px solid var(--border); 
-            height: 100vh; 
-            position: fixed; 
-            padding: 3rem 2rem; 
-            z-index: 100;
-            box-shadow: 4px 0 20px rgba(0,0,0,0.02);
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-hover);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+        }
+
+        /* ─── SIDEBAR ─── */
+        .admin-sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg) 100%);
+            border-right: 1px solid var(--border);
+            height: 100vh;
+            position: fixed;
+            padding: 2rem 1.5rem;
+            z-index: 1000;
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
         }
-        .sidebar-logo {
-            margin-bottom: 3rem;
-            line-height: 1.1;
+
+        .sidebar-brand {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
         }
-        .sidebar-logo-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.6rem;
-            letter-spacing: 4px;
-            font-weight: 700;
-            color: var(--accent);
-            text-transform: uppercase;
-        }
-        .sidebar-logo-sub {
-            display: block;
-            font-size: 0.55rem;
-            letter-spacing: 2px;
+
+        .sidebar-brand-main {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            letter-spacing: 5px;
             font-weight: 600;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .sidebar-brand-sub {
+            font-size: 0.55rem;
+            letter-spacing: 3px;
+            font-weight: 500;
             color: var(--text-muted);
             text-transform: uppercase;
-            margin-top: 3px;
+            margin-top: 4px;
+            display: block;
         }
+
+        .sidebar-divider {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin: 1.5rem 0 0.8rem;
+            font-weight: 600;
+        }
+
         .admin-sidebar nav {
             display: flex;
             flex-direction: column;
-            gap: 0.8rem;
+            gap: 0.3rem;
         }
+
         .admin-sidebar nav a {
-            color: var(--text-muted);
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 500;
-            padding: 12px 18px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            padding: 11px 14px;
+            border-radius: 10px;
+            transition: var(--transition-smooth);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 11px;
+            position: relative;
+            overflow: hidden;
         }
-        .admin-sidebar nav a:hover, .admin-sidebar nav a.active {
-            color: var(--accent);
-            background: rgba(37, 99, 235, 0.05);
+
+        .admin-sidebar nav a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 0;
+            background: var(--gold);
+            border-radius: 0 3px 3px 0;
+            transition: height 0.3s ease;
         }
-        
-        /* Main Layout */
-        .admin-main { 
-            margin-left: 280px; 
-            padding: 3rem; 
-            flex: 1;
-            display: grid; 
-            grid-template-columns: 2.5fr 1fr; 
-            gap: 3rem; 
-            overflow-y: auto;
-        }
-        
-        /* Dashboard Cards & Layout */
-        .dashboard-header {
-            margin-bottom: 2.5rem;
-        }
-        .dashboard-header h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
+
+        .admin-sidebar nav a:hover,
+        .admin-sidebar nav a.active {
             color: var(--text);
-            margin-bottom: 0.3rem;
+            background: rgba(201, 169, 110, 0.08);
         }
+
+        .admin-sidebar nav a:hover::before,
+        .admin-sidebar nav a.active::before {
+            height: 60%;
+        }
+
+        .admin-sidebar nav a i {
+            width: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
+        }
+
+        .admin-sidebar nav a:hover i,
+        .admin-sidebar nav a.active i {
+            color: var(--gold);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .sidebar-footer nav a {
+            color: var(--danger) !important;
+        }
+
+        .sidebar-footer nav a::before {
+            background: var(--danger) !important;
+        }
+
+        .sidebar-footer nav a:hover {
+            background: var(--danger-bg) !important;
+        }
+
+        /* ─── MAIN CONTENT ─── */
+        .admin-main {
+            margin-left: 260px;
+            padding: 2rem 2.5rem;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 2.5rem;
+            overflow-y: auto;
+            min-height: 100vh;
+        }
+
+        /* ─── DASHBOARD HEADER ─── */
+        .dashboard-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .dashboard-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            border-radius: 2px;
+        }
+
+        .dashboard-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.4rem;
+        }
+
         .dashboard-header p {
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 0.9rem;
+            font-weight: 300;
         }
-        
-        /* Stats Row */
+
+        /* ─── STATS ROW ─── */
         .stats-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
+            gap: 1rem;
             margin-bottom: 2.5rem;
         }
+
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.01);
-            transition: all 0.3s ease;
+            border-radius: 14px;
+            padding: 1.4rem;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
         }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
         .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
-            border-color: var(--accent);
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-soft);
         }
+
+        .stat-card:hover::before {
+            opacity: 0.5;
+        }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
         .stat-card .label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             color: var(--text-muted);
-            margin-bottom: 0.5rem;
             font-weight: 600;
         }
-        .stat-card .value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent);
-        }
-        .stat-card .value.commission {
-            color: #10b981;
-        }
-        
-        /* Order Card */
-        .order-card { 
-            background: var(--bg-card); 
-            border-radius: 20px; 
-            padding: 1.8rem; 
-            margin-bottom: 2rem; 
-            border: 1px solid var(--border); 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.01); 
-            transition: 0.3s; 
-        }
-        .order-card:hover { 
-            border-color: var(--accent); 
-        }
-        .status-badge { 
-            padding: 0.4rem 0.8rem; 
-            border-radius: 50px; 
-            font-size: 0.75rem; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-        }
-        .status-pendiente { background: #ffebee; color: #d32f2f; }
-        .status-confirmado { background: #e8f5e9; color: #2e7d32; }
-        
-        .btn-action { 
-            padding: 0.7rem 1.4rem; 
-            border-radius: 50px; 
-            font-size: 0.82rem; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            border: none; 
-        }
-        .btn-confirm { background: var(--accent); color: #fff; }
-        .btn-confirm:hover { background: var(--accent-hover); }
-        .btn-cancel { background: #f1f5f9; color: var(--text-muted); }
-        .btn-cancel:hover { background: #e2e8f0; color: var(--text); }
-        
-        .btn-whatsapp { 
-            background: #25D366; 
-            color: #fff; 
-            text-decoration: none; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 8px; 
-            padding: 0.6rem 1.2rem; 
-            border-radius: 50px; 
-            font-size: 0.8rem; 
-            font-weight: 600; 
-            transition: 0.3s;
-        }
-        .btn-whatsapp:hover { background: #1ebc5a; color: #fff; box-shadow: 0 4px 12px rgba(37,211,102,0.2); }
-        
-        /* Left Column widgets and sidebars */
-        .side-widget { 
-            background: var(--bg-card); 
-            border-radius: 20px; 
-            padding: 1.8rem; 
-            border: 1px solid var(--border); 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.01); 
-            margin-bottom: 2rem; 
-        }
-        .side-widget h3 { 
-            font-size: 1.1rem; 
-            margin-bottom: 1.2rem; 
-            border-bottom: 1px solid var(--border); 
-            padding-bottom: 0.8rem; 
+
+        .stat-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            font-size: 0.85rem;
+        }
+
+        .stat-icon.gold {
+            background: var(--gold-glow);
+            color: var(--gold);
+        }
+
+        .stat-icon.green {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .stat-icon.blue {
+            background: var(--info-bg);
+            color: var(--info);
+        }
+
+        .stat-icon.purple {
+            background: rgba(167, 139, 250, 0.1);
+            color: #A78BFA;
+        }
+
+        .stat-card .value {
+            font-size: 1.6rem;
+            font-weight: 700;
             color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.5px;
         }
-        .vip-client { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            padding: 0.8rem 0; 
-            border-bottom: 1px solid #f8fafc; 
+
+        .stat-card .value.commission {
+            color: var(--success);
         }
-        .vip-client:last-child { border-bottom: none; }
-        .vip-avatar { 
-            width: 38px; 
-            height: 38px; 
-            border-radius: 50%; 
-            background: rgba(37, 99, 235, 0.08); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-weight: 700; 
-            color: var(--accent); 
+
+        /* ─── BUTTONS ─── */
+        .btn {
+            padding: 0.7rem 1.4rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .order-item { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            padding: 1rem; 
-            background: #f8fafc; 
-            border-radius: 12px; 
-            margin-bottom: 0.5rem; 
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s ease, height 0.5s ease;
+        }
+
+        .btn:hover::after {
+            width: 200px;
+            height: 200px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--bg);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(201, 169, 110, 0.25);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-secondary);
             border: 1px solid var(--border);
         }
-        .order-item img { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; }
 
-        /* Assistant Widget Elements */
+        .btn-secondary:hover {
+            border-color: var(--border-hover);
+            color: var(--text);
+            background: var(--bg-card-hover);
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, var(--whatsapp) 0%, #128C7E 100%);
+            color: #fff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.7rem 1.4rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: rgba(248, 113, 113, 0.2);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+        }
+
+        /* ─── BADGES ─── */
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .status-pendiente {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+        }
+
+        .status-confirmado {
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid rgba(74, 222, 128, 0.2);
+        }
+
+        /* ─── ORDER CARDS ─── */
+        .order-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .order-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .order-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-soft);
+            transform: translateY(-3px);
+        }
+
+        .order-card:hover::before {
+            opacity: 0.6;
+        }
+
+        .order-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        /* ─── CLIENT INFO BOX ─── */
+        .client-info-box {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            transition: var(--transition-smooth);
+        }
+
+        .client-info-box:hover {
+            border-color: var(--border-hover);
+        }
+
+        /* ─── ORDER ITEMS ─── */
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 1rem;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            margin-bottom: 0.6rem;
+            border: 1px solid var(--border);
+            transition: var(--transition-smooth);
+        }
+
+        .order-item:hover {
+            border-color: var(--border-hover);
+            transform: translateX(5px);
+        }
+
+        .order-item img {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+
+        .order-item-placeholder {
+            width: 45px;
+            height: 45px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+        }
+
+        /* ─── SIDE WIDGETS ─── */
+        .side-widget {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.6rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        .side-widget:hover {
+            border-color: var(--border-hover);
+        }
+
+        .side-widget h3 {
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .side-widget h3 i {
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+
+        /* ─── SEARCH WIDGET ─── */
         .widget-search {
             width: 100%;
-            padding: 10px 14px;
-            background: #f1f5f9;
+            padding: 0.8rem 1rem;
+            background: var(--bg-elevated);
             border: 1px solid var(--border);
             border-radius: 10px;
             outline: none;
             color: var(--text);
             font-size: 0.85rem;
-            margin-bottom: 12px;
+            font-family: 'Outfit', sans-serif;
+            transition: var(--transition-smooth);
+            margin-bottom: 1rem;
         }
+
+        .widget-search:focus {
+            border-color: var(--border-hover);
+            box-shadow: 0 0 0 3px var(--gold-glow);
+        }
+
+        .widget-search::placeholder {
+            color: var(--text-muted);
+        }
+
         .search-results {
-            max-height: 380px;
+            max-height: 400px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            padding-right: 5px;
+            gap: 8px;
+            padding-right: 4px;
         }
+
         .search-item {
             display: flex;
             flex-direction: column;
             padding: 12px;
             border-radius: 12px;
-            background: #ffffff;
+            background: var(--bg-elevated);
             border: 1px solid var(--border);
-            transition: all 0.3s ease;
+            transition: var(--transition-smooth);
+            cursor: pointer;
         }
+
         .search-item:hover {
-            border-color: var(--accent);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border-color: var(--border-hover);
+            transform: translateX(3px);
         }
+
         .search-item-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            cursor: pointer;
             width: 100%;
         }
+
         .search-item-header img {
-            width: 45px;
-            height: 45px;
-            border-radius: 8px;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
             object-fit: cover;
             border: 1px solid var(--border);
             flex-shrink: 0;
         }
+
         .search-item-details {
             margin-top: 10px;
             padding-top: 10px;
-            border-top: 1px solid #f1f5f9;
+            border-top: 1px solid var(--border);
             font-size: 0.78rem;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             display: none;
+            animation: fadeIn 0.3s ease;
         }
+
         .search-item-details.active {
             display: block;
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .detail-pill {
             display: inline-block;
-            background: #f1f5f9;
-            color: var(--text);
-            padding: 2px 8px;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            padding: 3px 10px;
             border-radius: 6px;
             font-weight: 500;
             margin-right: 5px;
             margin-bottom: 5px;
             font-size: 0.7rem;
+            border: 1px solid var(--border);
+            transition: var(--transition-smooth);
         }
+
+        .detail-pill:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
         .btn-assistant-action {
             border: none;
             border-radius: 8px;
-            padding: 8px 12px;
+            padding: 8px 14px;
             font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            transition: var(--transition-smooth);
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
+
         .btn-assistant-action.copy {
-            background: rgba(37, 99, 235, 0.08);
-            color: var(--accent);
+            background: var(--gold-glow);
+            color: var(--gold);
+            border: 1px solid var(--border-hover);
         }
+
         .btn-assistant-action.copy:hover {
-            background: var(--accent);
-            color: #ffffff;
+            background: var(--gold);
+            color: var(--bg);
         }
+
         .btn-assistant-action.wa {
-            background: #25D366;
-            color: #ffffff;
+            background: rgba(37, 211, 102, 0.1);
+            color: var(--whatsapp);
+            border: 1px solid rgba(37, 211, 102, 0.2);
         }
+
         .btn-assistant-action.wa:hover {
-            background: #1ebc5a;
+            background: var(--whatsapp);
+            color: #fff;
         }
 
-
-
-
-        .btn-copy-info:hover {
-            color: var(--accent-hover);
-        }
-
-        /* Quote Builder styling */
-        .quote-select, .quote-input {
+        /* ─── QUOTE BUILDER ─── */
+        .quote-select,
+        .quote-input {
             width: 100%;
-            padding: 8px 12px;
-            background: #ffffff;
+            padding: 0.7rem 1rem;
+            background: var(--bg-elevated);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            margin-bottom: 8px;
+            border-radius: 10px;
+            margin-bottom: 0.6rem;
             font-size: 0.82rem;
             color: var(--text);
             outline: none;
-        }
-        .btn-quote-generate {
-            width: 100%;
-            background: var(--accent);
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            padding: 8px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn-quote-generate:hover {
-            background: var(--accent-hover);
+            font-family: 'Outfit', sans-serif;
+            transition: var(--transition-smooth);
         }
 
-        /* Responsive Overrides */
-        @media (max-width: 992px) {
-            body {
-                flex-direction: column !important;
-            }
-            .admin-sidebar {
-                position: static !important;
-                width: 100% !important;
-                height: auto !important;
-                padding: 1.5rem !important;
-                border-right: none !important;
-                border-bottom: 1px solid var(--border) !important;
-            }
-            .admin-sidebar nav {
-                flex-direction: row !important;
-                flex-wrap: wrap !important;
-                gap: 0.5rem !important;
-            }
-            .admin-sidebar nav a {
-                padding: 8px 14px !important;
-                font-size: 0.85rem !important;
-            }
-            .admin-sidebar nav a[style*="margin-top"] {
-                margin-top: 0 !important;
-            }
+        .quote-select:focus,
+        .quote-input:focus {
+            border-color: var(--border-hover);
+            box-shadow: 0 0 0 3px var(--gold-glow);
+        }
+
+        .btn-quote-generate {
+            width: 100%;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--bg);
+            border: none;
+            border-radius: 10px;
+            padding: 0.8rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-quote-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        /* ─── VIP CLIENTS ─── */
+        .vip-client {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition-smooth);
+        }
+
+        .vip-client:last-child {
+            border-bottom: none;
+        }
+
+        .vip-client:hover {
+            padding-left: 5px;
+        }
+
+        .vip-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-glow), transparent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--gold);
+            font-size: 0.85rem;
+            border: 1.5px solid var(--border-hover);
+            flex-shrink: 0;
+        }
+
+        /* ─── ALERT WIDGET ─── */
+        .alert-widget {
+            border-top: 3px solid var(--danger);
+        }
+
+        .alert-widget h3 i {
+            color: var(--danger) !important;
+        }
+
+        .stock-badge {
+            background: var(--danger-bg);
+            color: var(--danger);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            border: 1px solid rgba(248, 113, 113, 0.2);
+        }
+
+        /* ─── EMPTY STATE ─── */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px dashed var(--border);
+            transition: var(--transition-smooth);
+        }
+
+        .empty-state:hover {
+            border-color: var(--border-hover);
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* ─── SECTION TITLE ─── */
+        .section-title {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .section-title .badge-count {
+            background: var(--danger-bg);
+            color: var(--danger);
+            font-size: 0.75rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 2001;
+            width: 42px;
+            height: 42px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1999;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 1200px) {
             .admin-main {
-                margin-left: 0 !important;
-                grid-template-columns: 1fr !important;
-                padding: 1.5rem !important;
-                gap: 1.5rem !important;
-            }
-            .stats-row {
-                grid-template-columns: repeat(2, 1fr) !important;
+                grid-template-columns: 2fr 1fr;
+                gap: 1.5rem;
+                padding: 1.5rem;
             }
         }
-        @media (max-width: 480px) {
+
+        @media (max-width: 992px) {
+            .admin-sidebar {
+                position: fixed;
+                left: -260px;
+                transition: left 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            }
+
+            .admin-sidebar.open {
+                left: 0;
+            }
+
+            .admin-main {
+                margin-left: 0;
+                grid-template-columns: 1fr;
+                padding: 1.5rem;
+            }
+
+            .mobile-toggle {
+                display: flex;
+            }
+
             .stats-row {
-                grid-template-columns: 1fr !important;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .order-card-header {
+                flex-direction: column;
+            }
+
+            .client-info-box {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .dashboard-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .admin-main {
+                padding: 1rem;
             }
         }
     </style>
 </head>
+
 <body>
 
-    <aside class="admin-sidebar">
-        <div class="sidebar-logo">
-            <span class="sidebar-logo-title">PROFUMI</span>
-            <span class="sidebar-logo-sub">ASESOR BOUTIQUE</span>
+    <!-- Mobile Toggle -->
+    <button class="mobile-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SIDEBAR
+         ═══════════════════════════════════════════════════════════════ -->
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span class="sidebar-brand-main">PROFUMI</span>
+            <span class="sidebar-brand-sub">Asesor VIP Boutique</span>
         </div>
+
+        <div class="sidebar-divider">Principal</div>
         <nav>
-            <a th:href="@{/asesor/dashboard}" class="active"><i class="fas fa-th-large"></i> Escritorio VIP</a>
-            <a th:href="@{/catalogo}"><i class="fas fa-store"></i> Catálogo Público</a>
-            <a th:href="@{/logout}" style="margin-top: auto; color: #ff5252;"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            <a th:href="@{/asesor/dashboard}" class="active">
+                <i class="fas fa-th-large"></i> Escritorio VIP
+            </a>
+            <a th:href="@{/catalogo}">
+                <i class="fas fa-store"></i> Catálogo Público
+            </a>
         </nav>
+
+        <div class="sidebar-footer">
+            <nav>
+                <a th:href="@{/logout}">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </nav>
+        </div>
     </aside>
 
+    <!-- ═══════════════════════════════════════════════════════════════
+         MAIN CONTENT
+         ═══════════════════════════════════════════════════════════════ -->
     <main class="admin-main">
-        <!-- Columna Principal: Pedidos y Gestión -->
+        <!-- Columna Principal -->
         <div>
+            <!-- Header -->
             <header class="dashboard-header">
-                <h1>gestión de boutique</h1>
-                <p>Bienvenido de nuevo, Asesor Experto. Aquí tienes tus herramientas de ventas y solicitudes pendientes.</p>
+                <h1>Gestión de Boutique</h1>
+                <p>Bienvenido de nuevo, Asesor Experto. Aquí tienes tus herramientas de ventas y solicitudes pendientes.
+                </p>
             </header>
 
-            <!-- Stats Metrics -->
+            <!-- Stats -->
             <div class="stats-row">
                 <div class="stat-card">
-                    <div class="label">Solicitudes Hoy</div>
+                    <div class="stat-card-header">
+                        <span class="label">Solicitudes Hoy</span>
+                        <div class="stat-icon gold"><i class="fas fa-inbox"></i></div>
+                    </div>
                     <div class="value" th:text="${pendientes.size()}">0</div>
                 </div>
                 <div class="stat-card">
-                    <div class="label">Atendidos (Mes)</div>
+                    <div class="stat-card-header">
+                        <span class="label">Atendidos (Mes)</span>
+                        <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                    </div>
                     <div class="value" th:text="${confirmados.size()}">0</div>
                 </div>
                 <div class="stat-card">
-                    <div class="label">Clientes VIP</div>
+                    <div class="stat-card-header">
+                        <span class="label">Clientes VIP</span>
+                        <div class="stat-icon purple"><i class="fas fa-crown"></i></div>
+                    </div>
                     <div class="value" th:text="${clientesVip.size()}">0</div>
                 </div>
                 <div class="stat-card">
-                    <div class="label">Mi Comisión (10%)</div>
-                    <div class="value commission" th:text="'$' + ${#numbers.formatDecimal(confirmados != null and !confirmados.empty ? #aggregates.sum(confirmados.![total]) * 0.1 : 0, 0, 'POINT', 0, 'POINT')} + ' COP'">$0 COP</div>
+                    <div class="stat-card-header">
+                        <span class="label">Mi Comisión (10%)</span>
+                        <div class="stat-icon green"><i class="fas fa-coins"></i></div>
+                    </div>
+                    <div class="value commission"
+                        th:text="'$' + ${#numbers.formatDecimal(confirmados != null and !confirmados.empty ? #aggregates.sum(confirmados.![total]) * 0.1 : 0, 0, 'POINT', 0, 'POINT')} + ' COP'">
+                        $0 COP</div>
                 </div>
             </div>
-
+            <!-- ═══════════════════════════════════════════════════════
+                 ATENCIÓN REQUERIDA
+                 ═══════════════════════════════════════════════════════ -->
             <section>
-                <h2 style="margin-bottom: 1.5rem; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; font-weight: 600;">
-                    Atención Requerida <span style="background: #ff5252; color: #fff; font-size: 0.75rem; padding: 2px 10px; border-radius: 20px;" th:text="${pendientes.size()}">0</span>
+                <h2 class="section-title">
+                    Atención Requerida
+                    <span class="badge-count" th:text="${pendientes.size()}">0</span>
                 </h2>
-                
-                <div th:if="${pendientes.empty}" style="text-align: center; padding: 4rem 2rem; background: #fff; border-radius: 20px; border: 1px dashed var(--border);">
-                    <i class="fas fa-check-circle" style="font-size: 2.5rem; color: #2ecc71; margin-bottom: 1rem;"></i>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">Excelente, no hay pedidos pendientes por atender.</p>
+
+                <!-- Empty State -->
+                <div th:if="${pendientes.empty}" class="empty-state">
+                    <i class="fas fa-check-circle"></i>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Excelente, no hay pedidos pendientes por
+                        atender.</p>
                 </div>
 
+                <!-- Order Cards -->
                 <div th:each="pedido : ${pendientes}" class="order-card">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px;">
+                    <div class="order-card-header">
                         <div>
                             <span class="status-badge status-pendiente">Pendiente de Confirmación</span>
-                            <h3 style="margin-top: 0.8rem; font-size: 1.15rem; font-weight: 600;" th:text="'Ref: ' + ${pedido.id}">Ref</h3>
-                            <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 3px;" th:text="${pedido.fechaCreacion != null ? #temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm') : 'N/A'}">Fecha</p>
+                            <h3 style="margin-top: 0.8rem; font-size: 1.1rem; font-weight: 600; color: var(--text);"
+                                th:text="'Ref: #' + ${pedido.id}">Ref</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;"
+                                th:text="${pedido.fechaCreacion != null ? #temporals.format(pedido.fechaCreacion, 'dd/MM/yyyy HH:mm') : 'N/A'}">
+                                Fecha</p>
                         </div>
                         <div style="text-align: right;">
-                            <p style="font-size: 1.4rem; font-weight: 700; color: var(--text);" th:text="'$' + ${#numbers.formatDecimal(pedido.total, 0, 'POINT', 0, 'POINT')} + ' COP'">Total</p>
-                            <p style="font-size: 0.8rem; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-top: 3px;" th:text="${pedido.metodoPago}">Método</p>
+                            <p style="font-size: 1.5rem; font-weight: 700; color: var(--gold); font-family: 'Outfit', sans-serif;"
+                                th:text="'$' + ${#numbers.formatDecimal(pedido.total, 0, 'POINT', 0, 'POINT')}">Total
+                            </p>
+                            <p style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;"
+                                th:text="${pedido.metodoPago}">Método</p>
                         </div>
                     </div>
 
-                    <!-- Datos del Cliente -->
-                    <div style="background: #f8fafc; padding: 1.2rem; border-radius: 16px; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); flex-wrap: wrap; gap: 15px;">
+                    <!-- Client Info -->
+                    <div class="client-info-box">
                         <div>
-                            <p style="font-weight: 700; font-size: 1rem; color: var(--text);" th:text="${pedido.nombreCliente}">Nombre</p>
-                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;" th:text="${pedido.direccion}">Dirección</p>
+                            <p style="font-weight: 700; font-size: 1rem; color: var(--text);"
+                                th:text="${pedido.nombreCliente}">Nombre</p>
+                            <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 3px;"
+                                th:text="${pedido.direccion}">Dirección</p>
                         </div>
-                        <button class="btn-whatsapp" 
-                                style="border: none; cursor: pointer;"
-                                th:data-telefono="${pedido.telefono}"
-                                th:data-nombre="${pedido.nombreCliente}"
-                                th:data-id="${pedido.id}"
-                                th:data-total="${pedido.total}"
-                                th:data-pago="${pedido.metodoPago}"
-                                th:data-direccion="${pedido.direccion}"
-                                onclick="contactCustomerWa(this)">
-                            <i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i> Contactar VIP
+                        <button class="btn-whatsapp" th:data-telefono="${pedido.telefono}"
+                            th:data-nombre="${pedido.nombreCliente}" th:data-id="${pedido.id}"
+                            th:data-total="${pedido.total}" th:data-pago="${pedido.metodoPago}"
+                            th:data-direccion="${pedido.direccion}" onclick="contactCustomerWa(this)">
+                            <i class="fab fa-whatsapp" style="font-size: 1rem;"></i> Contactar VIP
                         </button>
                     </div>
 
-                    <!-- Detalles de Compra -->
-                    <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 0.8rem; font-weight: 700;">Detalle de la Colección</h4>
-                    <div style="margin-bottom: 1.8rem;">
-                        <div th:each="entry : ${pedido.items}" class="order-item" th:with="perfume=${perfumeMap.get(entry.key)}">
-                            <img th:if="${perfume != null && perfume.imagenUrl != 'Sin imagen'}" th:src="${perfume.imagenUrl}" alt="Perfume">
-                            <div th:if="${perfume == null || perfume.imagenUrl == 'Sin imagen'}" style="width: 45px; height: 45px; background: #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-box" style="color: #94a3b8;"></i></div>
-                            
+                    <!-- Order Items -->
+                    <h4
+                        style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 0.8rem; font-weight: 600;">
+                        Detalle de la Colección</h4>
+                    <div style="margin-bottom: 1.5rem;">
+                        <div th:each="entry : ${pedido.items}" class="order-item"
+                            th:with="perfume=${perfumeMap.get(entry.key)}">
+                            <img th:if="${perfume != null && perfume.imagenUrl != 'Sin imagen'}"
+                                th:src="${perfume.imagenUrl}" alt="Perfume">
+                            <div th:if="${perfume == null || perfume.imagenUrl == 'Sin imagen'}"
+                                class="order-item-placeholder">
+                                <i class="fas fa-box" style="color: var(--text-muted); font-size: 0.9rem;"></i>
+                            </div>
+
                             <div style="flex: 1;">
-                                <p style="font-weight: 600; font-size: 0.9rem;" th:text="${perfume != null ? perfume.nombre : 'Producto Removido'}">Nombre</p>
-                                <p style="font-size: 0.78rem; color: var(--text-muted);" th:text="${perfume != null ? perfume.marca : 'Desconocido'}">Marca</p>
+                                <p style="font-weight: 600; font-size: 0.88rem; color: var(--text);"
+                                    th:text="${perfume != null ? perfume.nombre : 'Producto Removido'}">Nombre</p>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);"
+                                    th:text="${perfume != null ? perfume.marca : 'Desconocido'}">Marca</p>
                             </div>
                             <div style="text-align: right;">
-                                <p style="font-size: 0.82rem; color: var(--text);">Cant: <span style="font-weight: 700;" th:text="${entry.value}">1</span></p>
+                                <p style="font-size: 0.82rem; color: var(--text);">
+                                    Cant: <span style="font-weight: 700; color: var(--gold);"
+                                        th:text="${entry.value}">1</span>
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Acciones del Pedido -->
-                    <div style="display: flex; gap: 0.8rem; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 1.2rem;">
+                    <!-- Actions -->
+                    <div
+                        style="display: flex; gap: 0.8rem; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 1.2rem;">
                         <form th:action="@{/asesor/cancelar/{id}(id=${pedido.id})}" method="post">
-                            <button type="submit" class="btn-action btn-cancel">Rechazar Solicitud</button>
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-times"></i> Rechazar
+                            </button>
                         </form>
                         <form th:action="@{/asesor/confirmar/{id}(id=${pedido.id})}" method="post">
-                            <button type="submit" class="btn-action btn-confirm"><i class="fas fa-check"></i> Pago Verificado - Aprobar</button>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="fas fa-check"></i> Pago Verificado
+                            </button>
                         </form>
                     </div>
                 </div>
             </section>
 
-            <!-- Historial Reciente -->
-            <section style="margin-top: 3.5rem;">
-                <h2 style="margin-bottom: 1.5rem; font-size: 1.4rem; color: var(--text-muted); font-weight: 600;">Historial Reciente (Confirmados)</h2>
-                <div th:if="${confirmados.empty}" style="color: var(--text-muted); font-size: 0.9rem;">No hay solicitudes confirmadas recientemente.</div>
-                <div th:each="pedido : ${confirmados}" class="order-card" style="opacity: 0.85; padding: 1.2rem; border-color: rgba(0,0,0,0.04);">
-                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <!-- ═══════════════════════════════════════════════════════
+                 HISTORIAL RECIENTE
+                 ═══════════════════════════════════════════════════════ -->
+            <section style="margin-top: 3rem;">
+                <h2 class="section-title" style="color: var(--text-muted);">
+                    Historial Reciente
+                    <span
+                        style="font-size: 0.75rem; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--text-muted);">(Confirmados)</span>
+                </h2>
+
+                <div th:if="${confirmados.empty}" style="color: var(--text-muted); font-size: 0.9rem; padding: 1rem 0;">
+                    No hay solicitudes confirmadas recientemente.</div>
+
+                <div th:each="pedido : ${confirmados}" class="order-card"
+                    style="opacity: 0.7; padding: 1.2rem; border-color: rgba(255,255,255,0.03);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                         <div>
-                            <span class="status-badge status-confirmado" style="font-size: 0.65rem; padding: 2px 8px;">Confirmado</span>
-                            <h4 style="margin-top: 0.5rem; font-size: 1rem; font-weight: 600;" th:text="${pedido.nombreCliente}">Cliente</h4>
-                            <p style="font-size: 0.75rem; color: var(--text-muted);" th:text="'Ref: ' + ${pedido.id}"></p>
+                            <span class="status-badge status-confirmado"
+                                style="font-size: 0.65rem; padding: 3px 10px;">Confirmado</span>
+                            <h4 style="margin-top: 0.5rem; font-size: 1rem; font-weight: 600; color: var(--text);"
+                                th:text="${pedido.nombreCliente}">Cliente</h4>
+                            <p style="font-size: 0.75rem; color: var(--text-muted);" th:text="'Ref: #' + ${pedido.id}">
+                            </p>
                         </div>
-                        <p style="font-weight: 700; color: var(--accent); font-size: 1.1rem;" th:text="'$' + ${#numbers.formatDecimal(pedido.total, 0, 'POINT', 0, 'POINT')} + ' COP'"></p>
-                     </div>
+                        <p style="font-weight: 700; color: var(--success); font-size: 1.1rem;"
+                            th:text="'$' + ${#numbers.formatDecimal(pedido.total, 0, 'POINT', 0, 'POINT')} + ' COP'">
+                        </p>
+                    </div>
                 </div>
             </section>
         </div>
 
-        <!-- Columna Lateral: Herramientas del Asesor -->
+        <!-- ═══════════════════════════════════════════════════════════════
+             COLUMNA LATERAL: HERRAMIENTAS DEL ASESOR
+             ═══════════════════════════════════════════════════════════════ -->
         <div>
-            <!-- ASISTENTE DE FRAGANCIAS -->
+            <!-- Buscador Experto -->
             <div class="side-widget">
-                <h3><i class="fas fa-search" style="color: var(--accent);"></i> Buscador Experto</h3>
-                <input type="text" class="widget-search" placeholder="Ej: vainilla, dulce, cítrico..." onkeyup="searchPerfumeAssistant(this.value)">
+                <h3><i class="fas fa-search"></i> Buscador Experto</h3>
+                <input type="text" class="widget-search" placeholder="Ej: vainilla, dulce, cítrico..."
+                    onkeyup="searchPerfumeAssistant(this.value)">
                 <div class="search-results" id="assistant-results">
-                    <p style="font-size: 0.78rem; color: var(--text-muted); text-align: center; padding: 10px;">Comienza a escribir para ver fragancias.</p>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); text-align: center; padding: 10px;">Comienza
+                        a escribir para ver fragancias.</p>
                 </div>
             </div>
 
-            <!-- CALCULADORA DE COTIZACIÓN -->
+            <!-- Generador de Cotización -->
             <div class="side-widget">
-                <h3><i class="fas fa-calculator" style="color: #10b981;"></i> Generador de Cotización</h3>
+                <h3><i class="fas fa-calculator"></i> Generador de Cotización</h3>
                 <select class="quote-select" id="quote-perfume-select">
                     <option value="">Selecciona Perfume...</option>
-                    <option th:each="p : ${perfumeMap.values()}" 
-                            th:value="${p.nombre}" 
-                            th:data-price="${p.precio}"
-                            th:data-brand="${p.marca}"
-                            th:text="${p.marca + ' - ' + p.nombre}">Perfume</option>
+                    <option th:each="p : ${perfumeMap.values()}" th:value="${p.nombre}" th:data-price="${p.precio}"
+                        th:data-brand="${p.marca}" th:text="${p.marca + ' - ' + p.nombre}">Perfume</option>
                 </select>
-                <input type="number" class="quote-input" id="quote-quantity" placeholder="Cantidad (por defecto 1)" min="1" value="1">
-                <input type="number" class="quote-input" id="quote-discount" placeholder="Descuento adicional % (opcional)" min="0" max="100">
+                <input type="number" class="quote-input" id="quote-quantity" placeholder="Cantidad (por defecto 1)"
+                    min="1" value="1">
+                <input type="number" class="quote-input" id="quote-discount"
+                    placeholder="Descuento adicional % (opcional)" min="0" max="100">
                 <button class="btn-quote-generate" onclick="generateQuoteMessage()">Crear Mensaje</button>
                 <div id="quote-output-container" style="margin-top: 12px; display: none;">
-                    <textarea id="quote-textarea" rows="4" style="width: 100%; font-size: 0.78rem; padding: 8px; border-radius: 8px; border: 1px solid var(--border); outline: none; resize: none; background: #f8fafc;" readonly></textarea>
-                    <button class="btn-quote-generate" onclick="copyQuoteToClipboard()" style="margin-top: 6px; background: #10b981;"><i class="far fa-copy"></i> Copiar Mensaje</button>
+                    <textarea id="quote-textarea" rows="4"
+                        style="width: 100%; font-size: 0.78rem; padding: 10px; border-radius: 10px; border: 1px solid var(--border); outline: none; resize: none; background: var(--bg-elevated); color: var(--text); font-family: 'Outfit', sans-serif;"
+                        readonly></textarea>
+                    <button class="btn-quote-generate" onclick="copyQuoteToClipboard()"
+                        style="margin-top: 8px; background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
+                        <i class="far fa-copy"></i> Copiar Mensaje
+                    </button>
                 </div>
             </div>
 
-            <!-- BLOC DE NOTAS RÁPIDAS -->
+            <!-- Recordatorios -->
             <div class="side-widget">
-                <h3><i class="far fa-edit" style="color: #e67e22;"></i> Recordatorios del Asesor</h3>
-                <textarea id="advisor-notes" rows="4" style="width: 100%; font-size: 0.8rem; padding: 10px; border-radius: 12px; border: 1px solid var(--border); outline: none; resize: none;" placeholder="Escribe notas rápidas aquí... Se guardan automáticamente." onkeyup="saveAdvisorNotes(this.value)"></textarea>
+                <h3><i class="far fa-edit"></i> Recordatorios</h3>
+                <textarea id="advisor-notes" rows="4"
+                    style="width: 100%; font-size: 0.82rem; padding: 12px; border-radius: 12px; border: 1px solid var(--border); outline: none; resize: none; background: var(--bg-elevated); color: var(--text); font-family: 'Outfit', sans-serif; transition: var(--transition-smooth);"
+                    placeholder="Escribe notas rápidas aquí... Se guardan automáticamente."
+                    onkeyup="saveAdvisorNotes(this.value)"></textarea>
             </div>
 
-            <!-- ALERTAS DE INVENTARIO -->
-            <div class="side-widget" style="border-top: 4px solid #ff5252;">
-                <h3><i class="fas fa-exclamation-triangle" style="color: #ff5252;"></i> Alertas de Stock</h3>
-                <p th:if="${lowStockPerfumes.empty}" style="font-size: 0.82rem; color: var(--text-muted);">El stock está saludable. No hay alertas.</p>
-                
-                <div th:each="p : ${lowStockPerfumes}" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; font-size: 0.85rem;">
+            <!-- Alertas de Stock -->
+            <div class="side-widget alert-widget">
+                <h3><i class="fas fa-exclamation-triangle"></i> Alertas de Stock</h3>
+                <p th:if="${lowStockPerfumes.empty}" style="font-size: 0.82rem; color: var(--text-muted);">El stock está
+                    saludable. No hay alertas.</p>
+
+                <div th:each="p : ${lowStockPerfumes}"
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; font-size: 0.85rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border);">
                     <div>
-                        <p style="font-weight: 600; color: var(--text);" th:text="${p.nombre}">Nombre</p>
+                        <p style="font-weight: 600; color: var(--text); font-size: 0.88rem;" th:text="${p.nombre}">
+                            Nombre</p>
                         <p style="font-size: 0.75rem; color: var(--text-muted);" th:text="${p.marca}">Marca</p>
                     </div>
-                    <span style="background: #ffebee; color: #d32f2f; padding: 2px 8px; border-radius: 5px; font-weight: 700; font-size: 0.75rem;" th:text="${p.stock} + ' un'">0 un</span>
+                    <span class="stock-badge" th:text="${p.stock} + ' un'">0 un</span>
                 </div>
             </div>
 
-            <!-- DIRECTORIO VIP -->
+            <!-- Directorio VIP -->
             <div class="side-widget">
-                <h3><i class="fas fa-crown" style="color: var(--accent);"></i> Directorio VIP</h3>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">Listado de clientes registrados en la plataforma.</p>
-                
-                <div th:if="${clientesVip.empty}" style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+                <h3><i class="fas fa-crown"></i> Directorio VIP</h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem;">Listado de clientes
+                    registrados en la plataforma.</p>
+
+                <div th:if="${clientesVip.empty}"
+                    style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 1rem 0;">
                     Aún no hay clientes registrados.
                 </div>
 
                 <div th:each="cliente : ${clientesVip}" class="vip-client">
-                    <div class="vip-avatar" th:text="${#strings.substring(cliente.nombre != null and #strings.length(cliente.nombre) > 0 ? cliente.nombre : 'U', 0, 1)}">A</div>
+                    <div class="vip-avatar"
+                        th:text="${#strings.substring(cliente.nombre != null and #strings.length(cliente.nombre) > 0 ? cliente.nombre : 'U', 0, 1)}">
+                        A</div>
                     <div style="flex: 1; overflow: hidden;">
-                        <p style="font-weight: 600; font-size: 0.88rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" th:text="${cliente.nombre}">Nombre</p>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" th:text="${cliente.email}">Email</p>
+                        <p style="font-weight: 600; font-size: 0.85rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; color: var(--text);"
+                            th:text="${cliente.nombre}">Nombre</p>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"
+                            th:text="${cliente.email}">Email</p>
                     </div>
-                    <a th:href="'mailto:' + ${cliente.email}" style="color: var(--accent);"><i class="fas fa-envelope"></i></a>
+                    <a th:href="'mailto:' + ${cliente.email}"
+                        style="color: var(--gold); transition: var(--transition-smooth); padding: 6px; border-radius: 6px;">
+                        <i class="fas fa-envelope"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- JS Logic and Fragrance Map Inject -->
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCRIPTS
+         ═══════════════════════════════════════════════════════════════ -->
     <script th:inline="javascript">
         /*<![CDATA[*/
-        const perfumesData = /*[[${perfumeMap.values()}]]*/ [];
+        const perfumesData = /*[[${perfumeMap.values()}]]*/[];
         /*]]>*/
 
-        // Initial Load
+        // ─── Sidebar Mobile Toggle ───
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+            const btn = document.querySelector('.mobile-toggle i');
+            if (sidebar.classList.contains('open')) {
+                btn.classList.remove('fa-bars');
+                btn.classList.add('fa-times');
+            } else {
+                btn.classList.remove('fa-times');
+                btn.classList.add('fa-bars');
+            }
+        }
+
+        // Close sidebar on link click (mobile)
+        document.querySelectorAll('.admin-sidebar nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 992) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // ─── Local Storage Notes ───
         window.addEventListener('DOMContentLoaded', () => {
             const notes = localStorage.getItem('profumi_advisor_notes') || '';
-            document.getElementById('advisor-notes').value = notes;
+            const textarea = document.getElementById('advisor-notes');
+            if (textarea) textarea.value = notes;
             searchPerfumeAssistant('');
         });
 
-        // Save notes
         function saveAdvisorNotes(val) {
             localStorage.setItem('profumi_advisor_notes', val);
         }
 
-        // Contact Customer on WhatsApp with Detailed Order info
+        // ─── Contact Customer WhatsApp ───
         function contactCustomerWa(btn) {
             const phone = btn.getAttribute('data-telefono');
             const clientName = btn.getAttribute('data-nombre');
@@ -648,32 +1347,34 @@
             const card = btn.closest('.order-card');
             const items = [];
             card.querySelectorAll('.order-item').forEach(item => {
-                const name = item.querySelector('p:nth-child(1)').innerText.trim();
-                const qty = item.querySelector('.order-item div:nth-child(3) span').innerText.trim();
-                items.push(`  • ${qty}x ${name}`);
+                const nameEl = item.querySelector('div:nth-child(2) p:first-child');
+                const qtyEl = item.querySelector('div:nth-child(3) span');
+                if (nameEl && qtyEl) {
+                    items.push(`  • ${qtyEl.innerText.trim()}x ${nameEl.innerText.trim()}`);
+                }
             });
             const itemsStr = items.join('\n');
             const formattedTotal = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(total);
 
             const text = `🌟 *PROFUMI - Boutique de Fragancias* 🌟\n\n` +
-                         `Estimado/a *${clientName}*, espero que se encuentre muy bien. ✨\n\n` +
-                         `Le habla su *Asesor Experto de Profumi*. He recibido su solicitud de pedido con la referencia *#${orderId}*:\n\n` +
-                         `🛍️ *Detalle de su Selección:*\n${itemsStr}\n\n` +
-                         `💵 *Total:* ${formattedTotal} COP\n` +
-                         `💳 *Método de Pago:* ${paymentMethod}\n` +
-                         `📍 *Dirección de Entrega:* ${address}\n\n` +
-                         `Escribo para confirmar los detalles de su compra, coordinar el pago de forma segura y programar el despacho de sus fragancias de inmediato. 📦\n\n` +
-                         `¿Le parece bien si coordinamos ahora? Quedo a su completa disposición. 🌹`;
+                `Estimado/a *${clientName}*, espero que se encuentre muy bien. ✨\n\n` +
+                `Le habla su *Asesor Experto de Profumi*. He recibido su solicitud de pedido con la referencia *#${orderId}*:\n\n` +
+                `🛍️ *Detalle de su Selección:*\n${itemsStr}\n\n` +
+                `💵 *Total:* ${formattedTotal} COP\n` +
+                `💳 *Método de Pago:* ${paymentMethod}\n` +
+                `📍 *Dirección de Entrega:* ${address}\n\n` +
+                `Escribo para confirmar los detalles de su compra, coordinar el pago de forma segura y programar el despacho de sus fragancias de inmediato. 📦\n\n` +
+                `¿Le parece bien si coordinamos ahora? Quedo a su completa disposición. 🌹`;
 
             const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
 
-        // Live Search
+        // ─── Live Search Assistant ───
         function searchPerfumeAssistant(query) {
             const container = document.getElementById('assistant-results');
             container.innerHTML = '';
-            
+
             const filtered = perfumesData.filter(p => {
                 const searchStr = `${p.nombre} ${p.marca} ${p.familiaOlfativa || ''} ${p.concentracion || ''}`.toLowerCase();
                 return searchStr.includes(query.toLowerCase());
@@ -687,8 +1388,7 @@
             filtered.slice(0, 10).forEach(p => {
                 const img = (p.imagenUrl && p.imagenUrl !== 'Sin imagen') ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
                 const formattedPrice = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(p.precio);
-                
-                // Build lists of notes or other details
+
                 const notes = [
                     p.notasSalida ? `Salida: ${p.notasSalida}` : '',
                     p.notasCorazon ? `Corazón: ${p.notasCorazon}` : '',
@@ -701,25 +1401,25 @@
                     <div class="search-item-header" onclick="toggleItemDetails('${p.id}')">
                         <img src="${img}" alt="Perfume">
                         <div style="flex:1; overflow:hidden;">
-                            <p style="font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; margin-bottom: 2px;">${p.nombre}</p>
-                            <p style="font-size:0.72rem; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${p.marca} | <strong style="color:var(--accent); font-weight:700;">${formattedPrice}</strong></p>
+                            <p style="font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; margin-bottom: 2px; color: var(--text);">${p.nombre}</p>
+                            <p style="font-size:0.72rem; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${p.marca} | <strong style="color:var(--gold); font-weight:700;">${formattedPrice}</strong></p>
                         </div>
-                        <i class="fas fa-chevron-down" id="arrow-${p.id}" style="font-size: 0.75rem; color: var(--text-muted); transition: 0.3s;"></i>
+                        <i class="fas fa-chevron-down" id="arrow-${p.id}" style="font-size: 0.75rem; color: var(--text-muted); transition: transform 0.3s ease;"></i>
                     </div>
                     <div class="search-item-details" id="details-${p.id}">
                         <div style="margin-bottom: 8px;">
                             <span class="detail-pill">${p.familiaOlfativa || 'Lujo'}</span>
                             <span class="detail-pill">${p.concentracion || 'EDP'}</span>
-                            <span class="detail-pill" style="background: ${p.stock > 0 ? '#e8f5e9' : '#ffebee'}; color: ${p.stock > 0 ? '#2e7d32' : '#d32f2f'};">Stock: ${p.stock || 0} un</span>
+                            <span class="detail-pill" style="background: ${p.stock > 0 ? 'rgba(74, 222, 128, 0.1)' : 'rgba(248, 113, 113, 0.1)'}; color: ${p.stock > 0 ? 'var(--success)' : 'var(--danger)'}; border-color: ${p.stock > 0 ? 'rgba(74, 222, 128, 0.2)' : 'rgba(248, 113, 113, 0.2)'};">Stock: ${p.stock || 0} un</span>
                         </div>
-                        <p style="line-height: 1.4; margin-bottom: 6px; font-size: 0.74rem;"><strong>Descripción:</strong> ${p.descripcion || 'Sin descripción comercial.'}</p>
-                        ${notes ? `<p style="line-height: 1.4; margin-bottom: 8px; font-size: 0.72rem; color: #555;"><strong>Notas:</strong> ${notes}</p>` : ''}
-                        
+                        <p style="line-height: 1.4; margin-bottom: 6px; font-size: 0.74rem; color: var(--text-secondary);"><strong style="color: var(--text);">Descripción:</strong> ${p.descripcion || 'Sin descripción comercial.'}</p>
+                        ${notes ? `<p style="line-height: 1.4; margin-bottom: 8px; font-size: 0.72rem; color: var(--text-muted);"><strong style="color: var(--text-secondary);">Notas:</strong> ${notes}</p>` : ''}
+
                         <div style="display: flex; gap: 8px; margin-top: 8px;">
-                            <button class="btn-assistant-action copy" onclick="copyPerfumeDetails('${p.id}')">
+                            <button class="btn-assistant-action copy" onclick="event.stopPropagation(); copyPerfumeDetails('${p.id}')">
                                 <i class="far fa-copy"></i> Copiar Detalles
                             </button>
-                            <button class="btn-assistant-action wa" onclick="sendPerfumeWa('${p.id}')">
+                            <button class="btn-assistant-action wa" onclick="event.stopPropagation(); sendPerfumeWa('${p.id}')">
                                 <i class="fab fa-whatsapp"></i> Compartir
                             </button>
                         </div>
@@ -729,21 +1429,19 @@
             });
         }
 
-        // Toggle Details
+        // ─── Toggle Details ───
         function toggleItemDetails(id) {
             const el = document.getElementById(`details-${id}`);
             const arrow = document.getElementById(`arrow-${id}`);
-            if (el) el.classList.toggle('active');
-            if (arrow) {
-                if (arrow.style.transform === 'rotate(180deg)') {
-                    arrow.style.transform = 'rotate(0deg)';
-                } else {
-                    arrow.style.transform = 'rotate(180deg)';
+            if (el) {
+                el.classList.toggle('active');
+                if (arrow) {
+                    arrow.style.transform = el.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
                 }
             }
         }
 
-        // Copy Perfume Details with Image Link and Notes
+        // ─── Copy Perfume Details ───
         function copyPerfumeDetails(id) {
             const p = perfumesData.find(x => x.id === id);
             if (!p) return;
@@ -751,37 +1449,26 @@
             const formattedPrice = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(p.precio);
             const imgUrl = (p.imagenUrl && p.imagenUrl !== 'Sin imagen') ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
 
-            const text = `🌟 ¡TE RECOMIENDO ESTA JOYA DE NUESTRA BOUTIQUE! 🌟
-
-` +
-                         `🛍️ Producto: ${p.nombre}
-` +
-                         `🏷️ Marca: ${p.marca}
-` +
-                         `💧 Concentración: ${p.concentracion || 'EDP'}
-` +
-                         `👃 Familia Olfativa: ${p.familiaOlfativa || 'Fragancia Lujosa'}
-` +
-                         (p.notasSalida ? `🍋 Notas de Salida: ${p.notasSalida}
-` : '') +
-                         (p.notasCorazon ? `🌸 Notas de Corazón: ${p.notasCorazon}
-` : '') +
-                         (p.notasFondo ? `🪵 Notas de Fondo: ${p.notasFondo}
-` : '') +
-                         `💵 Precio especial Boutique: ${formattedPrice} COP
-
-` +
-                         `📷 Foto del Producto: ${imgUrl}
-
-` +
-                         `¿Te gustaría coordinar el envío de esta fragancia? ✨`;
+            const text = `🌟 ¡TE RECOMIENDO ESTA JOYA DE NUESTRA BOUTIQUE! 🌟\n\n` +
+                `🛍️ Producto: ${p.nombre}\n` +
+                `🏷️ Marca: ${p.marca}\n` +
+                `💧 Concentración: ${p.concentracion || 'EDP'}\n` +
+                `👃 Familia Olfativa: ${p.familiaOlfativa || 'Fragancia Lujosa'}\n` +
+                (p.notasSalida ? `🍋 Notas de Salida: ${p.notasSalida}\n` : '') +
+                (p.notasCorazon ? `🌸 Notas de Corazón: ${p.notasCorazon}\n` : '') +
+                (p.notasFondo ? `🪵 Notas de Fondo: ${p.notasFondo}\n` : '') +
+                `💵 Precio especial Boutique: ${formattedPrice} COP\n\n` +
+                `📷 Foto del Producto: ${imgUrl}\n\n` +
+                `¿Te gustaría coordinar el envío de esta fragancia? ✨`;
 
             navigator.clipboard.writeText(text).then(() => {
-                alert('¡Ficha del producto copiada al portapapeles! Listo para enviar.');
+                showToast('¡Ficha del producto copiada al portapapeles!');
+            }).catch(() => {
+                alert('¡Ficha del producto copiada al portapapeles!');
             });
         }
 
-        // Share directly on WhatsApp
+        // ─── Share on WhatsApp ───
         function sendPerfumeWa(id) {
             const p = perfumesData.find(x => x.id === id);
             if (!p) return;
@@ -789,36 +1476,23 @@
             const formattedPrice = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(p.precio);
             const imgUrl = (p.imagenUrl && p.imagenUrl !== 'Sin imagen') ? p.imagenUrl : 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=800';
 
-            const text = `🌟 ¡TE RECOMIENDO ESTA JOYA DE NUESTRA BOUTIQUE! 🌟
-
-` +
-                         `🛍️ Producto: ${p.nombre}
-` +
-                         `🏷️ Marca: ${p.marca}
-` +
-                         `💧 Concentración: ${p.concentracion || 'EDP'}
-` +
-                         `👃 Familia Olfativa: ${p.familiaOlfativa || 'Fragancia Lujosa'}
-` +
-                         (p.notasSalida ? `🍋 Notas de Salida: ${p.notasSalida}
-` : '') +
-                         (p.notasCorazon ? `🌸 Notas de Corazón: ${p.notasCorazon}
-` : '') +
-                         (p.notasFondo ? `🪵 Notas de Fondo: ${p.notasFondo}
-` : '') +
-                         `💵 Precio especial Boutique: ${formattedPrice} COP
-
-` +
-                         `📷 Foto del Producto: ${imgUrl}
-
-` +
-                         `¿Te gustaría coordinar el envío de esta fragancia? ✨`;
+            const text = `🌟 ¡TE RECOMIENDO ESTA JOYA DE NUESTRA BOUTIQUE! 🌟\n\n` +
+                `🛍️ Producto: ${p.nombre}\n` +
+                `🏷️ Marca: ${p.marca}\n` +
+                `💧 Concentración: ${p.concentracion || 'EDP'}\n` +
+                `👃 Familia Olfativa: ${p.familiaOlfativa || 'Fragancia Lujosa'}\n` +
+                (p.notasSalida ? `🍋 Notas de Salida: ${p.notasSalida}\n` : '') +
+                (p.notasCorazon ? `🌸 Notas de Corazón: ${p.notasCorazon}\n` : '') +
+                (p.notasFondo ? `🪵 Notas de Fondo: ${p.notasFondo}\n` : '') +
+                `💵 Precio especial Boutique: ${formattedPrice} COP\n\n` +
+                `📷 Foto del Producto: ${imgUrl}\n\n` +
+                `¿Te gustaría coordinar el envío de esta fragancia? ✨`;
 
             const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
 
-        // Generate Quote
+        // ─── Generate Quote ───
         function generateQuoteMessage() {
             const select = document.getElementById('quote-perfume-select');
             const selectedOption = select.options[select.selectedIndex];
@@ -843,28 +1517,69 @@
 
             const formattedTotal = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(total);
 
-            const quoteText = `✨ COTIZACIÓN PROFUMI VIP ✨
-
-` +
-                              `• Fragancia: ${qty}x ${name} (${brand})
-` +
-                              `• Subtotal especial: ${formattedTotal}${discountText}
-
-` +
-                              `Coordinamos tu pago (Nequi/Transferencia) y envío inmediato por este medio. ¿Procedemos con tu orden?`;
+            const quoteText = `✨ COTIZACIÓN PROFUMI VIP ✨\n\n` +
+                `• Fragancia: ${qty}x ${name} (${brand})\n` +
+                `• Subtotal especial: ${formattedTotal}${discountText}\n\n` +
+                `Coordinamos tu pago (Nequi/Transferencia) y envío inmediato por este medio. ¿Procedemos con tu orden?`;
 
             const textarea = document.getElementById('quote-textarea');
             textarea.value = quoteText;
             document.getElementById('quote-output-container').style.display = 'block';
         }
 
-        // Copy Quote
+        // ─── Copy Quote ───
         function copyQuoteToClipboard() {
             const textarea = document.getElementById('quote-textarea');
             textarea.select();
             document.execCommand('copy');
-            alert('¡Cotización copiada al portapapeles! Ya puedes pegarla en el chat de WhatsApp.');
+            showToast('¡Cotización copiada al portapapeles!');
         }
+
+        // ─── Toast Helper ───
+        function showToast(message) {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 2rem;
+                right: 2rem;
+                background: var(--bg-card);
+                color: var(--text);
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                border: 1px solid var(--border-hover);
+                box-shadow: var(--shadow-gold);
+                font-size: 0.85rem;
+                font-weight: 500;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            `;
+            toast.innerHTML = `<i class="fas fa-check-circle" style="color: var(--success);"></i> ${message}`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Add toast animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
+
 </html>
